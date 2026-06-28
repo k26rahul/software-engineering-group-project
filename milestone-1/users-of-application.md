@@ -1,32 +1,74 @@
 # User Personas
 
+This document defines all users of the Library Management System, classified by how directly they interact with the system.
 
-### 1. Primary User: The Librarian
-The Librarian is the core administrator of the system and will use the application continuously throughout the day to manage all library operations.
+---
 
-**How they will use the application:**
-*   **Membership Management:** Approve new member registrations, manage user profiles, and track membership status without relying on physical passbooks.
-*   **Book Catalog Management:** Add new books, update existing records, manage multiple copies of a book, and mark specific books as lost or damaged.
-*   **Issue and Return Tracking:** Digitally issue books to members and process returns, replacing the manual physical register.
-*   **Fine Management:** Automatically calculate and collect fines for lost or damaged books upon return.
-*   **Reservation Queue Management:** Monitor hold requests from members when a book is out of stock.
-*   **Purchase Prioritization:** Review book requests from members to make informed purchasing decisions within the monthly budget.
-*   **Reading Lists and Engagement:** Curate digital reading lists by topic/interest and moderate book reviews submitted by members.
+## 1. Primary Users
 
-### 2. Secondary Users: Library Members (Students)
-Members (both on-campus and off-campus students) are the primary consumers of the library's resources. They will use the application to discover books, manage their borrowing lifecycle, and engage with the library community. New members will self-register on the platform and await the librarian's approval.
+Primary users interact with the system directly and on a regular basis. The system is built to serve their daily needs.
 
-**How they will use the application:**
-*   **Book Discovery:** Search the digital catalog by title, author, or category to see if a specific book is currently available in the library.
-*   **Borrowing Status Dashboard:** View a list of books they have currently issued and check the exact due dates for returns.
-*   **Reservation System:** Place a digital hold on a book that is currently issued to someone else, entering an automated queue.
-*   **Book Requests:** Submit requests for new books to be purchased by the library and upvote requests made by others.
-*   **Community Reviews:** Write and read reviews for books they have borrowed, contributing to a digital community board.
-*   **Fee Payments:** Pay the annual ₹100 membership fee (required for off-campus students every 12 months from their date of joining) directly within the application.
+### 1.1 The Librarian
 
-### 3. Tertiary Users: Campus Management
-Campus management will not interact with the application on a daily operational basis, but they are key stakeholders who are directly affected by the library's efficiency and operations.
+The librarian is the core administrator of the system. She uses the application throughout every working day to manage all library operations.
 
-**How they will use the application:**
-*   **Budget Allocation:** Utilize data from the application to understand the library's needs and assign the ₹10,000 monthly budget effectively.
-*   **Reporting and Analytics:** View high-level reports to understand library usage metrics, such as the number of books issued in a month, most popular categories, and overall member engagement.
+**How she uses the application:**
+- **Membership Management** → Reviews and approves new member registrations. Manages member profiles and tracks membership status without relying on physical passbooks.
+- **Book Catalog Management** → Adds new books, updates existing records, manages multiple copies of a book, and marks specific copies as lost or damaged.
+- **Issue and Return Tracking** → Digitally issues books to members and processes returns, replacing the manual physical register.
+- **Fine Management** → Reviews automatically calculated fines for lost or damaged books and records settlements upon return.
+- **Reservation Queue Management** → Gets alerted when a returned book has an active reservation, so she can hold it for the queued member.
+- **Purchase Prioritization** → Reviews member book requests ranked by upvotes to make informed purchasing decisions within the monthly budget.
+- **Subscription Management** → Adds, modifies, or cancels newspaper and magazine subscriptions. The system tracks recurring costs automatically.
+- **Book Purchase Entry** → Manually enters new book purchase details (title, copies, price per copy, vendor) to log spending against the monthly budget.
+- **Reading Lists and Curation** → Creates and manages themed digital reading lists and moderates book reviews submitted by members.
+
+### 1.2 Library Members (Students)
+
+Members are both on-campus and off-campus students. They are the primary consumers of the library's resources. They use the application to discover books, manage their borrowing, and engage with the library community. New members self-register on the platform and await the librarian's approval.
+
+**How they use the application:**
+- **Book Discovery** → Search the digital catalog by title, author, or category to check if a book is available.
+- **Borrowing Dashboard** → View currently issued books and their exact due dates.
+- **Reservations** → Place a digital hold on a book that is currently out of stock, entering an automated first-in, first-out queue.
+- **Book Requests** → Submit requests for new books to be purchased by the library and upvote requests made by other members.
+- **Book Recommendations** → View personalized book suggestions on their dashboard based on the genres and authors they have previously read.
+- **Community Reviews** → Write and read reviews for books available in the library.
+- **Fee Payments** → Pay the annual ₹100 membership fee (required for off-campus members) or any outstanding fines directly within the application.
+
+---
+
+## 2. Secondary Users
+
+Secondary users have system login access but interact with it periodically, not on a daily basis. They are stakeholders who monitor the outcomes of library operations.
+
+### 2.1 Campus Management
+
+Campus management logs into the system to view high-level reports and monitor library performance. They review and approve the monthly budget reimbursement based on expense data generated by the system.
+
+**How they use the application:**
+- **Budget Oversight** → View the month-end itemized expense report (broken down by newspapers, magazines, books, and vendor details) to verify spending and approve the librarian's reimbursement up to the ₹10,000 monthly allowance.
+- **Usage Reports** → View high-level metrics such as total active members, books issued per month, and most popular categories to measure the library's impact.
+- **Report Downloads** → Download report data for record-keeping or further review.
+
+---
+
+## 3. Tertiary Users
+
+Tertiary users are **not part of the system**. They have no login or system access of any kind. They are listed here because they are indirectly affected by the library's operations and by decisions made within the system.
+
+### 3.1 School Teachers
+
+Teachers at the RVK campus schools are influenced by the library's reading list curation and book availability. Themed reading collections and available academic resources directly support their classroom teaching and student engagement.
+
+### 3.2 School Principal
+
+The principal is a key institutional stakeholder. Library usage metrics — member engagement, reading activity, community participation — reflect on the school's overall academic culture and may be reviewed during institutional assessments.
+
+### 3.3 Book Vendors
+
+Book vendors supply new books to the library when the librarian places purchase orders. The monthly budget determines the volume of purchases. Vendors receive their payout from the librarian at month-end, after campus management has approved the expense report.
+
+### 3.4 Newspaper and Magazine Sellers
+
+Newspaper and magazine sellers fulfill the library's active subscriptions. Their monthly payout is calculated automatically by the system based on the library's subscription configuration and is settled by the librarian at month-end.
