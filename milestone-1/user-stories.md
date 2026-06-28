@@ -1,78 +1,119 @@
 # SMART User Stories
 
-This document outlines the exhaustive list of user stories required to build the Library Management System. These stories dictate the features to be implemented based on the workflows of the library.
+This document outlines the complete list of user stories for the Library Management System. These stories are derived from the actual workflows and pain points of the library.
 
-The stories are written in the SMART format: `As a [user persona], I want [action], so that [value/benefit].`
+Stories follow the SMART format: `As a [user persona], I want [action], so that [value/benefit].`
 
 ---
 
 ## 1. Librarian (Primary User)
 
 ### 1.1 Authentication & Access
-*   **As a Librarian**, I want to securely log in to the administrative dashboard, so that I can manage library operations without unauthorized access.
+
+- **As a Librarian**, I want to securely log in to the administrative dashboard, so that I can manage library operations without unauthorized access.
 
 ### 1.2 Membership Management
-*   **As a Librarian**, I want to review and approve new digital member registrations, so that I can verify their identity before granting them borrowing privileges.
-*   **As a Librarian**, I want to view a member's complete borrowing history and current issue limit on their digital profile, so that we completely eliminate the need for 20-entry physical passbooks.
-*   **As a Librarian**, I want the system to automatically track an off-campus member's 1-year billing cycle and flag them when they are due for renewal, so that I can easily notify them or disable their access if they haven't paid their ₹100 fee.
 
-### 1.3 Book Catalog Management (CRUD)
-*   **As a Librarian**, I want to add new books to the digital catalog (with title, author, category, price, and total copies), so that members can easily search and discover them.
-*   **As a Librarian**, I want to edit existing book records, so that I can correct typos or reclassify a book's category.
-*   **As a Librarian**, I want to mark specific copies of a book as "lost" or "damaged", so that the real-time availability status remains accurate for members searching the catalog.
+- **As a Librarian**, I want to review and approve new digital member registrations, so that I can verify their identity before granting them borrowing privileges.
+- **As a Librarian**, I want to view a member's complete borrowing history and current issue limit on their digital profile, so that we completely eliminate the need for 20-entry physical passbooks.
+- **As a Librarian**, I want to view a member's outstanding fines before issuing a book to them, so that I am aware of any unpaid dues on their account.
+- **As a Librarian**, I want the system to automatically track an off-campus member's 1-year billing cycle and flag them when renewal is due, so that I can easily notify them or disable their access if they haven't paid their ₹100 fee.
+
+### 1.3 Book Catalog Management
+
+- **As a Librarian**, I want to add new books to the digital catalog (with title, author, category, price, and total copies), so that members can search and discover them.
+- **As a Librarian**, I want to scan a book's ISBN barcode when adding it to the catalog and have the system auto-fill the title, author, and genre, so that I don't have to type all the details manually for every book.
+- **As a Librarian**, I want to edit existing book records, so that I can correct typos or reclassify a book's category.
+- **As a Librarian**, I want to mark specific copies of a book as "lost" or "damaged", so that the real-time availability status remains accurate for members searching the catalog.
 
 ### 1.4 Issuing, Returning & Fines
-*   **As a Librarian**, I want to digitally issue a book to a member's account, so that the system can automatically record the transaction and calculate the strict 10-day due date.
-*   **As a Librarian**, I want to process a book return digitally, so that the member's account is immediately cleared to borrow a new book.
-*   **As a Librarian**, I want to view an automated list of all overdue books across the library, so that I no longer have to manually scan pages of a physical register.
-*   **As a Librarian**, I want the system to automatically calculate the exact fine (0.5x price for damaged, 1.5x price for lost) when I flag a returned book's condition, so that I can eliminate manual math errors.
-*   **As a Librarian**, I want to send automated email or web push notifications to members who have overdue books, so that I can easily remind them to return the items.
+
+- **As a Librarian**, I want to digitally issue a book or magazine to a member's account and set the return deadline, so that the system automatically records the transaction and tracks the exact due date.
+- **As a Librarian**, I want to process a book return digitally, so that the member's account is immediately cleared and they can borrow again.
+- **As a Librarian**, I want to view an automated list of all overdue books across the library, so that I no longer have to manually scan through pages of a physical register.
+- **As a Librarian**, I want the system to automatically calculate the exact fine (0.5x price for damaged, 1.5x price for lost) when I flag a returned book's condition, so that I can eliminate manual math errors.
+- **As a Librarian**, I want to send automated email or web push notifications to members who have overdue books, so that I can remind them to return items without contacting each one manually.
 
 ### 1.5 Reservation Management
-*   **As a Librarian**, I want the system to alert me if a newly returned book has an active reservation, so that I can hold it aside for the queued member rather than returning it to the shelf.
 
-### 1.6 Budgeting & Prioritization
-*   **As a Librarian**, I want to view a ranked list of new book purchase requests (sorted by member upvotes), so that I can easily prioritize how to spend the ₹10,000 monthly budget based on actual demand.
+- **As a Librarian**, I want the system to alert me when a returned book has an active reservation, so that I can hold it aside for the queued member rather than returning it to the shelf.
 
-### 1.7 Community Curation
-*   **As a Librarian**, I want to create and manage custom reading lists (e.g., "Top Sci-Fi", "Required Physics Reading"), so that I can highlight these collections on the members' dashboard.
-*   **As a Librarian**, I want to review and moderate book reviews submitted by members, so that I can maintain a high-quality, permanent digital display board.
+### 1.6 Book Purchase Requests
+
+- **As a Librarian**, I want to view a ranked list of new book purchase requests sorted by member upvotes, so that I can prioritize how to spend the monthly budget based on actual demand.
+- **As a Librarian**, I want to mark a book purchase request as "purchased" once I have bought the book, so that members can see that their request has been acted on.
+
+### 1.7 Subscription Management
+
+- **As a Librarian**, I want to add a new newspaper or magazine subscription to the system (title, copies, price per copy, frequency), so that its monthly cost is automatically included in the budget without manual calculation.
+- **As a Librarian**, I want to modify the details of an existing subscription (e.g., change the number of copies or price per copy), so that the budget calculation stays accurate when subscription terms change.
+- **As a Librarian**, I want to cancel a subscription that the library no longer wants, so that it stops appearing in future monthly budget calculations.
+
+### 1.8 Book Purchase Entry & Budget Tracking
+
+- **As a Librarian**, I want to enter the details of a new book purchase (title, copies, price per copy, vendor), so that its cost is immediately added to the month's running budget total.
+- **As a Librarian**, I want to see a real-time view of how much of the ₹10,000 monthly allowance has been used so far, so that I know how much is left to spend before the month ends.
+
+### 1.9 Community Curation
+
+- **As a Librarian**, I want to create and manage custom reading lists (e.g., "Top Sci-Fi", "Required Physics Reading"), so that I can highlight curated collections on member dashboards.
+- **As a Librarian**, I want to review and moderate book reviews submitted by members, so that I can maintain a high-quality, permanent digital display board.
 
 ---
 
-## 2. Library Members / Students (Secondary Users)
+## 2. Library Members / Students (Primary Users)
 
 ### 2.1 Authentication & Profile
-*   **As a Member**, I want to self-register for a library account, so that I can access digital services without needing a physical card.
-*   **As a Member**, I want to securely log in to my portal, so that I can manage my personal reading activity.
+
+- **As a Member**, I want to self-register for a library account, so that I can access digital services without needing a physical card.
+- **As a Member**, I want to securely log in to my portal, so that I can manage my personal reading activity.
+- **As a Member**, I want to receive a notification when the librarian approves or rejects my registration, so that I know when I can start using the library's services.
 
 ### 2.2 Discovery & Search
-*   **As a Member**, I want to search the digital catalog using filters (title, author, category), so that I can find books immediately without manually browsing racks.
-*   **As a Member**, I want to see the real-time availability of a book (e.g., "Available" vs "All copies issued"), so that I don't waste time looking for a book that isn't on the shelf.
+
+- **As a Member**, I want to search the digital catalog using filters (title, author, category), so that I can find books immediately without manually browsing racks.
+- **As a Member**, I want to see the real-time availability of a book (e.g., "Available" vs. "All copies issued"), so that I don't waste time looking for a book that isn't on the shelf.
 
 ### 2.3 Borrowing Dashboard
-*   **As a Member**, I want to view a dashboard of my currently issued books along with their exact due dates, so that I can ensure I return them within the 10-day window.
-*   **As a Member**, I want to be able to issue a new book even if I haven't returned my previous ones (up to the maximum limit), so that I am not forced to return books just to "renew" a physical card.
-*   **As a Member**, I want to receive email or web push notifications when my issued books become overdue, so that I am reminded to return them promptly.
+
+- **As a Member**, I want to view a dashboard of my currently issued books and magazines along with their exact due dates, so that I can keep track of each item's deadline and return them on time.
+- **As a Member**, I want to be able to issue a new book even if I haven't returned my previous ones (up to the maximum limit), so that I am not forced to return books just to keep my account active.
+- **As a Member**, I want to receive email or web push notifications when my issued books become overdue, so that I am reminded to return them promptly.
 
 ### 2.4 Digital Reservations
-*   **As a Member**, I want to click a "Reserve" button on a book that is currently out of stock, so that I can enter a fair, automated waitlist.
-*   **As a Member**, I want to receive an automated notification when my reserved book is returned to the library, so that I can promptly collect it.
+
+- **As a Member**, I want to click a "Reserve" button on a book that is currently out of stock, so that I can enter a fair, automated waitlist.
+- **As a Member**, I want to cancel a reservation I previously placed, so that I can withdraw from the waitlist if I no longer need the book.
+- **As a Member**, I want to receive an automated notification when my reserved book is returned to the library, so that I can collect it promptly.
 
 ### 2.5 Purchase Requests
-*   **As a Member**, I want to submit a formal request for a book the library doesn't currently own, so that the librarian knows what I want to read.
-*   **As a Member**, I want to upvote existing book requests submitted by other students, so that highly desired books get prioritized for purchase.
+
+- **As a Member**, I want to submit a formal request for a book the library doesn't currently own, so that the librarian knows what I want to read.
+- **As a Member**, I want to upvote existing book requests submitted by other members, so that highly desired books get prioritized for purchase.
 
 ### 2.6 Community Engagement
-*   **As a Member**, I want to submit a digital rating and written review for a book I have read, so that my feedback is permanently saved and helps future readers.
-*   **As a Member**, I want to read historical reviews left by others on a book's detail page, so that I can decide if it's worth reading.
+
+- **As a Member**, I want to submit a digital rating and written review for a book I have read, so that my feedback is permanently saved and helps future readers.
+- **As a Member**, I want to read reviews left by others on a book's detail page, so that I can decide if it's worth reading.
 
 ### 2.7 Payments
-*   **As a Member**, I want to pay my annual membership renewal fee (₹100 for off-campus) or overdue fines through the application, so that my account remains active for a full rolling year from my exact date of joining.
+
+- **As a Member**, I want to pay my annual membership renewal fee (₹100 for off-campus members) or outstanding fines through the application, so that my account remains active without visiting the library in person.
+- **As a Member**, I want to view my complete fine and payment history, so that I have a clear record of all past dues and settlements.
+
+### 2.8 Recommendations
+
+- **As a Member**, I want to see book recommendations on my dashboard based on the genres and authors I have previously read, so that I can discover new books that match my interests without searching manually.
 
 ---
 
-## 3. Campus Management (Tertiary Users)
+## 3. Campus Management (Secondary Users)
 
-### 3.1 Reporting
-*   **As Campus Management**, I want to view automated high-level reports on library usage (total active members, books issued per month, most active categories), so that I can measure the library's impact and justify the ongoing ₹10,000 budget allocation.
+### 3.1 Library Usage Reports
+
+- **As Campus Management**, I want to view automated high-level reports on library usage (total active members, books issued per month, most active categories), so that I can measure the library's impact and justify the ongoing ₹10,000 monthly budget allocation.
+- **As Campus Management**, I want to download library usage reports, so that I can keep records and share them with other stakeholders as needed.
+
+### 3.2 Budget Oversight
+
+- **As Campus Management**, I want to view the month-end itemized expense report (broken down by newspapers, magazines, and books with vendor details), so that I can verify the librarian's spending and approve the reimbursement amount.
