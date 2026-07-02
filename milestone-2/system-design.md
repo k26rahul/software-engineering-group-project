@@ -44,11 +44,11 @@ Our Library Management System follows a **three-tier architecture**:
 
 ```
 ┌─────────────────────────────────────┐
-│           FRONTEND (React)          │  ← What the user sees and interacts with
+│      FRONTEND (React, Zustand)      │  ← What the user sees and interacts with
 ├─────────────────────────────────────┤
 │          BACKEND (FastAPI)          │  ← Business logic, API endpoints, services
 ├─────────────────────────────────────┤
-│       DATABASE (SQLite/PostgreSQL)  │  ← Persistent data storage
+│     DATABASE (SQLite, SQLModel)     │  ← Persistent data storage
 └─────────────────────────────────────┘
 ```
 
@@ -723,8 +723,8 @@ The class diagram uses four types of connections:
 |---|---|---|---|
 | Solid line with filled diamond | **Composition** | "Owns and cannot exist without" | Book ◆── BookCopy (copies don't exist without a book) |
 | Solid line | **Association** | "References / links to" | Transaction ── User (a transaction references a member) |
-| Dashed line | **Dependency** | "Uses / calls" | CirculationService ╌╌▶ CatalogService |
-| Hollow triangle arrow | **Realization** | "Enum used as type" | User ── UserRole |
+| Dashed line | **Dependency** | "Uses / calls" | CirculationService ╌╌ CatalogService |
+| Hollow triangle arrow | **Realization** | "Enum used as type" | User ──> UserRole |
 
 ### 8.1 Model-to-Model Relationships (Associations and Compositions)
 
