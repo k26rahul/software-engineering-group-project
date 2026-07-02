@@ -17,8 +17,8 @@ The project mandates a cross-functional team structure (5 members), with specifi
 *(Note: Members are encouraged to experience multiple roles throughout the project lifecycle.)*
 
 ### 1.2 Technology Stack
-* **Frontend:** Vue.js (or equivalent modern framework)
-* **Backend:** Flask RESTful API (or equivalent web framework)
+* **Frontend:** Vue.js / React.js (with Tailwind CSS or MUI)
+* **Backend:** Flask / FastAPI (or equivalent web framework)
 * **Database:** SQLite or PostgreSQL
 * **Authentication:** Session cookie-based authentication
 * **Version Control & CI/CD:** Git, GitHub/GitLab, Automated testing workflows
@@ -31,7 +31,7 @@ Regardless of the specific problem domain chosen, the final platform must strict
 
 ### 2.1 Functional Requirements
 1.  **Multiple User Roles:** The system must support at least two distinct user roles (e.g., Primary End-User and Secondary Administrator/Manager), each with specific permissions, access levels, and dashboards.
-2.  **Interrelated Workflows:** The system must facilitate complex, interconnected workflows. (e.g., A resource must be instantiated before it can be requested; a user must be authenticated and authorized to interact with a specific resource).
+2.  **Interrelated Workflows:** The system must facilitate complex, interconnected workflows. (e.g., A resource must be instantiated before it can be requested; a user must be authenticated and authorized to interact with a specific resource)
 3.  **Data-Driven Completeness:** The platform must move beyond static pages, providing real-time state changes, data persistence, and interactive data flow.
 
 ### 2.2 Technical Requirements
@@ -44,57 +44,108 @@ Regardless of the specific problem domain chosen, the final platform must strict
 
 ## 3. Project Roadmap & Deliverables
 
-The 8-week development cycle is broken down into 5 phases. Phases 1 and 2 are structured as planning **Milestones**, Phases 3 and 4 serve as active development **Sprints**, and Phase 5 represents the **Final Submission**.
+The 8-week development cycle is broken into 5 milestones. Milestones 1 and 2 cover planning and design. Milestones 3 and 4 are active development sprints. Milestone 5 is the final submission, which also includes the culmination report and issue tracking evidence compiled throughout the project.
 
-### 3.1 Milestone 1: Project Initiation & Requirements Gathering
-**Objective:** Define the problem space, understand the target audience through direct user interviews, and translate real-world pain points into actionable development tasks.
+### 3.1 Milestone 1: User Identification & User Stories
+**Objective:** Identify the application's users and write SMART (Specific, Measurable, Achievable, Relevant, Time-boxed) user stories.
 
-**Key Deliverables:**
-* **Problem Statement Selection:** Finalize the community-centric domain.
-* **User Research Evidence:** Proof of actual user interviews (audio/video clips or transcripts) detailing user workflows and bottlenecks. *Do not rely on developer assumptions.*
-* **User Personas:** Detailed profiles for Primary, Secondary, and Tertiary users.
-* **Requirements Documentation (SMART Stories):** A comprehensive list of user stories mapped to the identified pain points, strictly utilizing the SMART format: `As a [user persona], I want [action], so that [value/benefit].`
-* **Initial Backlog:** User stories populated into a Kanban/Scrum board (e.g., Jira, Trello).
+> **Evaluation Note:** Grade partly depends on how many user stories are committed to versus how many are delivered.
 
-### 3.2 Milestone 2: System Architecture & Design
-**Objective:** Establish the technical foundation, design the user experience, and structure the data models before any code is written.
-
-**Key Deliverables:**
-* **Database Schema:** Entity-Relationship (ER) diagrams detailing tables, relationships (1:1, 1:N, N:M), foreign keys, and constraints.
-* **API Specification:** Exhaustive Swagger/OpenAPI documentation mapping out all endpoints (Authentication, Core Resource CRUD, Interaction Workflows), including HTTP methods, paths, access levels, request payloads, and response structures.
-* **System Architecture Diagram:** Visual representation of the frontend, backend, and database interaction.
-* **UI/UX Mockups:** Wireframes or high-fidelity designs for the core views (Authentication, Primary User Dashboard, Manager Dashboard).
-
-### 3.3 Milestone 3 (Sprint 1): Core Backend & Infrastructure
-**Objective:** Set up the repository, establish CI/CD pipelines, and implement the foundational backend APIs and basic frontend skeleton.
+**Team Responsibilities:**
+| Role | Responsibility |
+|---|---|
+| Project Manager | Lead discussions and drive consensus on feature requirements and user identification |
+| Scrum Master | Document Minutes of Meeting (MoM) and track discussion progress |
+| Frontend Developer | Evaluate feasibility of frontend implementation |
+| Backend Developer | Evaluate feasibility of backend implementation |
 
 **Key Deliverables:**
-* **Environment Setup:** Configured repositories with branch protection rules.
-* **Database Initialization:** Scripts to create the database schema and seed initial mock data.
-* **Authentication Implementation:** Functional login, registration, and session management APIs.
-* **Core Resource APIs:** CRUD endpoints for the primary entities of the platform.
-* **Basic Frontend Integration:** Vue.js skeleton connecting to the Authentication and Core Resource APIs.
-* **Unit Tests:** Initial Pytest suite covering the delivered endpoints.
-* **Sprint Review:** Demonstration of foundational capabilities and updated Scrum board.
+1. **Identification of Users:** Detailed profiles for Primary, Secondary, and Tertiary users.
+2. **User Research:** Proof of actual user interviews and/or observation studies. Focus on identifying pain points, not suggesting features directly. Submit audio/video clips or transcripts as verification. *Do not rely on developer assumptions or written summaries alone.*
+3. **User Stories (SMART format):** A comprehensive list of user stories mapped to identified pain points, strictly using: `As a [user persona], I want [action], so that [value/benefit].`
 
-### 3.4 Milestone 4 (Sprint 2): Complex Workflows & Integration
-**Objective:** Develop the interrelated business logic, finalize frontend integration, and enforce strict code quality through reviews.
+---
+
+### 3.2 Milestone 2: Scheduling & Design
+**Objective:** Build a realistic timeline and sprint plan, complete the frontend UI, and produce backend design artifacts.
+
+**Team Responsibilities:**
+| Role | Responsibility |
+|---|---|
+| Project Manager (Scheduling Lead) | Plan project timeline and scrum cadences |
+| Scrum Master (Scheduling Co-Lead) | Support scheduling and tracking |
+| Backend Developer (Design Lead) | Develop class diagrams and component layout |
+| Frontend Developer | Complete most UI pages; ensure pages are linked |
+| Code Reviewer | Review structure and adherence to design practices before merging to main |
+
+**Process Notes:**
+- The Project Manager and Scrum Master must discuss the schedule with the whole team before finalizing it.
+- Every frontend developer works on their own branch and opens a merge request for the Code Reviewer.
+- Any issues noticed by a Code Reviewer or any team member must be tracked via GitHub Issues. (Issue tracking will be submitted as part of the final Milestone 5 report.)
+
+**Key Deliverables** *(consolidated into a single Milestone 2 PDF Report):*
+1. **Design of Components:** Visual breakdown of frontend and backend components.
+2. **Class Diagram:** UML class diagram reflecting the system's architecture.
+3. **Database Design Diagram:** Entity-Relationship (ER) diagram detailing tables, relationships (1:1, 1:N, N:M), foreign keys, and constraints.
+4. **Sprint Schedule:** Planned sprint timeline for the entire project.
+5. **Scrum Meetings Schedule & Minutes:** Meeting cadence plan and recorded MoM from held meetings.
+6. **Gantt Chart Screenshot:** Screenshot of the project Gantt chart.
+7. **Kanban Board Screenshot:** Screenshot of the Jira/Trello Kanban board.
+8. **Frontend Page Screenshots:** Screenshots of all frontend pages developed so far.
+9. **Frontend Code (ZIP):** A ZIP archive of the frontend codebase with a `README` containing installation and run instructions.
+
+---
+
+### 3.3 Milestone 3 (Sprint 1): API Development, Testing & User Feedback
+**Objective:** Design and develop REST API endpoints, write and run test cases, integrate backend and frontend, and collect initial user feedback.
+
+**Team Responsibilities:**
+| Role | Responsibility |
+|---|---|
+| Product Manager (Lead) | Oversee the sprint: API creation, testing, integration, and user feedback collection |
+| Backend Developer | Implement and document API endpoints |
+| Scrum Master / Tester | Write unit tests for APIs |
+| Frontend Developer | Integrate APIs into the frontend |
+| Code Reviewer | Ensure API design consistency, code quality, and integration completeness |
+
+> **Note:** Basic unit testing must be done by the developer immediately after writing code for each API endpoint.
 
 **Key Deliverables:**
-* **Interaction APIs:** Complex endpoints handling state changes, approvals, requests, and interdependent actions.
-* **Frontend Finalization:** Completion of all primary and secondary user dashboards, ensuring responsive design and proper error handling.
-* **Advanced Testing:** High test coverage metric, specifically targeting edge cases and complex workflows.
-* **Code Review Documentation:** Evidence of enforced pull requests, peer reviews, and resolved comments prior to merging.
-* **Sprint Review:** Full demonstration of the integrated application workflows.
+1. **Swagger/OpenAPI YAML:** Documentation of APIs in a Swagger-compatible YAML file.
+2. **Test Cases:** Proper test cases for each API, including input, expected output, and actual output. Showcase at least one case where actual ≠ expected and explain the fix.
+3. **Pytest Code:** Submit `pytest` test scripts for the implemented APIs.
+4. **User Feedback & Next Sprint Plan:** Collected primary user feedback and a documented plan to implement changes in Sprint 2.
+
+---
+
+### 3.4 Milestone 4 (Sprint 2): Feedback Implementation & API Finalization
+**Objective:** Implement changes from user feedback, finalize all API endpoints, update documentation, and ensure comprehensive test coverage.
+
+**Key Deliverables:**
+1. **Changes from User Feedback:** Documentation of changes made in response to Sprint 1 user feedback.
+2. **Updated Swagger/OpenAPI YAML:** Updated API documentation reflecting all changes. The YAML must include error handling, user story mappings, and a description for each API.
+3. **Backend Code:** Source code of all implemented APIs.
+4. **Updated Test Cases:** Proper test cases for the updated APIs (input, expected output, actual output).
+5. **Updated Pytest Code:** `pytest` scripts for the updated APIs.
+
+---
 
 ### 3.5 Milestone 5: Final Submission & Handoff
-**Objective:** Deploy the finalized application, polish the documentation, and prepare for evaluation.
+**Objective:** Submit the final working prototype with comprehensive documentation and a polished presentation.
+
+**Team Responsibilities:**
+| Role | Responsibility |
+|---|---|
+| Product Manager (Lead) | Ensure all final documentation and assets are compiled for submission |
 
 **Key Deliverables:**
-* **Final Application:** Fully functional, bug-free deployment of the software fulfilling all core user stories.
-* **Comprehensive Documentation:** A final report including updated ER diagrams, final API documentation, setup instructions, and user manuals.
-* **Final Presentation:** A structured demonstration showcasing the problem solved, the technical architecture, testing methodologies, and adherence to Agile practices.
-* **Code Repository Handoff:** Clean repository with an extensive `README.md`, organized file structure, and clear commit history.
+1. **Video Presentation:** A recorded demo of the working project (any team member can record).
+2. **Slide Presentation:** A structured presentation covering a brief project overview, with a primary focus on user stories and user identification.
+3. **Complete Project Code (ZIP):** Full source code of the working project in ZIP format.
+4. **README File:** A README with complete instructions to set up and run the project.
+5. **Final Report:** A complete compilation of all milestones (1 through 5), including:
+   - Tools and technologies used.
+   - Issue tracking evidence from throughout the project.
 
 ---
 
@@ -106,3 +157,4 @@ To ensure success and compliance with grading rubrics, the team must adhere stri
 2.  **Pull Requests:** All PRs must include a description of the changes, the related Jira/Trello ticket number, and screenshots if frontend changes were made.
 3.  **Mandatory Code Reviews:** The designated Code Reviewer must approve all PRs. Code cannot be merged if tests fail or if architectural standards are compromised.
 4.  **No Isolation:** Decisions regarding database schema changes or API modifications must be communicated to the entire team during daily standups or via team chat.
+5.  **Issue Tracking:** All bugs and issues noticed by any team member must be logged as GitHub Issues, with status updates and owners assigned. This evidence will be submitted as part of Milestone 6.
