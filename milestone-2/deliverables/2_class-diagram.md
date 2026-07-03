@@ -4,6 +4,10 @@
 
 This document explains what the class diagram for the Library Management System will contain and how to read it. The actual Mermaid `classDiagram` code will be generated from this specification along with the detailed definitions in [1.3_Backend Components](1.3_backend-components.md) and [1.4_Database Components](1.4_database-components.md).
 
+**View the Class Diagram here:** [https://mermaid.ai/d/0330fdc7-820e-46a2-bcba-a94d30858bf9](https://mermaid.ai/d/0330fdc7-820e-46a2-bcba-a94d30858bf9)
+
+**View the Mermaid source file:** [2_class-diagram.mermaid](2_class-diagram.mermaid)
+
 ### UML Diagram Types (Reference)
 
 | UML Diagram Type | What it shows | When to use |

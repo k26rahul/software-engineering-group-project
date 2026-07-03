@@ -4,6 +4,10 @@
 
 This document explains what the Entity-Relationship diagram for the Library Management System will contain and how to read it. The actual Mermaid `erDiagram` code will be generated from this specification along with the detailed definitions in [1.4_Database Components](1.4_database-components.md).
 
+**View the Database Design Diagram here:** [https://mermaid.ai/d/51df6326-1c91-4859-9266-8cefe5af24a8](https://mermaid.ai/d/51df6326-1c91-4859-9266-8cefe5af24a8)
+
+**View the Mermaid source file:** [3_database-design-diagram.mermaid](3_database-design-diagram.mermaid)
+
 ---
 
 ## What the ER Diagram Shows

@@ -30,6 +30,8 @@ Enumerations, data model classes with attributes, types, constraints, and method
 
 Describes what the UML class diagram contains - data models, services, enumerations, and the four types of relationships used. The actual Mermaid diagram code will be generated from this specification.
 
+**View the Class Diagram here:** [https://mermaid.ai/d/0330fdc7-820e-46a2-bcba-a94d30858bf9](https://mermaid.ai/d/0330fdc7-820e-46a2-bcba-a94d30858bf9)
+
 ---
 
 ## ✅ Database Design Diagram
@@ -37,3 +39,5 @@ Describes what the UML class diagram contains - data models, services, enumerati
 ### 3_Database Design Diagram.md
 
 Describes what the ER diagram contains - database entities (mapped from data models), their attributes, and relationships with cardinality. The actual Mermaid diagram code will be generated from this specification.
+
+**View the Database Design Diagram here:** [https://mermaid.ai/d/51df6326-1c91-4859-9266-8cefe5af24a8](https://mermaid.ai/d/51df6326-1c91-4859-9266-8cefe5af24a8)
