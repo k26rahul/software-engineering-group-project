@@ -37,7 +37,7 @@ For example:
 
 ### Enumerations in the ER Diagram
 
-Enumerations are not separate entities in the ER diagram. Instead, they appear as column types within their parent entity. For example, the `role` column in the `User` table has type `UserRole` rather than a raw string - indicating it is constrained to specific values (`LIBRARIAN`, `MEMBER`, `CAMPUS_MANAGEMENT`).
+Enumerations can be represented either as separate entities or simply as column types within their parent entity. In the generated diagram, they are explicitly shown as separate entities for clarity. For example, the `UserRole` enumeration acts as the type for the `role` column in the `User` table, indicating it is constrained to specific values (`LIBRARIAN`, `MEMBER`, `CAMPUS_MANAGEMENT`). Both representations are perfectly valid.
 
 ---
 
