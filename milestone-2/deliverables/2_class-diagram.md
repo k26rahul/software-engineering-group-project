@@ -4,6 +4,15 @@
 
 This document explains what the class diagram for the Library Management System will contain and how to read it. The actual Mermaid `classDiagram` code will be generated from this specification along with the detailed definitions in [1.2_Backend Components](1.2_backend-components.md) and [1.3_Database Components](1.3_database-components.md).
 
+### UML Diagram Types (Reference)
+
+| UML Diagram Type | What it shows | When to use |
+|---|---|---|
+| **Class Diagram** | Classes with attributes, methods, relationships | Data models, ORM entities, backend services |
+| **Component Diagram** | High-level software components and their dependencies | System architecture overview |
+| **Sequence Diagram** | Step-by-step message flow between actors/components | Specific workflows like "issue a book" |
+| **ER Diagram** | Database tables, columns, relationships | Database design |
+
 ---
 
 ## What the Class Diagram Shows
