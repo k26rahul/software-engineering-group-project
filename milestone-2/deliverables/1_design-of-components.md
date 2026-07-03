@@ -1,0 +1,135 @@
+# Design of Components
+
+## What Is This Document?
+
+This document introduces the component-level design for the Library Management System. It explains the design approach, defines key concepts, describes the system architecture, and ties everything together with inter-component workflows and a traceability matrix.
+
+The actual component details are in three sub-documents:
+
+| Document | What it covers |
+|---|---|
+| [1.1_Frontend Components](1.1_frontend-components.md) | Pages and shared UI components |
+| [1.2_Backend Components](1.2_backend-components.md) | API routers, services, cross-cutting concerns, and dependency mappings |
+| [1.3_Database Components](1.3_database-components.md) | Enumerations, data models, and model-to-model relationships |
+
+---
+
+## Modules vs. Components
+
+The [requirements-analysis.md](../milestone-1/deliverables/5_requirements-analysis.md) identifies 9 **functional modules** - these are groups of related *business capabilities* (e.g., "Circulation Module" handles issue/return/fines). They describe *what* the system does.
+
+**Components** describe *how* the system is built. A component is a self-contained piece of software with a defined interface. The Design of Components breaks down the system into the actual software pieces that will be coded, deployed, and connected.
+
+| Concept | What it answers | Example |
+|---|---|---|
+| Module | "What business capability?" | Circulation Module |
+| Component | "What software piece implements it?" | `CirculationService` (backend), `IssuePage` (frontend), `Transaction` model (database) |
+
+The 9 modules decompose into many components across three layers: **Frontend**, **Backend**, and **Database**.
+
+### UML Diagram Types (Reference)
+
+| UML Diagram Type | What it shows | When to use |
+|---|---|---|
+| **Class Diagram** | Classes with attributes, methods, relationships | Data models, ORM entities, backend services |
+| **Component Diagram** | High-level software components and their dependencies | System architecture overview |
+| **Sequence Diagram** | Step-by-step message flow between actors/components | Specific workflows like "issue a book" |
+| **ER Diagram** | Database tables, columns, relationships | Database design |
+
+---
+
+## The System Architecture
+
+Our Library Management System follows a **three-tier architecture**:
+
+```
+┌─────────────────────────────────────┐
+│      FRONTEND (React, Zustand)      │  ← What the user sees and interacts with
+├─────────────────────────────────────┤
+│          BACKEND (FastAPI)          │  ← Business logic, API endpoints, services
+├─────────────────────────────────────┤
+│     DATABASE (SQLite, SQLModel)     │  ← Persistent data storage
+└─────────────────────────────────────┘
+```
+
+Each tier is decomposed into components in the sub-documents linked above.
+
+### Key Technical Decisions
+
+**Authentication**: The system uses JWT-based authentication. Tokens are transported via HTTP `Authorization` headers (not cookies). A server-side in-memory blocklist is maintained for token invalidation on logout. No database-backed session model is needed.
+
+**Magazine Handling**: Magazines are treated as books for lending purposes. A `Magazine` model stores magazine-specific metadata (issue number, issue date) and references a `Book` entry. Physical copies of a magazine issue are tracked through `BookCopy`, allowing the same circulation workflow (issue, return, fine) to apply to both books and magazines.
+
+**Report Generation**: `BudgetService` generates raw expense data. `ReportService` calls `BudgetService` internally and formats the data for viewing and downloadable export. This avoids duplication between the two services.
+
+---
+
+## How Components Interact (Inter-Component Flow)
+
+Here is how the components connect across the three tiers for key workflows:
+
+### Workflow: Member Issues a Book
+
+```
+Member clicks "Issue" on BorrowingDashboardPage
+        │
+        ▼
+Frontend: IssuePage ──HTTP POST──▶ Backend: circulation_router (/transactions/issue)
+                                         │
+                                         ▼
+                                   CirculationService
+                                         │
+                              ┌──────────┼──────────┐
+                              ▼          ▼          ▼
+                        CatalogService  MemberService  ReservationService
+                        (check avail)   (check fines)  (check reservation)
+                              │          │          │
+                              ▼          ▼          ▼
+                         BookCopy       User/Fine    Reservation
+                         (model)        (models)     (model)
+                              │
+                              ▼
+                        Transaction (model) ← new record created
+```
+
+### Workflow: Book is Returned with Active Reservation
+
+```
+Librarian processes return on ReturnPage
+        │
+        ▼
+Frontend: ReturnPage ──HTTP POST──▶ Backend: circulation_router (/transactions/return)
+                                         │
+                                         ▼
+                                   CirculationService
+                                     │         │
+                                     ▼         ▼
+                              FineCalculation  ReservationService
+                              (if damaged/lost) (check waitlist)
+                                     │         │
+                                     ▼         ▼
+                                   Fine      NotificationService
+                                 (model)       │
+                                               ▼
+                                         EmailClient
+                                         (notify queued member)
+```
+
+---
+
+## Module-to-Component Traceability Matrix
+
+This matrix ensures every feature from the requirements analysis is covered by at least one component.
+
+| Module | Frontend Components | Backend Components | Data Models |
+|---|---|---|---|
+| 1. Authentication & Identity | `LoginPage`, `RegistrationPage` | `auth_router`, `AuthService`, `AuthMiddleware`, `RBACMiddleware` | `User` |
+| 2. Membership Management | `MemberApprovalPage`, `MemberDirectoryPage`, `MemberProfilePage`, `PaymentsPage` | `members_router`, `payments_router`, `MemberService`, `PaymentService` | `User`, `Fine`, `Payment` |
+| 3. Catalog & Inventory | `CatalogManagementPage`, `CatalogSearchPage`, `BookDetailPage` | `catalog_router`, `CatalogService`, `ExternalISBNClient` | `Book`, `BookCopy`, `Magazine` |
+| 4. Circulation | `IssuePage`, `ReturnPage`, `OverdueListPage`, `BorrowingDashboardPage` | `circulation_router`, `CirculationService`, `NotificationService` | `Transaction`, `Fine` |
+| 5. Reservation & Request | `ReservationAlertsPage`, `MyReservationsPage`, `BookRequestPage`, `PurchaseRequestsPage` | `reservations_router`, `requests_router`, `ReservationService`, `PurchaseRequestService` | `Reservation`, `PurchaseRequest`, `PurchaseRequestVote` |
+| 6. Community & Curation | `ReviewModerationPage`, `MyReviewsPage`, `ReadingListManagementPage` | `reviews_router`, `reading_lists_router`, `ReviewService`, `ReadingListService` | `Review`, `ReadingList`, `ReadingListBook` |
+| 7. Recommendations | `MemberDashboard` (recommendations section) | `recommendations_router`, `RecommendationService` | `Transaction` (reads borrowing history), `Book` |
+| 8. Budget & Subscription | `SubscriptionManagementPage`, `BookPurchaseEntryPage`, `BudgetTrackerPage` | `subscriptions_router`, `budget_router`, `SubscriptionService`, `BudgetService` | `Subscription`, `BookPurchaseEntry` |
+| 9. Reporting | `UsageReportsPage`, `ExpenseReportPage` | `reports_router`, `ReportService` | Aggregates from `Transaction`, `User`, `BookPurchaseEntry`, `Subscription` |
+| Cross-module | `NotificationsPage`, `NotificationBanner` | `notifications_router`, `NotificationService`, `EmailClient` | `Notification` |
