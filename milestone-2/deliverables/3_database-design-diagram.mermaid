@@ -1,0 +1,324 @@
+erDiagram
+
+%% ============================================================
+%% ENUMERATIONS
+%% ============================================================
+
+    UserRole {
+        string LIBRARIAN
+        string MEMBER
+        string CAMPUS_MANAGEMENT
+    }
+
+    MembershipType {
+        string ON_CAMPUS
+        string OFF_CAMPUS
+    }
+
+    MemberApprovalStatus {
+        string PENDING
+        string APPROVED
+        string REJECTED
+    }
+
+    CopyStatus {
+        string AVAILABLE
+        string ISSUED
+        string LOST
+        string DAMAGED
+    }
+
+    ReturnCondition {
+        string GOOD
+        string DAMAGED
+        string LOST
+    }
+
+    ReservationStatus {
+        string WAITING
+        string NOTIFIED
+        string FULFILLED
+        string CANCELLED
+    }
+
+    RequestStatus {
+        string PENDING
+        string PURCHASED
+    }
+
+    ReviewStatus {
+        string PENDING
+        string APPROVED
+        string REJECTED
+    }
+
+    SubscriptionFrequency {
+        string DAILY
+        string WEEKLY
+        string BIWEEKLY
+        string MONTHLY
+    }
+
+    SubscriptionType {
+        string NEWSPAPER
+        string MAGAZINE
+    }
+
+    PaymentType {
+        string MEMBERSHIP_FEE
+        string FINE_PAYMENT
+    }
+
+    NotificationType {
+        string OVERDUE_REMINDER
+        string RESERVATION_AVAILABLE
+        string REGISTRATION_APPROVED
+        string REGISTRATION_REJECTED
+        string BILLING_RENEWAL
+    }
+
+%% ============================================================
+%% USER
+%% ============================================================
+
+    User {
+        int id PK
+        string email UK
+        string password_hash
+        string name
+        string phone
+        UserRole role
+        MembershipType membership_type
+        MemberApprovalStatus approval_status
+        bool is_active
+        date membership_start_date
+        int max_issue_limit
+        datetime created_at
+        datetime updated_at
+    }
+
+%% ============================================================
+%% BOOK AND CATALOG
+%% ============================================================
+
+    Book {
+        int id PK
+        string title
+        string author
+        string isbn UK
+        string category
+        float price
+        string description
+        datetime created_at
+        datetime updated_at
+    }
+
+    BookCopy {
+        int id PK
+        int book_id FK
+        int copy_number
+        CopyStatus status
+    }
+
+    Magazine {
+        int id PK
+        int book_id FK
+        int subscription_id FK
+        string issue_number
+        date issue_date
+    }
+
+%% ============================================================
+%% CIRCULATION
+%% ============================================================
+
+    Transaction {
+        int id PK
+        int member_id FK
+        int book_copy_id FK
+        date issue_date
+        date due_date
+        date return_date
+        ReturnCondition return_condition
+    }
+
+    Fine {
+        int id PK
+        int transaction_id FK
+        int member_id FK
+        float amount
+        ReturnCondition reason
+        bool is_paid
+        datetime created_at
+    }
+
+%% ============================================================
+%% RESERVATION AND REQUEST
+%% ============================================================
+
+    Reservation {
+        int id PK
+        int member_id FK
+        int book_id FK
+        int queue_position
+        ReservationStatus status
+        datetime created_at
+        datetime notified_at
+        datetime fulfilled_at
+    }
+
+    PurchaseRequest {
+        int id PK
+        int member_id FK
+        string title
+        string author
+        string description
+        int upvote_count
+        RequestStatus status
+        datetime created_at
+        datetime purchased_at
+    }
+
+    PurchaseRequestVote {
+        int id PK
+        int request_id FK
+        int member_id FK
+        datetime created_at
+    }
+
+%% ============================================================
+%% COMMUNITY AND CURATION
+%% ============================================================
+
+    Review {
+        int id PK
+        int member_id FK
+        int book_id FK
+        int rating
+        string text
+        ReviewStatus status
+        datetime created_at
+        datetime updated_at
+    }
+
+    ReadingList {
+        int id PK
+        string title
+        string description
+        datetime created_at
+    }
+
+    ReadingListBook {
+        int id PK
+        int reading_list_id FK
+        int book_id FK
+    }
+
+%% ============================================================
+%% BUDGET AND SUBSCRIPTION
+%% ============================================================
+
+    Subscription {
+        int id PK
+        string title
+        SubscriptionType type
+        int copies
+        float price_per_copy
+        SubscriptionFrequency frequency
+        bool is_active
+        datetime created_at
+    }
+
+    BookPurchaseEntry {
+        int id PK
+        string title
+        int copies
+        float price_per_copy
+        string vendor
+        string category
+        date purchase_date
+    }
+
+%% ============================================================
+%% PAYMENTS
+%% ============================================================
+
+    Payment {
+        int id PK
+        int member_id FK
+        float amount
+        PaymentType type
+        int fine_id FK
+        datetime created_at
+    }
+
+%% ============================================================
+%% NOTIFICATIONS
+%% ============================================================
+
+    Notification {
+        int id PK
+        int recipient_id FK
+        NotificationType type
+        string message
+        bool is_read
+        datetime created_at
+    }
+
+%% ============================================================
+%% ENUM RELATIONSHIPS (entity uses enum)
+%% ============================================================
+
+    User }o--|| UserRole : "enum role"
+    User }o--|| MembershipType : "enum membership_type"
+    User }o--|| MemberApprovalStatus : "enum approval_status"
+
+    BookCopy }o--|| CopyStatus : "enum status"
+
+    Transaction }o--|| ReturnCondition : "enum return_condition"
+
+    Fine }o--|| ReturnCondition : "enum reason"
+
+    Reservation }o--|| ReservationStatus : "enum status"
+
+    PurchaseRequest }o--|| RequestStatus : "enum status"
+
+    Review }o--|| ReviewStatus : "enum status"
+
+    Subscription }o--|| SubscriptionType : "enum type"
+    Subscription }o--|| SubscriptionFrequency : "enum frequency"
+
+    Payment }o--|| PaymentType : "enum type"
+
+    Notification }o--|| NotificationType : "enum type"
+
+%% ============================================================
+%% DATA RELATIONSHIPS
+%% ============================================================
+
+    User ||--o{ Transaction : "issues/returns"
+    User ||--o{ Fine : "accrues"
+    User ||--o{ Reservation : "places"
+    User ||--o{ Review : "writes"
+    User ||--o{ PurchaseRequest : "submits"
+    User ||--o{ PurchaseRequestVote : "casts"
+    User ||--o{ Payment : "makes"
+    User ||--o{ Notification : "receives"
+
+    Book ||--o{ BookCopy : "has copies"
+    Book ||--o{ Review : "has reviews"
+    Book ||--o| Magazine : "has magazine metadata"
+    Book ||--o{ Reservation : "waitlisted for"
+    Book ||--o{ ReadingListBook : "appears in lists"
+
+    BookCopy ||--o{ Transaction : "issue history"
+
+    Transaction ||--o| Fine : "generates fine"
+
+    PurchaseRequest ||--o{ PurchaseRequestVote : "receives upvotes"
+
+    ReadingList ||--o{ ReadingListBook : "contains"
+
+    Fine ||--o| Payment : "settled by"
+
+    Subscription ||--o{ Magazine : "produces issues"
