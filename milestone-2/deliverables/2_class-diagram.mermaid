@@ -1,0 +1,515 @@
+classDiagram
+
+%% ============================================================
+%% ENUMERATIONS
+%% ============================================================
+
+class UserRole {
+    <<enumeration>>
+    LIBRARIAN
+    MEMBER
+    CAMPUS_MANAGEMENT
+}
+
+class MembershipType {
+    <<enumeration>>
+    ON_CAMPUS
+    OFF_CAMPUS
+}
+
+class MemberApprovalStatus {
+    <<enumeration>>
+    PENDING
+    APPROVED
+    REJECTED
+}
+
+class CopyStatus {
+    <<enumeration>>
+    AVAILABLE
+    ISSUED
+    LOST
+    DAMAGED
+}
+
+class ReturnCondition {
+    <<enumeration>>
+    GOOD
+    DAMAGED
+    LOST
+}
+
+class ReservationStatus {
+    <<enumeration>>
+    WAITING
+    NOTIFIED
+    FULFILLED
+    CANCELLED
+}
+
+class RequestStatus {
+    <<enumeration>>
+    PENDING
+    PURCHASED
+}
+
+class ReviewStatus {
+    <<enumeration>>
+    PENDING
+    APPROVED
+    REJECTED
+}
+
+class SubscriptionFrequency {
+    <<enumeration>>
+    DAILY
+    WEEKLY
+    BIWEEKLY
+    MONTHLY
+}
+
+class SubscriptionType {
+    <<enumeration>>
+    NEWSPAPER
+    MAGAZINE
+}
+
+class PaymentType {
+    <<enumeration>>
+    MEMBERSHIP_FEE
+    FINE_PAYMENT
+}
+
+class NotificationType {
+    <<enumeration>>
+    OVERDUE_REMINDER
+    RESERVATION_AVAILABLE
+    REGISTRATION_APPROVED
+    REGISTRATION_REJECTED
+    BILLING_RENEWAL
+}
+
+%% ============================================================
+%% DATA MODEL CLASSES
+%% ============================================================
+
+class User {
+    +int id
+    +str email
+    +str password_hash
+    +str name
+    +str phone
+    +UserRole role
+    +MembershipType membership_type
+    +MemberApprovalStatus approval_status
+    +bool is_active
+    +date membership_start_date
+    +int max_issue_limit
+    +datetime created_at
+    +datetime updated_at
+    +is_membership_due() bool
+}
+
+class Book {
+    +int id
+    +str title
+    +str author
+    +str isbn
+    +str category
+    +float price
+    +str description
+    +datetime created_at
+    +datetime updated_at
+    +available_copies() int
+    +average_rating() float
+}
+
+class BookCopy {
+    +int id
+    +int book_id
+    +int copy_number
+    +CopyStatus status
+}
+
+class Magazine {
+    +int id
+    +int book_id
+    +int subscription_id
+    +str issue_number
+    +date issue_date
+}
+
+class Transaction {
+    +int id
+    +int member_id
+    +int book_copy_id
+    +date issue_date
+    +date due_date
+    +date return_date
+    +ReturnCondition return_condition
+    +is_overdue() bool
+    +days_overdue() int
+}
+
+class Fine {
+    +int id
+    +int transaction_id
+    +int member_id
+    +float amount
+    +ReturnCondition reason
+    +bool is_paid
+    +datetime created_at
+}
+
+class Reservation {
+    +int id
+    +int member_id
+    +int book_id
+    +int queue_position
+    +ReservationStatus status
+    +datetime created_at
+    +datetime notified_at
+    +datetime fulfilled_at
+}
+
+class PurchaseRequest {
+    +int id
+    +int member_id
+    +str title
+    +str author
+    +str description
+    +int upvote_count
+    +RequestStatus status
+    +datetime created_at
+    +datetime purchased_at
+}
+
+class PurchaseRequestVote {
+    +int id
+    +int request_id
+    +int member_id
+    +datetime created_at
+}
+
+class Review {
+    +int id
+    +int member_id
+    +int book_id
+    +int rating
+    +str text
+    +ReviewStatus status
+    +datetime created_at
+    +datetime updated_at
+}
+
+class ReadingList {
+    +int id
+    +str title
+    +str description
+    +datetime created_at
+}
+
+class ReadingListBook {
+    +int id
+    +int reading_list_id
+    +int book_id
+}
+
+class Subscription {
+    +int id
+    +str title
+    +SubscriptionType type
+    +int copies
+    +float price_per_copy
+    +SubscriptionFrequency frequency
+    +bool is_active
+    +datetime created_at
+    +monthly_cost() float
+}
+
+class BookPurchaseEntry {
+    +int id
+    +str title
+    +int copies
+    +float price_per_copy
+    +str vendor
+    +str category
+    +date purchase_date
+    +total_cost() float
+}
+
+class Payment {
+    +int id
+    +int member_id
+    +float amount
+    +PaymentType type
+    +int fine_id
+    +datetime created_at
+}
+
+class Notification {
+    +int id
+    +int recipient_id
+    +NotificationType type
+    +str message
+    +bool is_read
+    +datetime created_at
+}
+
+%% ============================================================
+%% SERVICE CLASSES (BUSINESS LOGIC LAYER)
+%% ============================================================
+
+class AuthService {
+    +login(email str, password str) dict
+    +register(name str, email str, password str, membership_type MembershipType) User
+    +logout(token str) None
+    +get_current_user(token str) User
+    +create_token(user User) str
+    +hash_password(password str) str
+    +verify_password(password str, hash str) bool
+    +change_password(user_id int, old_password str, new_password str) None
+}
+
+class MemberService {
+    +get_all_members(filters dict) List~User~
+    +get_member(member_id int) User
+    +approve_member(member_id int) User
+    +reject_member(member_id int) User
+    +get_pending_approvals() List~User~
+    +get_borrowing_history(member_id int) List~Transaction~
+    +check_billing_cycle(member_id int) bool
+    +update_member_profile(member_id int, data dict) User
+    +deactivate_member(member_id int) User
+}
+
+class CatalogService {
+    +get_all_books(filters dict) List~Book~
+    +add_book(book_data dict) Book
+    +update_book(book_id int, data dict) Book
+    +get_book(book_id int) Book
+    +search_books(query str, filters dict) List~Book~
+    +lookup_isbn(isbn str) dict
+    +get_availability(book_id int) int
+    +update_copy_status(copy_id int, status CopyStatus) BookCopy
+    +add_copies(book_id int, count int) List~BookCopy~
+}
+
+class CirculationService {
+    +issue_book(member_id int, book_copy_id int, deadline_days int) Transaction
+    +return_book(transaction_id int, condition ReturnCondition) Transaction
+    +get_overdue_items() List~Transaction~
+    +get_member_current_issues(member_id int) List~Transaction~
+    +calculate_fine(book_price float, condition ReturnCondition) float
+    +check_issue_eligibility(member_id int) dict
+}
+
+class ReservationService {
+    +place_reservation(member_id int, book_id int) Reservation
+    +cancel_reservation(reservation_id int) None
+    +check_reservations_on_return(book_id int) Reservation
+    +get_member_reservations(member_id int) List~Reservation~
+    +get_reservation_alerts() List~Reservation~
+    +get_queue_position(reservation_id int) int
+}
+
+class PurchaseRequestService {
+    +submit_request(member_id int, title str, author str, description str) PurchaseRequest
+    +upvote_request(request_id int, member_id int) PurchaseRequest
+    +get_ranked_requests() List~PurchaseRequest~
+    +mark_as_purchased(request_id int) PurchaseRequest
+}
+
+class ReviewService {
+    +submit_review(member_id int, book_id int, rating int, text str) Review
+    +get_book_reviews(book_id int) List~Review~
+    +moderate_review(review_id int, approved bool) Review
+    +get_pending_reviews() List~Review~
+}
+
+class ReadingListService {
+    +create_list(title str, description str) ReadingList
+    +update_list(list_id int, data dict) ReadingList
+    +delete_list(list_id int) None
+    +add_book_to_list(list_id int, book_id int) ReadingListBook
+    +remove_book_from_list(list_id int, book_id int) None
+    +get_all_lists() List~ReadingList~
+}
+
+class SubscriptionService {
+    +add_subscription(data dict) Subscription
+    +update_subscription(sub_id int, data dict) Subscription
+    +cancel_subscription(sub_id int) None
+    +get_all_subscriptions() List~Subscription~
+    +calculate_monthly_total() float
+}
+
+class BudgetService {
+    +add_purchase_entry(title str, copies int, price float, vendor str) BookPurchaseEntry
+    +get_monthly_summary(month int, year int) dict
+    +get_budget_utilization(month int, year int) float
+    +generate_expense_report(month int, year int) dict
+}
+
+class RecommendationService {
+    +get_recommendations(member_id int) List~Book~
+    +analyze_reading_preferences(member_id int) dict
+}
+
+class ReportService {
+    +get_usage_report() dict
+    +get_expense_report(month int, year int) dict
+    +download_report(report_type str, format str) bytes
+}
+
+class NotificationService {
+    +send_overdue_reminders() None
+    +notify_reservation_available(member_id int, book_id int) Notification
+    +notify_registration_status(member_id int, approved bool) Notification
+    +notify_billing_renewal(member_id int) Notification
+    +send_email(recipient str, subject str, body str) None
+    +get_member_notifications(member_id int) List~Notification~
+    +mark_as_read(notification_id int) Notification
+}
+
+class PaymentService {
+    +process_payment(member_id int, amount float, type PaymentType, fine_id int) Payment
+    +get_payment_history(member_id int) List~Payment~
+    +check_outstanding_dues(member_id int) float
+    +process_membership_renewal(member_id int) Payment
+}
+
+%% ============================================================
+%% CROSS-CUTTING COMPONENTS
+%% ============================================================
+
+class AuthMiddleware {
+    +validate_token(token str) bool
+    +blocklist_token(token str) None
+}
+
+class RBACMiddleware {
+    +check_permission(user User, endpoint str) bool
+}
+
+class ExternalISBNClient {
+    +fetch_book_metadata(isbn str) dict
+}
+
+class EmailClient {
+    +send(recipient str, subject str, body str) None
+}
+
+class DatabaseConnection {
+    +get_session() Session
+}
+
+%% ============================================================
+%% MODEL-TO-MODEL RELATIONSHIPS (Composition & Association)
+%% ============================================================
+
+User "1" *-- "*" Transaction : issue/return history
+User "1" *-- "*" Fine : accumulated fines
+User "1" *-- "*" Reservation : active reservations
+User "1" *-- "*" Review : submitted reviews
+User "1" *-- "*" PurchaseRequest : submitted requests
+User "1" *-- "*" PurchaseRequestVote : submitted upvotes
+User "1" *-- "*" Payment : payment records
+User "1" *-- "*" Notification : received notifications
+
+Book "1" *-- "*" BookCopy : physical copies
+Book "1" *-- "*" Review : reviews for book
+Book "1" --> "0..1" Magazine : magazine metadata
+Book "1" --> "*" Reservation : waitlist entries
+Book "1" --> "*" ReadingListBook : appears in lists
+
+BookCopy "1" --> "*" Transaction : issue history of copy
+
+Transaction "1" --> "0..1" Fine : generates fine
+
+PurchaseRequest "1" *-- "*" PurchaseRequestVote : upvotes
+
+ReadingList "1" *-- "*" ReadingListBook : books in list
+
+Fine "1" --> "0..1" Payment : settled by
+
+Subscription "1" --> "*" Magazine : magazine issues
+
+%% ============================================================
+%% ENUM REALIZATIONS (Model uses Enum as attribute type)
+%% ============================================================
+
+User ..|> UserRole : role
+User ..|> MembershipType : membership_type
+User ..|> MemberApprovalStatus : approval_status
+BookCopy ..|> CopyStatus : status
+Transaction ..|> ReturnCondition : return_condition
+Fine ..|> ReturnCondition : reason
+Reservation ..|> ReservationStatus : status
+PurchaseRequest ..|> RequestStatus : status
+Review ..|> ReviewStatus : status
+Subscription ..|> SubscriptionType : type
+Subscription ..|> SubscriptionFrequency : frequency
+Payment ..|> PaymentType : type
+Notification ..|> NotificationType : type
+
+%% ============================================================
+%% SERVICE-TO-SERVICE DEPENDENCIES
+%% ============================================================
+
+CirculationService ..> CatalogService : checks availability
+CirculationService ..> MemberService : checks fines/eligibility
+CirculationService ..> ReservationService : checks active reservation
+CirculationService ..> NotificationService : triggers alerts
+ReservationService ..> NotificationService : notifies queued member
+BudgetService ..> SubscriptionService : monthly subscription cost
+ReportService ..> BudgetService : expense data source
+CatalogService ..> ExternalISBNClient : ISBN metadata lookup
+NotificationService ..> EmailClient : sends email
+PaymentService ..> MemberService : updates membership status
+AuthMiddleware ..> AuthService : validates current user
+RBACMiddleware ..> AuthMiddleware : uses validated identity
+
+%% ============================================================
+%% SERVICE-TO-MODEL DEPENDENCIES
+%% ============================================================
+
+AuthService ..> User : reads/writes
+
+MemberService ..> User : reads/writes
+
+CatalogService ..> Book : reads/writes
+CatalogService ..> BookCopy : reads/writes
+CatalogService ..> Magazine : reads/writes
+
+CirculationService ..> Transaction : reads/writes
+CirculationService ..> Fine : creates
+CirculationService ..> BookCopy : updates status
+
+ReservationService ..> Reservation : reads/writes
+
+PurchaseRequestService ..> PurchaseRequest : reads/writes
+PurchaseRequestService ..> PurchaseRequestVote : creates
+
+ReviewService ..> Review : reads/writes
+
+ReadingListService ..> ReadingList : reads/writes
+ReadingListService ..> ReadingListBook : reads/writes
+
+SubscriptionService ..> Subscription : reads/writes
+
+BudgetService ..> BookPurchaseEntry : creates
+BudgetService ..> Subscription : reads
+
+RecommendationService ..> Transaction : reads borrowing history
+RecommendationService ..> Book : reads catalog
+
+ReportService ..> Transaction : aggregates
+ReportService ..> User : aggregates
+ReportService ..> BookPurchaseEntry : aggregates
+ReportService ..> Subscription : aggregates
+
+NotificationService ..> Notification : creates/reads
+
+PaymentService ..> Payment : creates
+PaymentService ..> Fine : settles
