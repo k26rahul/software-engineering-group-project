@@ -2,7 +2,7 @@
 
 ## What Is This Document?
 
-This document explains what the class diagram for the Library Management System will contain and how to read it. The actual Mermaid `classDiagram` code will be generated from this specification along with the detailed definitions in [1.2_Backend Components](1.2_backend-components.md) and [1.3_Database Components](1.3_database-components.md).
+This document explains what the class diagram for the Library Management System will contain and how to read it. The actual Mermaid `classDiagram` code will be generated from this specification along with the detailed definitions in [1.3_Backend Components](1.3_backend-components.md) and [1.4_Database Components](1.4_database-components.md).
 
 ### UML Diagram Types (Reference)
 
@@ -21,19 +21,19 @@ A UML class diagram visualizes the system's classes, their internal structure (a
 
 ### 1. Data Model Classes
 
-These are the ORM entities that map to database tables. Each class shows its attributes (with types and constraints) and any computed property methods. Defined in full in [1.3_Database Components](1.3_database-components.md).
+These are the ORM entities that map to database tables. Each class shows its attributes (with types and constraints) and any computed property methods. Defined in full in [1.4_Database Components](1.4_database-components.md).
 
 Examples: `User`, `Book`, `BookCopy`, `Transaction`, `Fine`, `Reservation`, `Review`, `Payment`, `Notification`, `Magazine`.
 
 ### 2. Service Classes
 
-These encapsulate business logic. Each class shows its methods (with parameters and return types). Services contain no persistent state - they receive dependencies and operate on data model classes. Defined in full in [1.2_Backend Components](1.2_backend-components.md).
+These encapsulate business logic. Each class shows its methods (with parameters and return types). Services contain no persistent state - they receive dependencies and operate on data model classes. Defined in full in [1.3_Backend Components](1.3_backend-components.md).
 
 Examples: `AuthService`, `MemberService`, `CatalogService`, `CirculationService`, `ReservationService`, `PaymentService`, `NotificationService`.
 
 ### 3. Enumerations
 
-These are `enum` types used as attribute types across data models. Each enum lists its possible values. Defined in full in [1.3_Database Components](1.3_database-components.md).
+These are `enum` types used as attribute types across data models. Each enum lists its possible values. Defined in full in [1.4_Database Components](1.4_database-components.md).
 
 Examples: `UserRole`, `MembershipType`, `CopyStatus`, `ReturnCondition`, `MemberApprovalStatus`, `ReviewStatus`.
 
@@ -52,10 +52,10 @@ The class diagram uses four types of connections:
 
 ### Where Relationships Are Defined
 
-- **Model-to-model** relationships (compositions and associations with cardinality) are defined in [1.3_Database Components](1.3_database-components.md).
-- **Service-to-service** dependencies (which service calls which) are defined in [1.2_Backend Components](1.2_backend-components.md).
-- **Service-to-model** dependencies (which service operates on which models) are defined in [1.2_Backend Components](1.2_backend-components.md).
-- **Enum realizations** (which model uses which enum as an attribute type) are implicit from the attribute type definitions in [1.3_Database Components](1.3_database-components.md).
+- **Model-to-model** relationships (compositions and associations with cardinality) are defined in [1.4_Database Components](1.4_database-components.md).
+- **Service-to-service** dependencies (which service calls which) are defined in [1.3_Backend Components](1.3_backend-components.md).
+- **Service-to-model** dependencies (which service operates on which models) are defined in [1.3_Backend Components](1.3_backend-components.md).
+- **Enum realizations** (which model uses which enum as an attribute type) are implicit from the attribute type definitions in [1.4_Database Components](1.4_database-components.md).
 
 ---
 

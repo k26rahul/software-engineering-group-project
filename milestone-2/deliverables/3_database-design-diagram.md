@@ -2,7 +2,7 @@
 
 ## What Is This Document?
 
-This document explains what the Entity-Relationship diagram for the Library Management System will contain and how to read it. The actual Mermaid `erDiagram` code will be generated from this specification along with the detailed definitions in [1.3_Database Components](1.3_database-components.md).
+This document explains what the Entity-Relationship diagram for the Library Management System will contain and how to read it. The actual Mermaid `erDiagram` code will be generated from this specification along with the detailed definitions in [1.4_Database Components](1.4_database-components.md).
 
 ---
 
@@ -12,7 +12,7 @@ An ER diagram visualizes the database schema - the tables, their columns, and ho
 
 ### Entities
 
-Each data model from [1.3_Database Components](1.3_database-components.md) maps to a database entity (table) in the ER diagram. The entity shows:
+Each data model from [1.4_Database Components](1.4_database-components.md) maps to a database entity (table) in the ER diagram. The entity shows:
 
 - **Table name** (derived from the model class name)
 - **Columns** with their data types (int, str, float, date, datetime, bool)
@@ -22,7 +22,7 @@ The full list of entities: `User`, `Book`, `BookCopy`, `Transaction`, `Fine`, `R
 
 ### Relationships
 
-Model-to-model relationships from [1.3_Database Components](1.3_database-components.md) translate directly into ER relationships. Each relationship shows:
+Model-to-model relationships from [1.4_Database Components](1.4_database-components.md) translate directly into ER relationships. Each relationship shows:
 
 - **Cardinality** - one-to-one (1:1), one-to-many (1:N), or many-to-many (N:M)
 - **Foreign key direction** - which table holds the FK reference
