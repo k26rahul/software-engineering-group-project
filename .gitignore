@@ -2,3 +2,15 @@ private/
 *.wav
 *.pdf
 milestone-1/honor-code/signatures/
+
+# Frontend
+frontend/node_modules/
+frontend/dist/
+frontend/.env.local
+
+# Backend
+backend/.venv/
+backend/__pycache__/
+backend/**/__pycache__/
+backend/*.db
+backend/.env
