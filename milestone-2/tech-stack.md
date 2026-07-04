@@ -1,6 +1,6 @@
 # Tech Stack
 
-This document records the tools, libraries, and workflows chosen for building and maintaining the Library Management System. It explains what each tool is, why it's part of our stack, and how we intend to use it.
+This document records the tools, libraries, and workflows chosen for building and maintaining the Library Management System. It explains what each tool is, why it's part of our stack, and how we intend to use it. This is an internal working document, not a milestone deliverable.
 
 ---
 
