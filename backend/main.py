@@ -1,7 +1,9 @@
+from contextlib import asynccontextmanager
+
+from fastapi import FastAPI
+
 from core.config import settings
 from core.database import create_db_and_tables
-from contextlib import asynccontextmanager
-from fastapi import FastAPI
 from routers.health import router as health_router
 
 

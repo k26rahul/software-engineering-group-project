@@ -1,6 +1,8 @@
+from collections.abc import Generator
+
+from sqlmodel import Session, SQLModel, create_engine
+
 from core.config import settings
-from sqlmodel import SQLModel, Session, create_engine
-from typing import Generator
 
 engine = create_engine(settings.database_url, echo=settings.debug)
 
