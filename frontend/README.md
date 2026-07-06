@@ -8,7 +8,7 @@ This is the frontend client for the Library Management System, built as a modern
 - **Build Tool:** Vite
 - **Styling:** Tailwind CSS v4
 - **State Management:** Zustand
-- **UI Components:** shadcn/ui (Accessible, customizable primitives)
+- **UI Components:** shadcn/ui
 - **Routing:** React Router DOM
 - **HTTP Client:** Axios
 - **Testing:** Vitest + React Testing Library + jsdom
@@ -17,6 +17,7 @@ This is the frontend client for the Library Management System, built as a modern
 ## 📦 Installed Libraries
 
 ### Core Dependencies
+
 - `react`, `react-dom`: The core UI rendering ecosystem.
 - `react-router-dom`: Client-side routing.
 - `zustand`: Lightweight global state management.
@@ -27,6 +28,7 @@ This is the frontend client for the Library Management System, built as a modern
 - `@radix-ui/react-slot`: Headless UI components used by shadcn/ui.
 
 ### Development Dependencies
+
 - `eslint` (v10), `@eslint/js`: Core linting.
 - `@eslint-react/eslint-plugin`: Comprehensive lint rules for React hooks and components.
 - `prettier`, `prettier-plugin-tailwindcss`: Code formatting and automatic Tailwind class sorting.
@@ -35,42 +37,54 @@ This is the frontend client for the Library Management System, built as a modern
 
 ## 🛠️ Commands
 
-To get started with development, follow these steps. 
+To get started with development, follow these steps.
 
 > **Prerequisite:** Make sure you have [Node.js](https://nodejs.org/) installed on your machine.
 
 ### Install Dependencies
+
 ```bash
 npm install
 ```
+
 Installs all the required core and development packages.
 
 ### Run Development Server
+
 ```bash
 npm run dev
 ```
+
 Starts the Vite local development server with Hot Module Replacement (HMR). You can access the app at `http://localhost:5173`.
 
 ### Run Tests
+
 ```bash
 npm run test
 ```
+
 Executes the Vitest test suite. Tests are co-located with their respective components (e.g., `App.test.jsx`).
 
 ### Run Linting
+
 ```bash
 npm run lint
 ```
+
 Checks the codebase for errors and bad practices using ESLint.
 
 ### Run Formatting
+
 ```bash
 npm run format
 ```
+
 Automatically formats all files in the project using Prettier and sorts Tailwind classes.
 
 ### Build for Production
+
 ```bash
 npm run build
 ```
+
 Creates an optimized, production-ready static build of the application in the `dist/` directory. You can preview this build locally by running `npm run preview`.
