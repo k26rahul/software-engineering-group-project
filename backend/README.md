@@ -59,7 +59,12 @@ Discovers and runs all tests located in the `tests/` directory.
 ```bash
 uv run ruff check .
 ```
-Lints the entire Python codebase. To automatically fix fixable lint errors, you can run `uv run ruff check --fix .`.
+Lints the entire Python codebase. Refer to the [Ruff Rules](https://docs.astral.sh/ruff/rules/) documentation for more information regarding lint errors.
+
+```bash
+uv run ruff check --fix .
+```
+Automatically fixes fixable lint errors.
 
 ### Run Formatting
 ```bash
