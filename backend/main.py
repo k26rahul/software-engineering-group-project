@@ -9,19 +9,19 @@ from routers.health import router as health_router
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
-    create_db_and_tables()
-    yield
+  create_db_and_tables()
+  yield
 
 
 def create_app() -> FastAPI:
-    app = FastAPI(
-        title="Library Management System API",
-        version="0.1.0",
-        debug=settings.debug,
-        lifespan=lifespan,
-    )
-    app.include_router(health_router)
-    return app
+  app = FastAPI(
+    title="Library Management System API",
+    version="0.1.0",
+    debug=settings.debug,
+    lifespan=lifespan,
+  )
+  app.include_router(health_router)
+  return app
 
 
 app = create_app()
