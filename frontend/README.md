@@ -11,6 +11,7 @@ This is the frontend client for the Library Management System, built as a modern
 - **UI Components:** shadcn/ui
 - **Routing:** React Router DOM
 - **HTTP Client:** Axios
+- **API Mocking:** Mock Service Worker (MSW)
 - **Testing:** Vitest + React Testing Library + jsdom
 - **Code Quality:** ESLint (v10) + Prettier
 
@@ -34,6 +35,44 @@ This is the frontend client for the Library Management System, built as a modern
 - `prettier`, `prettier-plugin-tailwindcss`: Code formatting and automatic Tailwind class sorting.
 - `vitest`, `@vitest/coverage-v8`, `jsdom`: The blazing fast test runner and browser environment simulation.
 - `@testing-library/react`, `@testing-library/jest-dom`, `@testing-library/user-event`: Testing utilities that encourage good testing practices simulating user behavior.
+- `msw`: Mock Service Worker for network-level API mocking during development.
+
+## 📂 Project Structure
+
+```text
+src/
+├── assets/
+├── components/
+│   ├── ui/
+│   │   └── ...
+│   ├── Header.jsx
+│   └── Sidebar.jsx
+├── layouts/
+│   ├── AppLayout.jsx
+│   └── ...
+├── pages/
+│   ├── auth/
+│   │   ├── LoginPage.jsx
+│   │   └── RegisterPage.jsx
+│   └── ...
+├── store/
+│   └── authStore.js
+├── lib/
+│   ├── api.js
+│   └── utils.js
+└── mocks/
+    ├── handlers/
+    │   ├── authHandlers.js
+    │   └── index.js
+    ├── browser.js
+    └── mockData.js
+```
+
+## 🏗️ Architecture
+
+- **Components:** Render data read from a store, capture user interaction, and call store actions in response.
+- **Stores:** Hold the relevant slice of app state, make the API call directly (via the shared `axios` instance in `lib/api.js`), update state from the response, and surface errors.
+- **Mocking:** MSW intercepts outgoing requests at the network level via handlers defined per-domain in `mocks/handlers/`, backed by mock data in `mocks/mockData.js`. This is why there is no separate API/service layer — MSW already mocks at the HTTP boundary, so stores can make API calls directly without needing an extra indirection layer.
 
 ## 🛠️ Commands
 

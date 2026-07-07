@@ -26,6 +26,10 @@ The utility-first CSS framework used for all styling. Instead of writing custom 
 
 The component library used for common UI primitives (buttons, dialogs, dropdowns, tables, form inputs, etc.). Since shadcn/ui components are copied into our codebase rather than installed as an opaque dependency, we can freely customize them to match our design needs while still building on top of accessible, well-tested primitives. This forms the basis for shared components like `DataTable`, `ConfirmationModal`, and `FormField`.
 
+### Mock Service Worker (MSW)
+
+Used to intercept and mock outgoing API requests at the network level. This allows us to build and present the frontend UI completely independently while the backend is still under development. By mocking at the HTTP boundary, our stores can call `axios` directly as if communicating with a real API, without needing a separate abstraction layer.
+
 ---
 
 ## 2. Backend
@@ -146,6 +150,7 @@ Used as an automated first pass on pull requests, providing AI-assisted code rev
 | JS lint/format              | ESLint + Prettier (+ prettier-plugin-tailwindcss) | Code quality and class sorting for frontend      |
 | Python lint/format          | Ruff                                              | Code quality for backend                         |
 | Backend testing             | pytest                                            | API and service-layer tests                      |
+| API mocking                 | Mock Service Worker (MSW)                         | API mocking to present UI without backend        |
 | Frontend unit/state testing | Vitest, React Testing Library, jest-dom, jsdom    | Component and store-level tests                  |
 | Frontend E2E testing        | Playwright                                        | Full user-flow browser tests                     |
 | Python env management       | uv                                                | Virtual env + dependency management              |
