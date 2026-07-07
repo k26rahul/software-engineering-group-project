@@ -41,6 +41,8 @@ uv sync
 ```
 This command automatically manages your virtual environment (`.venv`), respects the `.python-version` (Python 3.10), and installs all required dependencies from `uv.lock`.
 
+> **VS Code Setup:** When opening this project in VS Code for the first time, you must manually select the Python interpreter. Press `Ctrl+Shift+P` (or `Cmd+Shift+P`), type **Python: Select Interpreter**, and select the executable located at `backend/.venv/Scripts/python.exe`.
+
 ### Run Development Server
 ```bash
 uv run uvicorn main:app --reload --port 8000
