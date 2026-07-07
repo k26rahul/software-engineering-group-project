@@ -1,0 +1,17 @@
+from sqlmodel import Field
+
+from models.base import CreatedAtMixin, IDMixin
+from models.enums import NotificationType
+
+
+class Notification(IDMixin, CreatedAtMixin, table=True):
+  """
+  Represents an alert or message sent to a user.
+  """
+
+  recipient_id: int = Field(
+    foreign_key="user.id", description="ID of the user receiving the notification."
+  )
+  type: NotificationType = Field(description="Type/category of the notification.")
+  message: str = Field(description="Content of the notification.")
+  is_read: bool = Field(default=False, description="Whether the user has read the notification.")
