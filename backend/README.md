@@ -55,19 +55,27 @@ uv run pytest
 ```
 Discovers and runs all tests located in the `tests/` directory.
 
-### Run Linting
+### Linting
+
+To check the codebase for errors and bad practices using Ruff:
 ```bash
 uv run ruff check .
 ```
-Lints the entire Python codebase. Refer to the [Ruff Rules](https://docs.astral.sh/ruff/rules/) documentation for more information regarding lint errors.
+(Refer to the [Ruff Rules](https://docs.astral.sh/ruff/rules/) documentation for more information regarding lint errors.)
 
+To automatically fix fixable lint errors:
 ```bash
 uv run ruff check --fix .
 ```
-Automatically fixes fixable lint errors.
 
-### Run Formatting
+### Formatting
+
+To automatically format the codebase to enforce consistent style (double quotes, space indentation, etc.):
 ```bash
 uv run ruff format .
 ```
-Automatically formats the codebase to enforce consistent style (double quotes, space indentation, etc.).
+
+To check if all files in the project are formatted correctly, without making any changes:
+```bash
+uv run ruff format --check .
+```
