@@ -106,7 +106,7 @@ The following VS Code extensions are recommended for all contributors, matching 
 - [Vitest](https://marketplace.visualstudio.com/items?itemName=vitest.explorer) — run and debug Vitest tests directly from the editor's test explorer.
 - [Playwright Test for VSCode](https://marketplace.visualstudio.com/items?itemName=ms-playwright.playwright) — run, debug, and generate Playwright end-to-end tests from the editor.
 - [Tailwind CSS IntelliSense](https://marketplace.visualstudio.com/items?itemName=bradlc.vscode-tailwindcss) — autocomplete, linting, and hover previews for Tailwind utility classes.
-- [Inline Fold](https://marketplace.visualstudio.com/items?itemName=moalamri.inline-fold) — collapses long inline attributes (like Tailwind class lists) for improved readability while editing.
+- [Tailwind Fold](https://marketplace.visualstudio.com/items?itemName=stivo.tailwind-fold) — automatically folds long class attributes for improved readability while editing.
 
 ---
 
