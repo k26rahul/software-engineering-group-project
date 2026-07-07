@@ -68,7 +68,7 @@ FastAPI automatically generates an OpenAPI schema from our routers and Pydantic 
 
 - **ESLint (v10)** checks the frontend code for programming errors, unused variables, and enforces consistent coding patterns. We use **@eslint-react/eslint-plugin** for comprehensive React component and hook validation in place of legacy plugins.
 - **Prettier** handles automatic code formatting (spacing, quotes, line length) so that formatting is never a matter of personal preference or PR discussion.
-- We use **prettier-plugin-tailwindcss** alongside Prettier to automatically sort Tailwind utility classes into a consistent order, keeping class lists readable and avoiding inconsistent ordering across the codebase.
+- We use **[prettier-plugin-tailwindcss](https://tailwindcss.com/blog/automatic-class-sorting-with-prettier)** alongside Prettier to automatically sort Tailwind utility classes into a consistent order, keeping class lists readable and avoiding inconsistent ordering across the codebase.
 - Configured via `eslint.config.js` and `.prettierrc` at the project root.
 
 ### Ruff (Python/Backend)
