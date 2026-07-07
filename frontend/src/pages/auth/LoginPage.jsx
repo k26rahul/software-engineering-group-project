@@ -35,7 +35,7 @@ export default function LoginPage() {
       else if (user.role === "Management") navigate("/management");
       else navigate("/");
     } catch (err) {
-      setError(err.response?.data?.detail || "Invalid email or password");
+      setError(err.message);
     }
   };
 
