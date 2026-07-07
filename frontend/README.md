@@ -81,6 +81,14 @@ npm run format
 
 Automatically formats all files in the project using Prettier and sorts Tailwind classes.
 
+### Check Formatting
+
+```bash
+npm run format:check
+```
+
+Checks if all files in the project are formatted correctly using Prettier, without making any changes.
+
 ### Build for Production
 
 ```bash
