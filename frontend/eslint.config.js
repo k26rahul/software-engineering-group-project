@@ -4,7 +4,7 @@ import reactRefresh from "eslint-plugin-react-refresh";
 import globals from "globals";
 
 export default [
-  { ignores: ["dist"] },
+  { ignores: ["dist", "public/mockServiceWorker.js"] },
   {
     files: ["**/*.{js,jsx}"],
     ...js.configs.recommended,
