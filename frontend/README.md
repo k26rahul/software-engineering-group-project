@@ -93,6 +93,14 @@ To check if all files in the project are formatted correctly, without making any
 npm run format:check
 ```
 
+### Validation
+
+To run all checks (formatting, linting, and tests) sequentially before committing:
+
+```bash
+npm run validate
+```
+
 ### Build for Production
 
 ```bash
