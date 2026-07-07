@@ -4,5 +4,14 @@
     "python.testing.cwd": "${workspaceFolder}/backend",
     "python.testing.pytestArgs": [
         "tests"
-    ]
+    ],
+    "search.exclude": {
+        "**/frontend/dist": true,
+        "**/frontend/node_modules": true
+    },
+    "files.exclude": {
+        "**/__pycache__": true,
+        "**/.pytest_cache": true,
+        "**/.ruff_cache": true
+    }
 }
