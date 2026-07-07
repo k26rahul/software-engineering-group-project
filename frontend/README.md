@@ -65,29 +65,33 @@ npm run test
 
 Executes the Vitest test suite. Tests are co-located with their respective components (e.g., `App.test.jsx`).
 
-### Run Linting
+### Linting
+
+To check the codebase for errors and bad practices using ESLint:
 
 ```bash
 npm run lint
 ```
 
-Checks the codebase for errors and bad practices using ESLint.
+To automatically fix linting errors and warnings where possible:
 
-### Run Formatting
+```bash
+npm run lint:fix
+```
+
+### Formatting
+
+To automatically format all files in the project using Prettier and sort Tailwind classes:
 
 ```bash
 npm run format
 ```
 
-Automatically formats all files in the project using Prettier and sorts Tailwind classes.
-
-### Check Formatting
+To check if all files in the project are formatted correctly, without making any changes:
 
 ```bash
 npm run format:check
 ```
-
-Checks if all files in the project are formatted correctly using Prettier, without making any changes.
 
 ### Build for Production
 
