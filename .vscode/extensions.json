@@ -1,0 +1,11 @@
+{
+  "recommendations": [
+    "dbaeumer.vscode-eslint",
+    "esbenp.prettier-vscode",
+    "charliermarsh.ruff",
+    "vitest.explorer",
+    "ms-playwright.playwright",
+    "bradlc.vscode-tailwindcss",
+    "stivo.tailwind-fold"
+  ]
+}
