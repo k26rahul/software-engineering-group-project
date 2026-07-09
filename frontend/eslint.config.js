@@ -31,22 +31,4 @@ export default [
       "react-refresh/only-export-components": ["warn", { allowConstantExport: true }],
     },
   },
-  // Test files get Vitest globals (test, expect, describe, etc.)
-  {
-    files: ["**/*.test.{js,jsx}"],
-    languageOptions: {
-      globals: {
-        ...globals.browser,
-        test: "readonly",
-        expect: "readonly",
-        describe: "readonly",
-        it: "readonly",
-        vi: "readonly",
-        beforeEach: "readonly",
-        afterEach: "readonly",
-        beforeAll: "readonly",
-        afterAll: "readonly",
-      },
-    },
-  },
 ];

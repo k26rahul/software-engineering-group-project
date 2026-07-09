@@ -9,19 +9,13 @@ beforeEach(() => {
       return HttpResponse.json({ data: "success" });
     }),
     http.get("http://localhost:8000/test-error-detail", () => {
-      return HttpResponse.json(
-        { detail: "Custom error detail from backend" },
-        { status: 401 }
-      );
+      return HttpResponse.json({ detail: "Custom error detail from backend" }, { status: 401 });
     }),
     http.get("http://localhost:8000/test-network-error", () => {
       return HttpResponse.error();
     }),
     http.get("http://localhost:8000/test-unknown-error", () => {
-      return HttpResponse.json(
-        { someOtherField: "Unknown error shape" },
-        { status: 500 }
-      );
+      return HttpResponse.json({ someOtherField: "Unknown error shape" }, { status: 500 });
     })
   );
 });
