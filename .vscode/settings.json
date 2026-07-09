@@ -12,5 +12,5 @@
     "**/.pytest_cache": true,
     "**/.ruff_cache": true
   },
-  "cSpell.words": ["Chitra"]
+  "cSpell.words": ["blocklist", "Chitra"]
 }
