@@ -4,8 +4,8 @@ from typing import TYPE_CHECKING
 from sqlmodel import Field, Relationship, SQLModel
 
 if TYPE_CHECKING:
-    from models.catalog import Book
-    from models.user import User
+  from models.catalog import Book
+  from models.user import User
 
 from models.base import CreatedAtMixin, IDMixin
 from models.enums import ReservationStatus
@@ -14,36 +14,36 @@ from models.enums import ReservationStatus
 
 
 class Reservation(IDMixin, CreatedAtMixin, table=True):
-    """Represents a waitlist reservation for a book that is currently unavailable."""
+  """Represents a waitlist reservation for a book that is currently unavailable."""
 
-    member_id: int = Field(
-        foreign_key="user.id", description="ID of the member who made the reservation."
-    )
-    book_id: int = Field(foreign_key="book.id", description="ID of the reserved book.")
-    status: ReservationStatus = Field(
-        default=ReservationStatus.WAITING, description="Current status of the reservation."
-    )
-    notified_at: datetime | None = Field(
-        default=None, description="When the member was notified of availability."
-    )
-    fulfilled_at: datetime | None = Field(
-        default=None, description="When the reservation was fulfilled."
-    )
+  member_id: int = Field(
+    foreign_key="user.id", description="ID of the member who made the reservation."
+  )
+  book_id: int = Field(foreign_key="book.id", description="ID of the reserved book.")
+  status: ReservationStatus = Field(
+    default=ReservationStatus.WAITING, description="Current status of the reservation."
+  )
+  notified_at: datetime | None = Field(
+    default=None, description="When the member was notified of availability."
+  )
+  fulfilled_at: datetime | None = Field(
+    default=None, description="When the reservation was fulfilled."
+  )
 
-    member: "User" = Relationship(back_populates="reservations")
-    book: "Book" = Relationship(back_populates="reservations")
+  member: "User" = Relationship(back_populates="reservations")
+  book: "Book" = Relationship(back_populates="reservations")
 
 
 # ── Schemas ───────────────────────────────────────────────────────────────────
 
 
 class CreateReservationRequest(SQLModel):
-    book_id: int
+  book_id: int
 
 
 class ReservationResponse(SQLModel):
-    id: int
-    book_id: int
-    status: ReservationStatus
-    created_at: datetime
-    notified_at: datetime | None
+  id: int
+  book_id: int
+  status: ReservationStatus
+  created_at: datetime
+  notified_at: datetime | None

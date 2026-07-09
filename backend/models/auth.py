@@ -6,27 +6,27 @@ from models.enums import MembershipType
 
 
 class LoginRequest(SQLModel):
-    email: str
-    password: str
+  email: str
+  password: str
 
 
 class RegisterRequest(SQLModel):
-    email: str
-    password: str
-    name: str
-    phone: str | None = None
-    membership_type: MembershipType
+  email: str
+  password: str
+  name: str
+  phone: str | None = None
+  membership_type: MembershipType
 
 
 class LogoutRequest(SQLModel):
-    token: str
+  token: str
 
 
 class ChangePasswordRequest(SQLModel):
-    current_password: str
-    new_password: str
+  current_password: str
+  new_password: str
 
 
 class TokenResponse(SQLModel):
-    access_token: str
-    token_type: str = "bearer"
+  access_token: str
+  token_type: str = "bearer"
