@@ -97,3 +97,21 @@ class Magazine(IDMixin, table=True):
 
   book: "Book" = Relationship(back_populates="magazine")
   subscription: "Subscription" = Relationship(back_populates="magazine")
+
+
+class Newspaper(IDMixin, table=True):
+  """
+  Represents a newspaper subscription track record.
+  It is a lightweight model not linked to a Book.
+  """
+
+  title: str = Field(description="Title of the newspaper.")
+  language: str = Field(description="Language of the newspaper.")
+  publisher: str = Field(description="Publisher of the newspaper.")
+  subscription_id: int | None = Field(
+    default=None,
+    foreign_key="subscription.id",
+    description="ID of the associated subscription.",
+  )
+
+  subscription: "Subscription" = Relationship(back_populates="newspaper")

@@ -4,10 +4,27 @@ from typing import TYPE_CHECKING
 from sqlmodel import Field, Relationship
 
 if TYPE_CHECKING:
-  from models.catalog import Magazine
+  from models.catalog import Magazine, Newspaper
 
 from models.base import CreatedAtMixin, IDMixin
 from models.enums import SubscriptionFrequency, SubscriptionType
+
+
+class Vendor(IDMixin, table=True):
+  """
+  Represents a vendor from whom books or subscriptions are purchased.
+  """
+
+  name: str = Field(description="The vendor's business name.")
+  contact_email: str | None = Field(default=None, description="Email for the vendor.")
+  contact_phone: str | None = Field(default=None, description="Phone number for the vendor.")
+  address: str | None = Field(default=None, description="Physical or billing address.")
+  is_active: bool = Field(
+    default=True, description="Whether the library currently purchases from this vendor."
+  )
+
+  book_purchases: list["BookPurchaseEntry"] = Relationship(back_populates="vendor")
+  subscriptions: list["Subscription"] = Relationship(back_populates="vendor")
 
 
 class Subscription(IDMixin, CreatedAtMixin, table=True):
@@ -15,7 +32,6 @@ class Subscription(IDMixin, CreatedAtMixin, table=True):
   Represents a recurring subscription for newspapers or magazines.
   """
 
-  title: str = Field(description="Title of the subscription.")
   type: SubscriptionType = Field(description="Type of the subscription (Newspaper/Magazine).")
   copies: int = Field(description="Number of copies received per issue.")
   price_per_copy: float = Field(description="Cost of a single copy.")
@@ -25,6 +41,13 @@ class Subscription(IDMixin, CreatedAtMixin, table=True):
   magazine: "Magazine" = Relationship(
     sa_relationship_kwargs={"uselist": False}, back_populates="subscription"
   )
+  newspaper: "Newspaper" = Relationship(
+    sa_relationship_kwargs={"uselist": False}, back_populates="subscription"
+  )
+  vendor_id: int | None = Field(
+    default=None, foreign_key="vendor.id", description="ID of the vendor."
+  )
+  vendor: "Vendor" = Relationship(back_populates="subscriptions")
 
   def monthly_cost(self) -> float:
     """Calculates the estimated monthly cost based on frequency."""
@@ -46,7 +69,10 @@ class BookPurchaseEntry(IDMixin, table=True):
   title: str = Field(description="Title of the purchased book.")
   copies: int = Field(description="Number of copies purchased.")
   price_per_copy: float = Field(description="Price per copy.")
-  vendor: str = Field(description="Vendor from whom the purchase was made.")
+  vendor_id: int | None = Field(
+    default=None, foreign_key="vendor.id", description="ID of the vendor."
+  )
+  vendor: "Vendor" = Relationship(back_populates="book_purchases")
   category: str | None = Field(default=None, description="Category of the purchased books.")
   purchase_date: date = Field(description="Date the purchase was made.")
 
