@@ -1,6 +1,14 @@
 from datetime import date
+from typing import TYPE_CHECKING
 
-from sqlmodel import Field
+from sqlmodel import Field, Relationship
+
+if TYPE_CHECKING:
+  from models.circulation import Transaction, Fine
+  from models.reservation import Reservation, PurchaseRequest, PurchaseRequestVote
+  from models.community import Review
+  from models.payment import Payment
+  from models.notification import Notification
 
 from models.base import CreatedAtMixin, IDMixin, UpdatedAtMixin
 from models.enums import MemberApprovalStatus, MembershipType, UserRole
@@ -30,6 +38,15 @@ class User(IDMixin, CreatedAtMixin, UpdatedAtMixin, table=True):
   max_issue_limit: int = Field(
     description="Maximum number of books the member can issue simultaneously."
   )
+
+  transactions: list["Transaction"] = Relationship(back_populates="member")
+  fines: list["Fine"] = Relationship(back_populates="member")
+  reservations: list["Reservation"] = Relationship(back_populates="member")
+  reviews: list["Review"] = Relationship(back_populates="member")
+  purchase_requests: list["PurchaseRequest"] = Relationship(back_populates="member")
+  purchase_request_votes: list["PurchaseRequestVote"] = Relationship(back_populates="member")
+  payments: list["Payment"] = Relationship(back_populates="member")
+  notifications: list["Notification"] = Relationship(back_populates="recipient")
 
   def is_membership_due(self) -> bool:
     """Checks if off-campus member's 1-year billing cycle has expired."""

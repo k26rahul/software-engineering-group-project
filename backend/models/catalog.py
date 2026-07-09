@@ -1,6 +1,15 @@
 from datetime import date
+from typing import TYPE_CHECKING
 
-from sqlmodel import Field, Session, select
+from sqlmodel import Field, Relationship, Session, select
+
+from models.community import ReadingListBook
+
+if TYPE_CHECKING:
+  from models.community import Review, ReadingList
+  from models.reservation import Reservation
+  from models.circulation import Transaction
+  from models.budget import Subscription
 
 from models.base import CreatedAtMixin, IDMixin, UpdatedAtMixin
 from models.enums import CopyStatus, ReviewStatus
@@ -20,6 +29,12 @@ class Book(IDMixin, CreatedAtMixin, UpdatedAtMixin, table=True):
   category: str = Field(description="Category or genre of the book.")
   price: float = Field(description="Price of the book.")
   description: str | None = Field(default=None, description="Summary or description of the book.")
+
+  copies: list["BookCopy"] = Relationship(back_populates="book")
+  reviews: list["Review"] = Relationship(back_populates="book")
+  magazine: "Magazine" = Relationship(sa_relationship_kwargs={"uselist": False}, back_populates="book")
+  reservations: list["Reservation"] = Relationship(back_populates="book")
+  reading_lists: list["ReadingList"] = Relationship(back_populates="books", link_model=ReadingListBook)
 
   def available_copies(self, session: Session) -> int:
     """Count of copies with status AVAILABLE."""
@@ -52,6 +67,9 @@ class BookCopy(IDMixin, table=True):
     default=CopyStatus.AVAILABLE, description="Current status of the book copy."
   )
 
+  book: "Book" = Relationship(back_populates="copies")
+  transactions: list["Transaction"] = Relationship(back_populates="book_copy")
+
 
 class Magazine(IDMixin, table=True):
   """
@@ -72,3 +90,6 @@ class Magazine(IDMixin, table=True):
   )
   issue_number: str | None = Field(default=None, description="Issue number of the magazine.")
   issue_date: date | None = Field(default=None, description="Publication date of the issue.")
+
+  book: "Book" = Relationship(back_populates="magazine")
+  subscription: "Subscription" = Relationship(back_populates="magazine")

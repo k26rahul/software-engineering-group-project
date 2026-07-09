@@ -1,6 +1,10 @@
 from datetime import date
+from typing import TYPE_CHECKING
 
-from sqlmodel import Field
+from sqlmodel import Field, Relationship
+
+if TYPE_CHECKING:
+  from models.catalog import Magazine
 
 from models.base import CreatedAtMixin, IDMixin
 from models.enums import SubscriptionFrequency, SubscriptionType
@@ -17,6 +21,8 @@ class Subscription(IDMixin, CreatedAtMixin, table=True):
   price_per_copy: float = Field(description="Cost of a single copy.")
   frequency: SubscriptionFrequency = Field(description="Delivery frequency of the subscription.")
   is_active: bool = Field(default=True, description="Whether the subscription is currently active.")
+
+  magazine: "Magazine" = Relationship(sa_relationship_kwargs={"uselist": False}, back_populates="subscription")
 
   def monthly_cost(self) -> float:
     """Calculates the estimated monthly cost based on frequency."""

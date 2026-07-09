@@ -1,4 +1,9 @@
-from sqlmodel import Field
+from typing import TYPE_CHECKING
+
+from sqlmodel import Field, Relationship
+
+if TYPE_CHECKING:
+  from models.user import User
 
 from models.base import CreatedAtMixin, IDMixin
 from models.enums import NotificationType
@@ -15,3 +20,5 @@ class Notification(IDMixin, CreatedAtMixin, table=True):
   type: NotificationType = Field(description="Type/category of the notification.")
   message: str = Field(description="Content of the notification.")
   is_read: bool = Field(default=False, description="Whether the user has read the notification.")
+
+  recipient: "User" = Relationship(back_populates="notifications")

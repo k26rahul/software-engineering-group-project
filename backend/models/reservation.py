@@ -1,6 +1,11 @@
 from datetime import datetime
+from typing import TYPE_CHECKING
 
-from sqlmodel import Field, UniqueConstraint
+from sqlmodel import Field, Relationship, UniqueConstraint
+
+if TYPE_CHECKING:
+  from models.user import User
+  from models.catalog import Book
 
 from models.base import CreatedAtMixin, IDMixin
 from models.enums import RequestStatus, ReservationStatus
@@ -26,6 +31,9 @@ class Reservation(IDMixin, CreatedAtMixin, table=True):
     default=None, description="When the reservation was fulfilled."
   )
 
+  member: "User" = Relationship(back_populates="reservations")
+  book: "Book" = Relationship(back_populates="reservations")
+
 
 class PurchaseRequest(IDMixin, CreatedAtMixin, table=True):
   """
@@ -42,6 +50,9 @@ class PurchaseRequest(IDMixin, CreatedAtMixin, table=True):
   )
   purchased_at: datetime | None = Field(default=None, description="When the book was purchased.")
 
+  member: "User" = Relationship(back_populates="purchase_requests")
+  votes: list["PurchaseRequestVote"] = Relationship(back_populates="request")
+
 
 class PurchaseRequestVote(IDMixin, CreatedAtMixin, table=True):
   """
@@ -55,3 +66,6 @@ class PurchaseRequestVote(IDMixin, CreatedAtMixin, table=True):
     foreign_key="purchaserequest.id", description="ID of the purchase request being voted on."
   )
   member_id: int = Field(foreign_key="user.id", description="ID of the member voting.")
+
+  request: "PurchaseRequest" = Relationship(back_populates="votes")
+  member: "User" = Relationship(back_populates="purchase_request_votes")

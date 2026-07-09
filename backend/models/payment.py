@@ -1,4 +1,10 @@
-from sqlmodel import Field
+from typing import TYPE_CHECKING
+
+from sqlmodel import Field, Relationship
+
+if TYPE_CHECKING:
+  from models.user import User
+  from models.circulation import Fine
 
 from models.base import CreatedAtMixin, IDMixin
 from models.enums import PaymentType
@@ -15,3 +21,6 @@ class Payment(IDMixin, CreatedAtMixin, table=True):
   fine_id: int | None = Field(
     default=None, foreign_key="fine.id", description="ID of the associated fine, if applicable."
   )
+
+  member: "User" = Relationship(back_populates="payments")
+  fine: "Fine" = Relationship(back_populates="payment")
