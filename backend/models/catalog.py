@@ -8,7 +8,8 @@ from models.enums import CopyStatus, ReviewStatus
 
 class Book(IDMixin, CreatedAtMixin, UpdatedAtMixin, table=True):
   """
-  Represents a unique book title in the catalog. Includes metadata and methods to calculate availability and ratings.
+  Represents a unique book title in the catalog. Includes metadata and
+  methods to calculate availability and ratings.
   """
 
   title: str = Field(description="Title of the book.")
@@ -55,7 +56,8 @@ class BookCopy(IDMixin, table=True):
 class Magazine(IDMixin, table=True):
   """
   Stores magazine-specific metadata for books that represent magazine issues.
-  A magazine issue is modeled as a Book for circulation purposes - this model adds the additional context.
+  A magazine issue is modeled as a Book for circulation purposes - this
+  model adds the additional context.
   """
 
   book_id: int = Field(

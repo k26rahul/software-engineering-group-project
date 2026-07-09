@@ -17,7 +17,8 @@ reservations_router = APIRouter(tags=["Reservations"])
 #   Description: Cancels an active reservation for a member.
 #
 # GET  /reservations/alerts
-#   Description: Librarian-only. Retrieves reservations that have just become available for fulfillment.
+#   Description: Librarian-only. Retrieves reservations that have just
+#   become available for fulfillment.
 #
 # GET  /members/{id}/reservations
 #   Description: Retrieves all active reservations for a specific member.

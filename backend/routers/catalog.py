@@ -11,7 +11,8 @@ catalog_router = APIRouter(tags=["Catalog"])
 # Routes to implement:
 #
 # GET  /books
-#   Description: Retrieves a list of all books in the catalog, optionally filtered by search queries.
+#   Description: Retrieves a list of all books in the catalog,
+#   optionally filtered by search queries.
 #
 # POST  /books
 #   Description: Adds a new book to the library catalog.
