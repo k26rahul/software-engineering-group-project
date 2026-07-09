@@ -8,7 +8,6 @@ if TYPE_CHECKING:
 
 from models.base import CreatedAtMixin, IDMixin
 
-
 # ── Models ────────────────────────────────────────────────────────────────────
 
 

@@ -14,7 +14,6 @@ if TYPE_CHECKING:
 from models.base import CreatedAtMixin, IDMixin, UpdatedAtMixin
 from models.enums import MemberApprovalStatus, MembershipType, UserRole
 
-
 # ── Models ────────────────────────────────────────────────────────────────────
 
 

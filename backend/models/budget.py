@@ -1,4 +1,4 @@
-from datetime import date, datetime
+from datetime import date
 from typing import TYPE_CHECKING
 
 from sqlmodel import Field, Relationship, SQLModel
@@ -6,8 +6,7 @@ from sqlmodel import Field, Relationship, SQLModel
 if TYPE_CHECKING:
     from models.subscription import Subscription
 
-from models.base import CreatedAtMixin, IDMixin
-
+from models.base import IDMixin
 
 # ── Models ────────────────────────────────────────────────────────────────────
 

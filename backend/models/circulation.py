@@ -11,20 +11,23 @@ if TYPE_CHECKING:
 from models.base import CreatedAtMixin, IDMixin
 from models.enums import ReturnCondition
 
-
 # ── Models ────────────────────────────────────────────────────────────────────
 
 
 class Transaction(IDMixin, table=True):
     """Represents a borrowing transaction where a member issues a book copy."""
 
-    member_id: int = Field(foreign_key="user.id", description="ID of the member who issued the book.")
+    member_id: int = Field(
+        foreign_key="user.id", description="ID of the member who issued the book."
+    )
     book_copy_id: int = Field(
         foreign_key="bookcopy.id", description="ID of the specific book copy issued."
     )
     issue_date: date = Field(description="Date the book was issued.")
     due_date: date = Field(description="Date the book is due for return.")
-    return_date: date | None = Field(default=None, description="Date the book was actually returned.")
+    return_date: date | None = Field(
+        default=None, description="Date the book was actually returned."
+    )
     return_condition: ReturnCondition | None = Field(
         default=None, description="Condition of the book upon return."
     )

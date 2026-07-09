@@ -10,7 +10,6 @@ if TYPE_CHECKING:
 from models.base import CreatedAtMixin, IDMixin
 from models.enums import ReservationStatus
 
-
 # ── Models ────────────────────────────────────────────────────────────────────
 
 

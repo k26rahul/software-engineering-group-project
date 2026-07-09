@@ -14,7 +14,6 @@ from models.base import CreatedAtMixin, IDMixin, UpdatedAtMixin
 from models.enums import CopyStatus, ReviewStatus
 from models.reading_list import ReadingListBook
 
-
 # ── Models ────────────────────────────────────────────────────────────────────
 
 

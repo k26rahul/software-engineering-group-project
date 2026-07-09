@@ -2,7 +2,6 @@ from sqlmodel import SQLModel
 
 from models.enums import MembershipType
 
-
 # ── Schemas ───────────────────────────────────────────────────────────────────
 
 

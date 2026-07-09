@@ -10,7 +10,6 @@ if TYPE_CHECKING:
 from models.base import CreatedAtMixin, IDMixin
 from models.enums import SubscriptionFrequency, SubscriptionType
 
-
 # ── Models ────────────────────────────────────────────────────────────────────
 
 
@@ -21,7 +20,9 @@ class Subscription(IDMixin, CreatedAtMixin, table=True):
     copies: int = Field(description="Number of copies received per issue.")
     price_per_copy: float = Field(description="Cost of a single copy.")
     frequency: SubscriptionFrequency = Field(description="Delivery frequency of the subscription.")
-    is_active: bool = Field(default=True, description="Whether the subscription is currently active.")
+    is_active: bool = Field(
+        default=True, description="Whether the subscription is currently active."
+    )
     vendor_id: int | None = Field(
         default=None, foreign_key="vendor.id", description="ID of the vendor."
     )

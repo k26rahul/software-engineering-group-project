@@ -9,7 +9,6 @@ if TYPE_CHECKING:
 from models.base import CreatedAtMixin, IDMixin
 from models.enums import RequestStatus
 
-
 # ── Models ────────────────────────────────────────────────────────────────────
 
 
@@ -21,8 +20,12 @@ class PurchaseRequest(IDMixin, CreatedAtMixin, table=True):
     )
     title: str = Field(description="Title of the requested book.")
     author: str | None = Field(default=None, description="Author of the requested book.")
-    description: str | None = Field(default=None, description="Additional details about the request.")
-    upvote_count: int = Field(default=0, description="Number of upvotes received from other members.")
+    description: str | None = Field(
+        default=None, description="Additional details about the request."
+    )
+    upvote_count: int = Field(
+        default=0, description="Number of upvotes received from other members."
+    )
     status: RequestStatus = Field(
         default=RequestStatus.PENDING, description="Status of the purchase request."
     )
