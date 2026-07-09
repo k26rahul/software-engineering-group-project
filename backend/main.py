@@ -1,9 +1,12 @@
 from contextlib import asynccontextmanager
 
 from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware
+from sqlmodel import Session
 
 from core.config import settings
-from core.database import create_db_and_tables
+from core.database import create_db_and_tables, engine
+from core.seeding import seed_default_users
 from routers.auth import auth_router
 from routers.health import router as health_router
 
@@ -11,6 +14,8 @@ from routers.health import router as health_router
 @asynccontextmanager
 async def lifespan(app: FastAPI):
   create_db_and_tables()
+  with Session(engine) as session:
+    seed_default_users(session)
   yield
 
 
@@ -20,6 +25,13 @@ def create_app() -> FastAPI:
     version="0.1.0",
     debug=settings.debug,
     lifespan=lifespan,
+  )
+  app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["http://localhost:5173", "http://localhost:5174"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
   )
   app.include_router(health_router)
   app.include_router(auth_router)
