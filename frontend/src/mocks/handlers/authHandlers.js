@@ -1,11 +1,11 @@
 import { http, HttpResponse } from "msw";
-import { mockUsers } from "../mockData";
+import { users } from "@/mocks/data";
 import { baseURL } from "@/lib/api";
 
 export const authHandlers = [
   http.post(`${baseURL}/auth/login`, async ({ request }) => {
     const { email, password } = await request.json();
-    const user = mockUsers[email];
+    const user = users[email];
 
     if (user && user.password === password) {
       return HttpResponse.json({
