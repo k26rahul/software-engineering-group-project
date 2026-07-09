@@ -114,6 +114,15 @@
         "reveal": "always",
         "panel": "shared"
       }
+    },
+    {
+      "label": "Validate All",
+      "dependsOn": [
+        "Validate Backend",
+        "Validate Frontend"
+      ],
+      "dependsOrder": "sequence",
+      "problemMatcher": []
     }
   ]
 }
