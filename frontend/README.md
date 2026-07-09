@@ -90,11 +90,19 @@ Installs all the required core and development packages.
 
 ### Run Development Server
 
+To start the Vite local development server with Hot Module Replacement (HMR) and API mocking active (default):
+
 ```bash
 npm run dev
 ```
 
-Starts the Vite local development server with Hot Module Replacement (HMR). You can access the app at `http://localhost:5173`.
+To start the development server with the mock service worker disabled, allowing requests to hit the actual API server:
+
+```bash
+npm run dev:no-mock
+```
+
+In either case, you can access the app at `http://localhost:5173`.
 
 ### Run Tests
 
