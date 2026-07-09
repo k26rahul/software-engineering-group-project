@@ -1,10 +1,11 @@
 from models.budget import BookPurchaseEntry, Subscription
-from models.catalog import Book, BookCopy, Magazine
+from models.catalog import Book, BookCopy, Magazine, ReadingList, ReadingListBook
 from models.circulation import Fine, Transaction
-from models.community import ReadingList, ReadingListBook, Review
+from models.community import Review
 from models.notification import Notification
 from models.payment import Payment
-from models.reservation import PurchaseRequest, PurchaseRequestVote, Reservation
+from models.purchase_request import PurchaseRequest, PurchaseRequestVote
+from models.reservation import Reservation
 from models.user import User
 
 __all__ = [
