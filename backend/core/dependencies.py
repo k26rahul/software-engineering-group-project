@@ -34,10 +34,10 @@ def get_current_user(
       detail="Invalid or expired token.",
     )
   user = session.get(User, user_id)
-  if user is None or not user.is_active:
+  if user is None:
     raise HTTPException(
       status_code=status.HTTP_401_UNAUTHORIZED,
-      detail="User not found or inactive.",
+      detail="User not found.",
     )
   return user
 
@@ -47,13 +47,18 @@ CurrentUserDep = Annotated[User, Depends(get_current_user)]
 
 
 def _require_role(*roles: UserRole):
-  """Returns a dependency that raises 403 if the user's role is not in `roles`."""
+  """Returns a dependency that raises 403 if the user's role is not in `roles` or is inactive."""
 
   def _check(current_user: CurrentUserDep) -> User:
     if current_user.role not in roles:
       raise HTTPException(
         status_code=status.HTTP_403_FORBIDDEN,
         detail="You do not have permission to perform this action.",
+      )
+    if not current_user.is_active:
+      raise HTTPException(
+        status_code=status.HTTP_403_FORBIDDEN,
+        detail="Your account is deactivated and pending approval.",
       )
     return current_user
 

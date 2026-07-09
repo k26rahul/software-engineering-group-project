@@ -21,4 +21,36 @@ export const authHandlers = [
       },
     });
   }),
+
+  http.post(`${baseURL}/auth/register`, async ({ request }) => {
+    const { email, name, phone, membership_type } = await request.json();
+
+    if (users[email]) {
+      return new HttpResponse(JSON.stringify({ detail: "Email already registered." }), {
+        status: 409,
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+    }
+
+    return HttpResponse.json(
+      {
+        user: {
+          id: 999,
+          email,
+          name,
+          phone: phone || null,
+          role: "MEMBER",
+          membership_type,
+          approval_status: "PENDING",
+          is_active: false,
+          created_at: new Date().toISOString(),
+        },
+        token: "mock-jwt-token-123",
+        access_token: "mock-jwt-token-123",
+      },
+      { status: 201 }
+    );
+  }),
 ];

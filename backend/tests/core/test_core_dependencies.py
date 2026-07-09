@@ -46,21 +46,19 @@ def test_get_current_user_not_found(db_session: Session):
     get_current_user(token=token, session=db_session)
 
   assert exc_info.value.status_code == 401
-  assert exc_info.value.detail == "User not found or inactive."
+  assert exc_info.value.detail == "User not found."
 
 
 def test_get_current_user_inactive(db_session: Session, inactive_user: User):
-  """Verifies get_current_user raises a 401 Unauthorized if the user is inactive."""
+  """Verifies get_current_user successfully returns the user even if they are inactive."""
   token = create_access_token(subject=inactive_user.id)
-  with pytest.raises(HTTPException) as exc_info:
-    get_current_user(token=token, session=db_session)
-
-  assert exc_info.value.status_code == 401
-  assert exc_info.value.detail == "User not found or inactive."
+  user = get_current_user(token=token, session=db_session)
+  assert user.id == inactive_user.id
+  assert user.is_active is False
 
 
 def test_require_role_success(librarian_user: User):
-  """Verifies role requirement check succeeds when the user has the correct role."""
+  """Verifies role requirement check succeeds when the user has the correct role and is active."""
   # Extract the actual dependency function
   dependency_func = _require_role(UserRole.LIBRARIAN)
 
@@ -79,3 +77,15 @@ def test_require_role_forbidden(normal_user: User):
 
   assert exc_info.value.status_code == 403
   assert exc_info.value.detail == "You do not have permission to perform this action."
+
+
+def test_require_role_inactive(inactive_user: User):
+  """Verifies role requirement check raises a 403 Forbidden when the user is inactive."""
+  # Require MEMBER, and provide an inactive MEMBER user
+  dependency_func = _require_role(UserRole.MEMBER)
+
+  with pytest.raises(HTTPException) as exc_info:
+    dependency_func.dependency(current_user=inactive_user)
+
+  assert exc_info.value.status_code == 403
+  assert exc_info.value.detail == "Your account is deactivated and pending approval."

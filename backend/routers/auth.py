@@ -19,9 +19,9 @@ def login(body: LoginRequest, session: SessionDep) -> TokenResponse:
   return auth_service.login(body, session)
 
 
-@auth_router.post("/auth/register", response_model=UserProfileResponse, status_code=201)
-def register(body: RegisterRequest, session: SessionDep) -> UserProfileResponse:
-  """Registers a new member account with pending approval."""
+@auth_router.post("/auth/register", response_model=TokenResponse, status_code=201)
+def register(body: RegisterRequest, session: SessionDep) -> TokenResponse:
+  """Registers a new member account with pending approval and logs them in."""
   return auth_service.register(body, session)
 
 

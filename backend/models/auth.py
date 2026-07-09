@@ -1,6 +1,7 @@
 from sqlmodel import SQLModel
 
 from models.enums import MembershipType
+from models.user import UserProfileResponse
 
 # ── Schemas ───────────────────────────────────────────────────────────────────
 
@@ -26,3 +27,5 @@ class ChangePasswordRequest(SQLModel):
 class TokenResponse(SQLModel):
   access_token: str
   token_type: str = "bearer"
+  token: str
+  user: UserProfileResponse

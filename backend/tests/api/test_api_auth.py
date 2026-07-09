@@ -16,13 +16,15 @@ def test_register_success(client: TestClient):
   )
   assert response.status_code == 201
   data = response.json()
-  assert data["email"] == "newuser@test.com"
-  assert data["name"] == "New User"
-  assert data["membership_type"] == MembershipType.ON_CAMPUS
-  assert data["role"] == UserRole.MEMBER
-  assert data["is_active"] is False
-  assert "id" in data
-  assert "password_hash" not in data
+  assert "access_token" in data
+  user_data = data["user"]
+  assert user_data["email"] == "newuser@test.com"
+  assert user_data["name"] == "New User"
+  assert user_data["membership_type"] == MembershipType.ON_CAMPUS
+  assert user_data["role"] == UserRole.MEMBER
+  assert user_data["is_active"] is False
+  assert "id" in user_data
+  assert "password_hash" not in user_data
 
 
 def test_register_duplicate_email(client: TestClient, normal_user):
@@ -71,7 +73,7 @@ def test_login_invalid_credentials(client: TestClient, normal_user):
 
 
 def test_login_inactive_user(client: TestClient, inactive_user):
-  """Verifies that an inactive user cannot log in and gets a 403 Forbidden."""
+  """Verifies that an inactive user can log in successfully."""
   response = client.post(
     "/auth/login",
     json={
@@ -79,8 +81,10 @@ def test_login_inactive_user(client: TestClient, inactive_user):
       "password": "password123",
     },
   )
-  assert response.status_code == 403
-  assert response.json()["detail"] == "Account is inactive."
+  assert response.status_code == 200
+  data = response.json()
+  assert "access_token" in data
+  assert data["user"]["is_active"] is False
 
 
 def test_get_current_user_me(client: TestClient, normal_user, normal_user_token):

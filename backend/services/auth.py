@@ -22,14 +22,16 @@ def login(body: LoginRequest, session: Session) -> TokenResponse:
   user = session.exec(select(User).where(User.email == body.email)).first()
   if user is None or not verify_password(body.password, user.password_hash):
     raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Invalid credentials.")
-  if not user.is_active:
-    raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="Account is inactive.")
   token = create_access_token(subject=user.id)
-  return TokenResponse(access_token=token)
+  return TokenResponse(
+    access_token=token,
+    token=token,
+    user=UserProfileResponse.model_validate(user),
+  )
 
 
-def register(body: RegisterRequest, session: Session) -> UserProfileResponse:
-  """Creates a new member with PENDING approval status."""
+def register(body: RegisterRequest, session: Session) -> TokenResponse:
+  """Creates a new member with PENDING approval status and returns an access token."""
   existing = session.exec(select(User).where(User.email == body.email)).first()
   if existing is not None:
     raise HTTPException(
@@ -50,7 +52,12 @@ def register(body: RegisterRequest, session: Session) -> UserProfileResponse:
   session.add(user)
   session.commit()
   session.refresh(user)
-  return UserProfileResponse.model_validate(user)
+  token = create_access_token(subject=user.id)
+  return TokenResponse(
+    access_token=token,
+    token=token,
+    user=UserProfileResponse.model_validate(user),
+  )
 
 
 def logout(token: str) -> None:
