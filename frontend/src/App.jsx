@@ -1,4 +1,6 @@
+import { useEffect } from "react";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
+import useAuthStore from "@/store/authStore";
 
 // Layouts
 import AuthLayout from "@/layouts/AuthLayout";
@@ -13,6 +15,21 @@ import MemberDashboard from "@/pages/member/MemberDashboard";
 import ManagementDashboard from "@/pages/management/ManagementDashboard";
 
 export default function App() {
+  const initializeAuth = useAuthStore((state) => state.initializeAuth);
+  const isInitializing = useAuthStore((state) => state.isInitializing);
+
+  useEffect(() => {
+    initializeAuth();
+  }, [initializeAuth]);
+
+  if (isInitializing) {
+    return (
+      <div className="bg-background flex min-h-screen items-center justify-center">
+        <div className="text-muted-foreground animate-pulse text-lg font-medium">Loading...</div>
+      </div>
+    );
+  }
+
   return (
     <BrowserRouter>
       <Routes>

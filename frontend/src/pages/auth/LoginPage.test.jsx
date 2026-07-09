@@ -9,7 +9,12 @@ import useAuthStore from "@/store/authStore";
 import LoginPage from "./LoginPage";
 
 beforeEach(() => {
-  useAuthStore.setState({ user: null, accessToken: null });
+  useAuthStore.setState({
+    user: null,
+    accessToken: null,
+    isInitializing: false,
+    hasInitialized: false,
+  });
   localStorage.clear();
 });
 
@@ -64,8 +69,8 @@ describe("LoginPage Component", () => {
       role: "LIBRARIAN",
       password: "password123",
     });
-    expect(useAuthStore.getState().accessToken).toBe("mock-jwt-token-123");
-    expect(localStorage.getItem(ACCESS_TOKEN_KEY)).toBe("mock-jwt-token-123");
+    expect(useAuthStore.getState().accessToken).toBe("mock-jwt-token-librarian@example.com");
+    expect(localStorage.getItem(ACCESS_TOKEN_KEY)).toBe("mock-jwt-token-librarian@example.com");
   });
 
   it("redirects MEMBER to /member after successful login", async () => {

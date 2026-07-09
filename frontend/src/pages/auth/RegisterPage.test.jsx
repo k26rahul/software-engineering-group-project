@@ -9,7 +9,12 @@ import useAuthStore from "@/store/authStore";
 import RegisterPage from "./RegisterPage";
 
 beforeEach(() => {
-  useAuthStore.setState({ user: null, accessToken: null });
+  useAuthStore.setState({
+    user: null,
+    accessToken: null,
+    isInitializing: false,
+    hasInitialized: false,
+  });
   localStorage.clear();
 });
 
@@ -84,8 +89,8 @@ describe("RegisterPage Component", () => {
       is_active: false,
       created_at: expect.any(String),
     });
-    expect(useAuthStore.getState().accessToken).toBe("mock-jwt-token-123");
-    expect(localStorage.getItem(ACCESS_TOKEN_KEY)).toBe("mock-jwt-token-123");
+    expect(useAuthStore.getState().accessToken).toBe("mock-jwt-token-alice@example.com");
+    expect(localStorage.getItem(ACCESS_TOKEN_KEY)).toBe("mock-jwt-token-alice@example.com");
   });
 
   it("displays error message when registration API returns error", async () => {

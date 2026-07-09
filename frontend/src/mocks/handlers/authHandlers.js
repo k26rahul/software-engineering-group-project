@@ -10,7 +10,7 @@ export const authHandlers = [
     if (user && user.password === password) {
       return HttpResponse.json({
         user: user,
-        access_token: "mock-jwt-token-123",
+        access_token: `mock-jwt-token-${email}`,
       });
     }
 
@@ -47,9 +47,37 @@ export const authHandlers = [
           is_active: false,
           created_at: new Date().toISOString(),
         },
-        access_token: "mock-jwt-token-123",
+        access_token: `mock-jwt-token-${email}`,
       },
       { status: 201 }
     );
+  }),
+
+  http.get(`${baseURL}/auth/me`, async ({ request }) => {
+    const authHeader = request.headers.get("Authorization");
+    if (!authHeader || !authHeader.startsWith("Bearer ")) {
+      return new HttpResponse(JSON.stringify({ detail: "Not authenticated" }), {
+        status: 401,
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+    }
+
+    const token = authHeader.substring("Bearer ".length);
+    if (token.startsWith("mock-jwt-token-")) {
+      const email = token.substring("mock-jwt-token-".length);
+      const user = users[email];
+      if (user) {
+        return HttpResponse.json(user);
+      }
+    }
+
+    return new HttpResponse(JSON.stringify({ detail: "Invalid token" }), {
+      status: 401,
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
   }),
 ];
