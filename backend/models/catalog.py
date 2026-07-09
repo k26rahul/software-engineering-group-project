@@ -6,10 +6,10 @@ from sqlmodel import Field, Relationship, Session, select
 from models.community import ReadingListBook
 
 if TYPE_CHECKING:
-  from models.community import Review, ReadingList
-  from models.reservation import Reservation
-  from models.circulation import Transaction
   from models.budget import Subscription
+  from models.circulation import Transaction
+  from models.community import ReadingList, Review
+  from models.reservation import Reservation
 
 from models.base import CreatedAtMixin, IDMixin, UpdatedAtMixin
 from models.enums import CopyStatus, ReviewStatus
@@ -32,9 +32,13 @@ class Book(IDMixin, CreatedAtMixin, UpdatedAtMixin, table=True):
 
   copies: list["BookCopy"] = Relationship(back_populates="book")
   reviews: list["Review"] = Relationship(back_populates="book")
-  magazine: "Magazine" = Relationship(sa_relationship_kwargs={"uselist": False}, back_populates="book")
+  magazine: "Magazine" = Relationship(
+    sa_relationship_kwargs={"uselist": False}, back_populates="book"
+  )
   reservations: list["Reservation"] = Relationship(back_populates="book")
-  reading_lists: list["ReadingList"] = Relationship(back_populates="books", link_model=ReadingListBook)
+  reading_lists: list["ReadingList"] = Relationship(
+    back_populates="books", link_model=ReadingListBook
+  )
 
   def available_copies(self, session: Session) -> int:
     """Count of copies with status AVAILABLE."""

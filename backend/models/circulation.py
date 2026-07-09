@@ -4,9 +4,9 @@ from typing import TYPE_CHECKING
 from sqlmodel import Field, Relationship
 
 if TYPE_CHECKING:
-  from models.user import User
   from models.catalog import BookCopy
   from models.payment import Payment
+  from models.user import User
 
 from models.base import CreatedAtMixin, IDMixin
 from models.enums import ReturnCondition
@@ -30,7 +30,9 @@ class Transaction(IDMixin, table=True):
 
   member: "User" = Relationship(back_populates="transactions")
   book_copy: "BookCopy" = Relationship(back_populates="transactions")
-  fine: "Fine" = Relationship(sa_relationship_kwargs={"uselist": False}, back_populates="transaction")
+  fine: "Fine" = Relationship(
+    sa_relationship_kwargs={"uselist": False}, back_populates="transaction"
+  )
 
   def is_overdue(self) -> bool:
     """Checks if current date exceeds due_date and book is not returned."""
@@ -64,4 +66,6 @@ class Fine(IDMixin, CreatedAtMixin, table=True):
 
   transaction: "Transaction" = Relationship(back_populates="fine")
   member: "User" = Relationship(back_populates="fines")
-  payment: "Payment" = Relationship(sa_relationship_kwargs={"uselist": False}, back_populates="fine")
+  payment: "Payment" = Relationship(
+    sa_relationship_kwargs={"uselist": False}, back_populates="fine"
+  )

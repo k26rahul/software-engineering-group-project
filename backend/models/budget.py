@@ -22,7 +22,9 @@ class Subscription(IDMixin, CreatedAtMixin, table=True):
   frequency: SubscriptionFrequency = Field(description="Delivery frequency of the subscription.")
   is_active: bool = Field(default=True, description="Whether the subscription is currently active.")
 
-  magazine: "Magazine" = Relationship(sa_relationship_kwargs={"uselist": False}, back_populates="subscription")
+  magazine: "Magazine" = Relationship(
+    sa_relationship_kwargs={"uselist": False}, back_populates="subscription"
+  )
 
   def monthly_cost(self) -> float:
     """Calculates the estimated monthly cost based on frequency."""

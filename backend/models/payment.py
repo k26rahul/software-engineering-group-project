@@ -3,8 +3,8 @@ from typing import TYPE_CHECKING
 from sqlmodel import Field, Relationship
 
 if TYPE_CHECKING:
-  from models.user import User
   from models.circulation import Fine
+  from models.user import User
 
 from models.base import CreatedAtMixin, IDMixin
 from models.enums import PaymentType
