@@ -21,7 +21,7 @@ class Subscription(IDMixin, CreatedAtMixin, table=True):
   def monthly_cost(self) -> float:
     """Calculates the estimated monthly cost based on frequency."""
     multipliers = {
-      SubscriptionFrequency.DAILY: 26,
+      SubscriptionFrequency.DAILY: 30,
       SubscriptionFrequency.WEEKLY: 4,
       SubscriptionFrequency.BIWEEKLY: 2,
       SubscriptionFrequency.MONTHLY: 1,
