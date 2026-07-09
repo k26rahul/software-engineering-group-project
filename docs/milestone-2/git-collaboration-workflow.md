@@ -208,6 +208,39 @@ Useful when you need to quickly switch branches (e.g., to pull `main`) without c
 
 ---
 
+### Scenario: Pushing a Feature Branch, Opening a PR, and Local Cleanup
+
+This is the standard workflow when you have accumulated commits on your local feature branch (`feature/<branch-name>`) and are ready to push, submit a pull request, and clean up your workspace:
+
+#### 1. Push changes and open PR
+Starting on your feature branch with accumulated commits:
+1. Push the branch to GitHub:
+   ```bash
+   git push -u origin feature/<branch-name>
+   ```
+2. Go to GitHub and open a Pull Request.
+
+#### 2. Clean up locally after merge
+After the Pull Request is merged on GitHub and the remote branch has been deleted:
+1. Switch back to your local `main` branch:
+   ```bash
+   git checkout main
+   ```
+2. Pull the newly merged changes to update local `main`:
+   ```bash
+   git pull origin main
+   ```
+3. Delete the local feature branch:
+   ```bash
+   git branch -d feature/<branch-name>
+   ```
+4. Prune obsolete remote-tracking branch references:
+   ```bash
+   git fetch --prune
+   ```
+
+---
+
 ## 7. If Something Breaks
 
 If you hit a confusing Git state (conflicts you don't understand, a broken branch, accidental force-push, detached HEAD, etc.):
