@@ -4,12 +4,12 @@ import { MemoryRouter, Route, Routes } from "react-router-dom";
 import { describe, it, expect, beforeEach } from "vitest";
 import { http, HttpResponse } from "msw";
 import { server } from "@/mocks/server";
-import { baseURL } from "@/lib/api";
+import { baseURL, ACCESS_TOKEN_KEY } from "@/lib/api";
 import useAuthStore from "@/store/authStore";
 import RegisterPage from "./RegisterPage";
 
 beforeEach(() => {
-  useAuthStore.setState({ user: null, token: null });
+  useAuthStore.setState({ user: null, accessToken: null });
   localStorage.clear();
 });
 
@@ -84,8 +84,8 @@ describe("RegisterPage Component", () => {
       is_active: false,
       created_at: expect.any(String),
     });
-    expect(useAuthStore.getState().token).toBe("mock-jwt-token-123");
-    expect(localStorage.getItem("token")).toBe("mock-jwt-token-123");
+    expect(useAuthStore.getState().accessToken).toBe("mock-jwt-token-123");
+    expect(localStorage.getItem(ACCESS_TOKEN_KEY)).toBe("mock-jwt-token-123");
   });
 
   it("displays error message when registration API returns error", async () => {

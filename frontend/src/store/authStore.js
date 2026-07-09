@@ -1,15 +1,15 @@
 import { create } from "zustand";
-import api from "@/lib/api";
+import api, { ACCESS_TOKEN_KEY } from "@/lib/api";
 
 const useAuthStore = create((set) => ({
   user: null,
-  token: null,
+  accessToken: null,
 
   login: async (email, password) => {
     const response = await api.post("/auth/login", { email, password });
     const { user, access_token } = response.data;
-    set({ user, token: access_token });
-    localStorage.setItem("token", access_token);
+    set({ user, accessToken: access_token });
+    localStorage.setItem(ACCESS_TOKEN_KEY, access_token);
     return user;
   },
 
@@ -22,14 +22,14 @@ const useAuthStore = create((set) => ({
       membership_type: membershipType,
     });
     const { user, access_token } = response.data;
-    set({ user, token: access_token });
-    localStorage.setItem("token", access_token);
+    set({ user, accessToken: access_token });
+    localStorage.setItem(ACCESS_TOKEN_KEY, access_token);
     return user;
   },
 
   logout: () => {
-    set({ user: null, token: null });
-    localStorage.removeItem("token");
+    set({ user: null, accessToken: null });
+    localStorage.removeItem(ACCESS_TOKEN_KEY);
   },
 }));
 

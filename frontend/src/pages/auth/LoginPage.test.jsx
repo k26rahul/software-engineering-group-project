@@ -4,12 +4,12 @@ import { MemoryRouter, Route, Routes } from "react-router-dom";
 import { describe, it, expect, beforeEach } from "vitest";
 import { http, HttpResponse } from "msw";
 import { server } from "@/mocks/server";
-import { baseURL } from "@/lib/api";
+import { baseURL, ACCESS_TOKEN_KEY } from "@/lib/api";
 import useAuthStore from "@/store/authStore";
 import LoginPage from "./LoginPage";
 
 beforeEach(() => {
-  useAuthStore.setState({ user: null, token: null });
+  useAuthStore.setState({ user: null, accessToken: null });
   localStorage.clear();
 });
 
@@ -64,8 +64,8 @@ describe("LoginPage Component", () => {
       role: "LIBRARIAN",
       password: "password123",
     });
-    expect(useAuthStore.getState().token).toBe("mock-jwt-token-123");
-    expect(localStorage.getItem("token")).toBe("mock-jwt-token-123");
+    expect(useAuthStore.getState().accessToken).toBe("mock-jwt-token-123");
+    expect(localStorage.getItem(ACCESS_TOKEN_KEY)).toBe("mock-jwt-token-123");
   });
 
   it("redirects MEMBER to /member after successful login", async () => {
@@ -130,7 +130,7 @@ describe("LoginPage Component", () => {
 
     // Check store state remains null
     expect(useAuthStore.getState().user).toBeNull();
-    expect(useAuthStore.getState().token).toBeNull();
+    expect(useAuthStore.getState().accessToken).toBeNull();
   });
 
   it("displays network error fallback when connection fails", async () => {
