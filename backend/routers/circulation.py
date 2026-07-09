@@ -1,9 +1,3 @@
-"""Router: Circulation.
-
-Endpoints are not yet implemented. See docs/milestone-2/deliverables/1.3_backend-components.md
-for the full specification. Each route below is a placeholder — implement one at a time.
-"""
-
 from fastapi import APIRouter
 
 circulation_router = APIRouter(tags=["Circulation"])
@@ -12,15 +6,22 @@ circulation_router = APIRouter(tags=["Circulation"])
 #
 # POST  /transactions/issue
 #   Description: Issues a book copy to a member with a specific deadline.
+#   Request:  IssueBookRequest
+#   Response: TransactionResponse
 #
 # POST  /transactions/return
 #   Description: Processes the return of a book and calculates fines if damaged or lost.
+#   Request:  ReturnBookRequest
+#   Response: TransactionResponse
 #
 # GET  /transactions/{id}
 #   Description: Retrieves details of a specific borrowing transaction.
+#   Response: TransactionResponse
 #
 # GET  /transactions/overdue
 #   Description: Retrieves a list of all currently overdue borrowing transactions.
+#   Response: list[TransactionResponse]
 #
 # GET  /members/{id}/current-issues
 #   Description: Retrieves a list of all books currently issued to a specific member.
+#   Response: list[TransactionResponse]

@@ -1,9 +1,3 @@
-"""Router: Subscriptions.
-
-Endpoints are not yet implemented. See docs/milestone-2/deliverables/1.3_backend-components.md
-for the full specification. Each route below is a placeholder — implement one at a time.
-"""
-
 from fastapi import APIRouter
 
 subscriptions_router = APIRouter(tags=["Subscriptions"])
@@ -12,12 +6,17 @@ subscriptions_router = APIRouter(tags=["Subscriptions"])
 #
 # GET  /subscriptions
 #   Description: Retrieves all recurring subscriptions.
+#   Response: list[SubscriptionResponse]
 #
 # POST  /subscriptions
 #   Description: Adds a new recurring subscription for a newspaper or magazine.
+#   Request:  CreateSubscriptionRequest
+#   Response: SubscriptionResponse
 #
 # PATCH  /subscriptions/{id}
 #   Description: Updates details of an existing subscription.
+#   Request:  UpdateSubscriptionRequest
+#   Response: SubscriptionResponse
 #
 # DELETE  /subscriptions/{id}
 #   Description: Cancels an active subscription.

@@ -1,9 +1,3 @@
-"""Router: Authentication.
-
-Endpoints are not yet implemented. See docs/milestone-2/deliverables/1.3_backend-components.md
-for the full specification. Each route below is a placeholder — implement one at a time.
-"""
-
 from fastapi import APIRouter
 
 auth_router = APIRouter(tags=["Authentication"])
@@ -12,15 +6,22 @@ auth_router = APIRouter(tags=["Authentication"])
 #
 # POST  /auth/login
 #   Description: Authenticates a user and returns a JWT token.
+#   Request:  LoginRequest
+#   Response: TokenResponse
 #
 # POST  /auth/register
 #   Description: Registers a new member and sets their registration status to pending.
+#   Request:  RegisterRequest
+#   Response: UserProfileResponse
 #
 # POST  /auth/logout
 #   Description: Invalidates the current user's JWT token by adding it to a blocklist.
+#   Request:  LogoutRequest
 #
 # POST  /auth/change-password
 #   Description: Changes the authenticated user's password.
+#   Request:  ChangePasswordRequest
 #
 # GET  /auth/me
 #   Description: Returns the profile of the currently authenticated user based on the JWT token.
+#   Response: UserProfileResponse

@@ -1,9 +1,3 @@
-"""Router: Reservations.
-
-Endpoints are not yet implemented. See docs/milestone-2/deliverables/1.3_backend-components.md
-for the full specification. Each route below is a placeholder — implement one at a time.
-"""
-
 from fastapi import APIRouter
 
 reservations_router = APIRouter(tags=["Reservations"])
@@ -12,6 +6,8 @@ reservations_router = APIRouter(tags=["Reservations"])
 #
 # POST  /reservations
 #   Description: Places a member in the waitlist queue for an unavailable book.
+#   Request:  CreateReservationRequest
+#   Response: ReservationResponse
 #
 # DELETE  /reservations/{id}
 #   Description: Cancels an active reservation for a member.
@@ -19,6 +15,8 @@ reservations_router = APIRouter(tags=["Reservations"])
 # GET  /reservations/alerts
 #   Description: Librarian-only. Retrieves reservations that have just
 #   become available for fulfillment.
+#   Response: list[ReservationResponse]
 #
 # GET  /members/{id}/reservations
 #   Description: Retrieves all active reservations for a specific member.
+#   Response: list[ReservationResponse]
