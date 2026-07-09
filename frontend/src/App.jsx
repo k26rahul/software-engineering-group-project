@@ -42,7 +42,7 @@ export default function App() {
         <Route
           path="/librarian/*"
           element={
-            <DashboardLayout requiredRole="Librarian">
+            <DashboardLayout requiredRole="LIBRARIAN">
               <LibrarianDashboard />
             </DashboardLayout>
           }
@@ -52,7 +52,7 @@ export default function App() {
         <Route
           path="/member/*"
           element={
-            <DashboardLayout requiredRole="Member">
+            <DashboardLayout requiredRole="MEMBER">
               <MemberDashboard />
             </DashboardLayout>
           }
@@ -62,7 +62,7 @@ export default function App() {
         <Route
           path="/management/*"
           element={
-            <DashboardLayout requiredRole="Management">
+            <DashboardLayout requiredRole="CAMPUS_MANAGEMENT">
               <ManagementDashboard />
             </DashboardLayout>
           }

@@ -30,9 +30,9 @@ export default function LoginPage() {
       const user = await login(email, password);
 
       // Redirect based on role
-      if (user.role === "Librarian") navigate("/librarian");
-      else if (user.role === "Member") navigate("/member");
-      else if (user.role === "Management") navigate("/management");
+      if (user.role === "LIBRARIAN") navigate("/librarian");
+      else if (user.role === "MEMBER") navigate("/member");
+      else if (user.role === "CAMPUS_MANAGEMENT") navigate("/management");
       else navigate("/");
     } catch (err) {
       setError(err.message);

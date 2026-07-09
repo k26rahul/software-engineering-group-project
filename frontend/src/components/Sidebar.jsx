@@ -10,18 +10,18 @@ export function Sidebar({ className }) {
   // Default links
   let links = [];
 
-  if (user?.role === "Librarian") {
+  if (user?.role === "LIBRARIAN") {
     links = [
       { name: "Dashboard", href: "/librarian", icon: LayoutDashboard },
       { name: "Members", href: "/librarian/members", icon: Users },
       { name: "Catalog", href: "/librarian/catalog", icon: BookCopy },
     ];
-  } else if (user?.role === "Member") {
+  } else if (user?.role === "MEMBER") {
     links = [
       { name: "Dashboard", href: "/member", icon: LayoutDashboard },
       { name: "Catalog", href: "/member/catalog", icon: BookCopy },
     ];
-  } else if (user?.role === "Management") {
+  } else if (user?.role === "CAMPUS_MANAGEMENT") {
     links = [
       { name: "Dashboard", href: "/management", icon: LayoutDashboard },
       { name: "Reports", href: "/management/reports", icon: BarChart },
