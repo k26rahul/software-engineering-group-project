@@ -27,8 +27,6 @@ api.interceptors.response.use(
     if (error.response) {
       if (error.response.data?.detail && typeof error.response.data.detail === "string") {
         message = error.response.data.detail;
-      } else if (error.response.data?.message && typeof error.response.data.message === "string") {
-        message = error.response.data.message;
       }
     } else if (error.request) {
       message = "Network error. Please check your connection and try again.";
