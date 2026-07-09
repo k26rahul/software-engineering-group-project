@@ -13,10 +13,11 @@ from models.user import User
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/auth/login")
 
 SessionDep = Annotated[Session, Depends(get_session)]
+TokenDep = Annotated[str, Depends(oauth2_scheme)]
 
 
 def get_current_user(
-  token: Annotated[str, Depends(oauth2_scheme)],
+  token: TokenDep,
   session: SessionDep,
 ) -> User:
   """Resolves a valid JWT to its User, enforcing blocklist and active status."""
@@ -42,13 +43,13 @@ def get_current_user(
 
 
 # Resolves the JWT and injects the full User object.
-CurrentUser = Annotated[User, Depends(get_current_user)]
+CurrentUserDep = Annotated[User, Depends(get_current_user)]
 
 
 def _require_role(*roles: UserRole):
   """Returns a dependency that raises 403 if the user's role is not in `roles`."""
 
-  def _check(current_user: CurrentUser) -> User:
+  def _check(current_user: CurrentUserDep) -> User:
     if current_user.role not in roles:
       raise HTTPException(
         status_code=status.HTTP_403_FORBIDDEN,

@@ -18,10 +18,6 @@ class RegisterRequest(SQLModel):
   membership_type: MembershipType
 
 
-class LogoutRequest(SQLModel):
-  token: str
-
-
 class ChangePasswordRequest(SQLModel):
   current_password: str
   new_password: str

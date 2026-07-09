@@ -1,5 +1,7 @@
+from datetime import datetime, timedelta, timezone
+
 import pytest
-from jose import JWTError
+from jose import JWTError, jwt
 
 from core.auth import (
   create_access_token,
@@ -7,9 +9,11 @@ from core.auth import (
   hash_password,
   verify_password,
 )
+from core.config import settings
 
 
 def test_hash_and_verify_password():
+  """Verifies that passwords can be hashed and verified correctly."""
   password = "supersecretpassword"
   hashed = hash_password(password)
 
@@ -19,6 +23,7 @@ def test_hash_and_verify_password():
 
 
 def test_create_access_token():
+  """Verifies that signed JWT access tokens can be created."""
   user_id = 123
   token = create_access_token(subject=user_id)
 
@@ -27,6 +32,7 @@ def test_create_access_token():
 
 
 def test_decode_token_success():
+  """Verifies that a valid JWT token is successfully decoded."""
   user_id = 456
   token = create_access_token(subject=user_id)
 
@@ -35,17 +41,13 @@ def test_decode_token_success():
 
 
 def test_decode_token_invalid():
+  """Verifies that decoding an invalid token raises a JWTError."""
   with pytest.raises(JWTError):
     decode_token("this.is.invalid")
 
 
 def test_decode_token_missing_sub():
-  from datetime import datetime, timedelta, timezone
-
-  from jose import jwt
-
-  from core.config import settings
-
+  """Verifies that decoding a token without a subject claim raises a JWTError."""
   # Create a token without the 'sub' claim
   expire = datetime.now(timezone.utc) + timedelta(minutes=15)
   payload = {"exp": expire}
@@ -56,12 +58,7 @@ def test_decode_token_missing_sub():
 
 
 def test_decode_token_expired():
-  from datetime import datetime, timedelta, timezone
-
-  from jose import jwt
-
-  from core.config import settings
-
+  """Verifies that decoding an expired token raises a JWTError."""
   # Create a token that is already expired
   expire = datetime.now(timezone.utc) - timedelta(minutes=15)
   payload = {"sub": "123", "exp": expire}

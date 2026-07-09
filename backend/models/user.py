@@ -38,7 +38,7 @@ class User(UserBase, IDMixin, CreatedAtMixin, UpdatedAtMixin, table=True):
     default=MemberApprovalStatus.PENDING,
     description="Approval status of the member registration.",
   )
-  is_active: bool = Field(default=True, description="Whether the user account is active.")
+  is_active: bool = Field(default=False, description="Whether the user account is active.")
   membership_start_date: date | None = Field(
     default=None, description="Start date of the current membership cycle."
   )

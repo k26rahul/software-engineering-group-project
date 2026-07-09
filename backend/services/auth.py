@@ -10,7 +10,6 @@ from core.auth import (
 from models.auth import (
   ChangePasswordRequest,
   LoginRequest,
-  LogoutRequest,
   RegisterRequest,
   TokenResponse,
 )
@@ -45,6 +44,7 @@ def register(body: RegisterRequest, session: Session) -> UserProfileResponse:
     role=UserRole.MEMBER,
     membership_type=body.membership_type,
     approval_status=MemberApprovalStatus.PENDING,
+    is_active=False,
     max_issue_limit=0,
   )
   session.add(user)
@@ -53,9 +53,9 @@ def register(body: RegisterRequest, session: Session) -> UserProfileResponse:
   return UserProfileResponse.model_validate(user)
 
 
-def logout(body: LogoutRequest) -> None:
+def logout(token: str) -> None:
   """Adds the token to the in-memory blocklist to invalidate it."""
-  token_blocklist.add(body.token)
+  token_blocklist.add(token)
 
 
 def change_password(body: ChangePasswordRequest, user: User, session: Session) -> None:

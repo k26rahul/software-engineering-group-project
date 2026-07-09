@@ -12,6 +12,7 @@ from models.user import User
 
 @pytest.fixture(autouse=True)
 def clear_blocklist():
+  """Clears the token blocklist before each test execution."""
   token_blocklist.clear()
 
 
@@ -26,6 +27,7 @@ engine = create_engine(
 
 @pytest.fixture(name="db_session")
 def session_fixture():
+  """Creates a database session with a clean SQLite memory database for the test."""
   SQLModel.metadata.create_all(engine)
   with Session(engine) as session:
     yield session
@@ -34,7 +36,10 @@ def session_fixture():
 
 @pytest.fixture(name="client")
 def client_fixture(db_session: Session):
+  """Provides a FastAPI test client configured with database overrides."""
+
   def get_session_override():
+    """Overrides the database session dependency to return the test session."""
     return db_session
 
   app.dependency_overrides[get_session] = get_session_override
@@ -45,6 +50,7 @@ def client_fixture(db_session: Session):
 
 @pytest.fixture(name="normal_user")
 def normal_user_fixture(db_session: Session) -> User:
+  """Creates and returns an active approved member user in the database."""
   user = User(
     email="member@test.com",
     name="Test Member",
@@ -62,6 +68,7 @@ def normal_user_fixture(db_session: Session) -> User:
 
 @pytest.fixture(name="inactive_user")
 def inactive_user_fixture(db_session: Session) -> User:
+  """Creates and returns an inactive pending member user in the database."""
   user = User(
     email="inactive@test.com",
     name="Inactive User",
@@ -79,6 +86,7 @@ def inactive_user_fixture(db_session: Session) -> User:
 
 @pytest.fixture(name="librarian_user")
 def librarian_user_fixture(db_session: Session) -> User:
+  """Creates and returns an active approved librarian user in the database."""
   user = User(
     email="librarian@test.com",
     name="Test Librarian",
@@ -92,3 +100,13 @@ def librarian_user_fixture(db_session: Session) -> User:
   db_session.commit()
   db_session.refresh(user)
   return user
+
+
+@pytest.fixture(name="normal_user_token")
+def normal_user_token_fixture(client: TestClient, normal_user: User) -> str:
+  """Retrieves a valid JWT access token for the normal member user."""
+  response = client.post(
+    "/auth/login",
+    json={"email": normal_user.email, "password": "password123"},
+  )
+  return response.json()["access_token"]
