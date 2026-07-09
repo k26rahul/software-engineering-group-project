@@ -27,5 +27,4 @@ class ChangePasswordRequest(SQLModel):
 class TokenResponse(SQLModel):
   access_token: str
   token_type: str = "bearer"
-  token: str
   user: UserProfileResponse

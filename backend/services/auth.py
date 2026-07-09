@@ -25,7 +25,6 @@ def login(body: LoginRequest, session: Session) -> TokenResponse:
   token = create_access_token(subject=user.id)
   return TokenResponse(
     access_token=token,
-    token=token,
     user=UserProfileResponse.model_validate(user),
   )
 
@@ -55,7 +54,6 @@ def register(body: RegisterRequest, session: Session) -> TokenResponse:
   token = create_access_token(subject=user.id)
   return TokenResponse(
     access_token=token,
-    token=token,
     user=UserProfileResponse.model_validate(user),
   )
 

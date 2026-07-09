@@ -10,7 +10,7 @@ export const authHandlers = [
     if (user && user.password === password) {
       return HttpResponse.json({
         user: user,
-        token: "mock-jwt-token-123",
+        access_token: "mock-jwt-token-123",
       });
     }
 
@@ -47,7 +47,6 @@ export const authHandlers = [
           is_active: false,
           created_at: new Date().toISOString(),
         },
-        token: "mock-jwt-token-123",
         access_token: "mock-jwt-token-123",
       },
       { status: 201 }

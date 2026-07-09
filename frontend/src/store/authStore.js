@@ -7,9 +7,9 @@ const useAuthStore = create((set) => ({
 
   login: async (email, password) => {
     const response = await api.post("/auth/login", { email, password });
-    const { user, token } = response.data;
-    set({ user, token });
-    localStorage.setItem("token", token);
+    const { user, access_token } = response.data;
+    set({ user, token: access_token });
+    localStorage.setItem("token", access_token);
     return user;
   },
 
@@ -21,9 +21,9 @@ const useAuthStore = create((set) => ({
       phone: phone || null,
       membership_type: membershipType,
     });
-    const { user, token } = response.data;
-    set({ user, token });
-    localStorage.setItem("token", token);
+    const { user, access_token } = response.data;
+    set({ user, token: access_token });
+    localStorage.setItem("token", access_token);
     return user;
   },
 
