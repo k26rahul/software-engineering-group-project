@@ -38,14 +38,15 @@ class Subscription(IDMixin, CreatedAtMixin, table=True):
   frequency: SubscriptionFrequency = Field(description="Delivery frequency of the subscription.")
   is_active: bool = Field(default=True, description="Whether the subscription is currently active.")
 
+  vendor_id: int | None = Field(
+    default=None, foreign_key="vendor.id", description="ID of the vendor."
+  )
+
   magazine: "Magazine" = Relationship(
     sa_relationship_kwargs={"uselist": False}, back_populates="subscription"
   )
   newspaper: "Newspaper" = Relationship(
     sa_relationship_kwargs={"uselist": False}, back_populates="subscription"
-  )
-  vendor_id: int | None = Field(
-    default=None, foreign_key="vendor.id", description="ID of the vendor."
   )
   vendor: "Vendor" = Relationship(back_populates="subscriptions")
 
@@ -72,9 +73,10 @@ class BookPurchaseEntry(IDMixin, table=True):
   vendor_id: int | None = Field(
     default=None, foreign_key="vendor.id", description="ID of the vendor."
   )
-  vendor: "Vendor" = Relationship(back_populates="book_purchases")
   category: str | None = Field(default=None, description="Category of the purchased books.")
   purchase_date: date = Field(description="Date the purchase was made.")
+
+  vendor: "Vendor" = Relationship(back_populates="book_purchases")
 
   def total_cost(self) -> float:
     """Total cost of the purchase entry."""
