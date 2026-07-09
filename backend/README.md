@@ -10,7 +10,7 @@ This is the backend API for the Library Management System, providing a robust, h
 - **Database:** SQLite
 - **ORM:** SQLModel (Combines SQLAlchemy and Pydantic)
 - **Validation:** Pydantic
-- **Authentication:** Passlib + Python-JOSE (JWT)
+- **Authentication:** pwdlib + Python-JOSE (JWT)
 - **Testing:** pytest
 - **Code Quality:** Ruff
 
@@ -21,7 +21,7 @@ This is the backend API for the Library Management System, providing a robust, h
 - `uvicorn[standard]`: Lightning-fast ASGI web server.
 - `sqlmodel`: ORM layer for interacting with the SQLite database seamlessly.
 - `pydantic-settings`: Management of settings and environment variables.
-- `passlib[bcrypt]`: Secure password hashing.
+- `pwdlib[bcrypt]`: Modern, secure password hashing.
 - `python-jose[cryptography]`: Generation and verification of JSON Web Tokens (JWT) for user authentication.
 
 ### Development Dependencies

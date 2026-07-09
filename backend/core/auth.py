@@ -1,11 +1,12 @@
 from datetime import datetime, timedelta, timezone
 
 from jose import JWTError, jwt
-from passlib.context import CryptContext
+from pwdlib import PasswordHash
+from pwdlib.hashers.bcrypt import BcryptHasher
 
 from core.config import settings
 
-pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
+pwd_context = PasswordHash((BcryptHasher(),))
 
 # Holds invalidated tokens until their natural expiry.
 token_blocklist: set[str] = set()
