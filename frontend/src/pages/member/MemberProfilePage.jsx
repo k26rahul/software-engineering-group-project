@@ -182,7 +182,7 @@ export default function MemberProfilePage() {
     <div className="flex flex-col gap-8 pb-8">
       {/* Header */}
       <div className="flex flex-col gap-2">
-        <h1 className="from-primary to-primary-foreground bg-gradient-to-r bg-clip-text text-4xl font-extrabold tracking-tight text-transparent">
+        <h1 className="from-primary to-primary-foreground bg-linear-to-r bg-clip-text text-4xl font-extrabold tracking-tight text-transparent">
           My Account & Profile
         </h1>
         <p className="text-muted-foreground text-sm">

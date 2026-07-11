@@ -78,7 +78,7 @@ function MemberDashboardHome() {
 
       {/* Header and Welcome */}
       <div className="flex flex-col gap-2">
-        <h1 className="from-primary to-primary-foreground bg-gradient-to-r bg-clip-text text-4xl font-extrabold tracking-tight text-transparent">
+        <h1 className="from-primary to-primary-foreground bg-linear-to-r bg-clip-text text-4xl font-extrabold tracking-tight text-transparent">
           Welcome back, {profile?.name || user?.name || "Member"}
         </h1>
         <p className="text-muted-foreground text-sm">
