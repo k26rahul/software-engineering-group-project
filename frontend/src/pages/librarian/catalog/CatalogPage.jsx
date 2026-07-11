@@ -32,14 +32,20 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { Skeleton } from "@/components/ui/skeleton";
 import { toast } from "sonner";
 import useCatalogStore from "@/store/catalogStore";
 import { categories } from "@/mocks/data/books";
 
 export default function CatalogPage() {
-  const { books, fetchBooks, deleteBook, isLoading, error } = useCatalogStore();
+  const { books, fetchBooks, deleteBook, isLoading } = useCatalogStore();
   const [search, setSearch] = useState("");
   const [category, setCategory] = useState("all");
   const [bookToDelete, setBookToDelete] = useState(null);
@@ -48,11 +54,11 @@ export default function CatalogPage() {
     const params = {};
     if (search) params.search = search;
     if (category !== "all") params.category = category;
-    
+
     const timer = setTimeout(() => {
       fetchBooks(params);
     }, 300);
-    
+
     return () => clearTimeout(timer);
   }, [search, category, fetchBooks]);
 
@@ -86,8 +92,8 @@ export default function CatalogPage() {
         </CardHeader>
         <CardContent>
           <div className="mb-6 flex flex-col gap-4 sm:flex-row sm:items-center">
-            <div className="relative flex-1 max-w-sm">
-              <Search className="text-muted-foreground absolute left-2.5 top-2.5 h-4 w-4" />
+            <div className="relative max-w-sm flex-1">
+              <Search className="text-muted-foreground absolute top-2.5 left-2.5 h-4 w-4" />
               <Input
                 type="search"
                 placeholder="Search by title, author, or ISBN..."
@@ -129,19 +135,34 @@ export default function CatalogPage() {
               <TableBody>
                 {isLoading && books.length === 0 ? (
                   Array.from({ length: 5 }).map((_, i) => (
+                    // eslint-disable-next-line @eslint-react/no-array-index-key
                     <TableRow key={i}>
-                      <TableCell><Skeleton className="h-4 w-[200px]" /></TableCell>
-                      <TableCell><Skeleton className="h-4 w-[150px]" /></TableCell>
-                      <TableCell className="hidden md:table-cell"><Skeleton className="h-4 w-[100px]" /></TableCell>
-                      <TableCell className="hidden lg:table-cell"><Skeleton className="h-4 w-[120px]" /></TableCell>
-                      <TableCell><Skeleton className="h-4 w-[50px]" /></TableCell>
-                      <TableCell className="hidden sm:table-cell"><Skeleton className="h-4 w-[80px]" /></TableCell>
-                      <TableCell className="text-right"><Skeleton className="h-8 w-8 ml-auto rounded-md" /></TableCell>
+                      <TableCell>
+                        <Skeleton className="h-4 w-[200px]" />
+                      </TableCell>
+                      <TableCell>
+                        <Skeleton className="h-4 w-[150px]" />
+                      </TableCell>
+                      <TableCell className="hidden md:table-cell">
+                        <Skeleton className="h-4 w-[100px]" />
+                      </TableCell>
+                      <TableCell className="hidden lg:table-cell">
+                        <Skeleton className="h-4 w-[120px]" />
+                      </TableCell>
+                      <TableCell>
+                        <Skeleton className="h-4 w-[50px]" />
+                      </TableCell>
+                      <TableCell className="hidden sm:table-cell">
+                        <Skeleton className="h-4 w-[80px]" />
+                      </TableCell>
+                      <TableCell className="text-right">
+                        <Skeleton className="ml-auto h-8 w-8 rounded-md" />
+                      </TableCell>
                     </TableRow>
                   ))
                 ) : books.length === 0 ? (
                   <TableRow>
-                    <TableCell colSpan={7} className="h-24 text-center text-muted-foreground">
+                    <TableCell colSpan={7} className="text-muted-foreground h-24 text-center">
                       No books found.
                     </TableCell>
                   </TableRow>
@@ -153,7 +174,7 @@ export default function CatalogPage() {
                       <TableCell className="hidden md:table-cell">
                         <Badge variant="outline">{book.category}</Badge>
                       </TableCell>
-                      <TableCell className="hidden lg:table-cell text-muted-foreground">
+                      <TableCell className="text-muted-foreground hidden lg:table-cell">
                         {book.isbn || "-"}
                       </TableCell>
                       <TableCell>
@@ -189,10 +210,13 @@ export default function CatalogPage() {
                             <DropdownMenuSeparator />
                             <AlertDialog>
                               <AlertDialogTrigger asChild>
-                                <DropdownMenuItem onSelect={(e) => {
-                                  e.preventDefault();
-                                  setBookToDelete(book);
-                                }} className="text-destructive focus:text-destructive focus:bg-destructive/10">
+                                <DropdownMenuItem
+                                  onSelect={(e) => {
+                                    e.preventDefault();
+                                    setBookToDelete(book);
+                                  }}
+                                  className="text-destructive focus:text-destructive focus:bg-destructive/10"
+                                >
                                   <Trash2 className="mr-2 h-4 w-4" />
                                   Archive
                                 </DropdownMenuItem>
@@ -201,12 +225,18 @@ export default function CatalogPage() {
                                 <AlertDialogHeader>
                                   <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
                                   <AlertDialogDescription>
-                                    This will archive "{bookToDelete?.title}" from the catalog. You can restore it later if needed.
+                                    This will archive "{bookToDelete?.title}" from the catalog. You
+                                    can restore it later if needed.
                                   </AlertDialogDescription>
                                 </AlertDialogHeader>
                                 <AlertDialogFooter>
-                                  <AlertDialogCancel onClick={() => setBookToDelete(null)}>Cancel</AlertDialogCancel>
-                                  <AlertDialogAction onClick={handleDelete} className="bg-destructive text-destructive-foreground hover:bg-destructive/90">
+                                  <AlertDialogCancel onClick={() => setBookToDelete(null)}>
+                                    Cancel
+                                  </AlertDialogCancel>
+                                  <AlertDialogAction
+                                    onClick={handleDelete}
+                                    className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+                                  >
                                     Archive Book
                                   </AlertDialogAction>
                                 </AlertDialogFooter>

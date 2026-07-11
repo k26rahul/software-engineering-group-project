@@ -3,11 +3,11 @@ import { books as mockBooks } from "@/mocks/data";
 import { baseURL } from "@/lib/api";
 
 // Keep a mutable in-memory copy
-let booksDB = structuredClone(mockBooks);  //deep clone to avoid mutating the original mock data
-let nextId = Math.max(0, ...booksDB.map(b => b.id)) + 1;
-let nextCopyId = Math.max(0, ...booksDB.flatMap(b => b.copies.map(c => c.id))) + 1;
+let booksDB = structuredClone(mockBooks); //deep clone to avoid mutating the original mock data
+let nextId = Math.max(0, ...booksDB.map((b) => b.id)) + 1;
+let nextCopyId = Math.max(0, ...booksDB.flatMap((b) => b.copies.map((c) => c.id))) + 1;
 
-export const catalogHandlers = [  
+export const catalogHandlers = [
   http.get(`${baseURL}/books`, ({ request }) => {
     const url = new URL(request.url);
     const search = url.searchParams.get("search")?.toLowerCase() || "";
@@ -81,7 +81,7 @@ export const catalogHandlers = [
     }
     return HttpResponse.json(book);
   }),
-  
+
   http.patch(`${baseURL}/books/:id`, async ({ params, request }) => {
     const bookIndex = booksDB.findIndex((b) => b.id === Number(params.id));
     if (bookIndex === -1 || booksDB[bookIndex].is_archived) {
@@ -90,7 +90,7 @@ export const catalogHandlers = [
 
     const updates = await request.json();
     booksDB[bookIndex] = { ...booksDB[bookIndex], ...updates };
-    
+
     return HttpResponse.json(booksDB[bookIndex]);
   }),
 
@@ -104,20 +104,20 @@ export const catalogHandlers = [
     booksDB[bookIndex].is_archived = true;
     return HttpResponse.json({ detail: "Book archived successfully" });
   }),
-  
+
   http.post(`${baseURL}/books/isbn-lookup`, async ({ request }) => {
     const { isbn } = await request.json();
 
     // Mock data for known ISBNs
     const mockLookupDB = {
-      "9781491950296": {
+      9781491950296: {
         title: "Programming TypeScript",
         author: "Boris Cherny",
         category: "Technology",
         price: 399,
         description: "Making Your JavaScript Applications Scale",
       },
-      "9780596517748": {
+      9780596517748: {
         title: "JavaScript: The Good Parts",
         author: "Douglas Crockford",
         category: "Technology",
@@ -133,7 +133,7 @@ export const catalogHandlers = [
 
     return HttpResponse.json({ detail: "ISBN not found" }, { status: 404 });
   }),
-  
+
   http.patch(`${baseURL}/books/:id/copies/:copyId`, async ({ params, request }) => {
     const bookIndex = booksDB.findIndex((b) => b.id === Number(params.id));
     if (bookIndex === -1 || booksDB[bookIndex].is_archived) {
@@ -141,9 +141,7 @@ export const catalogHandlers = [
     }
 
     const { status } = await request.json();
-    const copyIndex = booksDB[bookIndex].copies.findIndex(
-      (c) => c.id === Number(params.copyId)
-    );
+    const copyIndex = booksDB[bookIndex].copies.findIndex((c) => c.id === Number(params.copyId));
 
     if (copyIndex === -1) {
       return HttpResponse.json({ detail: "Copy not found" }, { status: 404 });
@@ -158,23 +156,23 @@ export const catalogHandlers = [
 
     return HttpResponse.json(booksDB[bookIndex]);
   }),
-    
+
   http.post(`${baseURL}/books/:id/copies`, async ({ params }) => {
     const bookIndex = booksDB.findIndex((b) => b.id === Number(params.id));
     if (bookIndex === -1 || booksDB[bookIndex].is_archived) {
       return HttpResponse.json({ detail: "Book not found" }, { status: 404 });
     }
-    
+
     const newCopy = {
       id: nextCopyId++,
       book_id: Number(params.id),
       copy_number: booksDB[bookIndex].copies.length + 1,
       status: "AVAILABLE",
     };
-    
+
     booksDB[bookIndex].copies.push(newCopy);
     booksDB[bookIndex].available_copies += 1;
-    
+
     return HttpResponse.json(newCopy, { status: 201 });
   }),
 ];

@@ -4,8 +4,21 @@ import { ArrowLeft, Search, Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from "@/components/ui/card";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+  CardFooter,
+} from "@/components/ui/card";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { toast } from "sonner";
 import useCatalogStore from "@/store/catalogStore";
 import { categories } from "@/mocks/data/books";
@@ -15,7 +28,7 @@ export default function AddBookPage() {
   const { addBook, lookupISBN, isLoading } = useCatalogStore();
   const [isbnLookup, setIsbnLookup] = useState("");
   const [isLookingUp, setIsLookingUp] = useState(false);
-  
+
   const [formData, setFormData] = useState({
     title: "",
     author: "",
@@ -37,7 +50,7 @@ export default function AddBookPage() {
 
   const handleLookup = async () => {
     if (!isbnLookup.trim()) return;
-    
+
     setIsLookingUp(true);
     try {
       const data = await lookupISBN(isbnLookup);
@@ -74,7 +87,7 @@ export default function AddBookPage() {
   };
 
   return (
-    <div className="flex max-w-3xl flex-col gap-6 mx-auto w-full">
+    <div className="mx-auto flex w-full max-w-3xl flex-col gap-6">
       <div className="flex items-center gap-4">
         <Button variant="outline" size="icon" asChild>
           <Link to="/librarian/catalog">
@@ -106,7 +119,11 @@ export default function AddBookPage() {
               }}
             />
             <Button onClick={handleLookup} disabled={isLookingUp || !isbnLookup.trim()}>
-              {isLookingUp ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <Search className="mr-2 h-4 w-4" />}
+              {isLookingUp ? (
+                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+              ) : (
+                <Search className="mr-2 h-4 w-4" />
+              )}
               Lookup
             </Button>
           </div>
@@ -129,7 +146,7 @@ export default function AddBookPage() {
                 required
               />
             </div>
-            
+
             <div className="grid grid-cols-1 gap-6 sm:grid-cols-2">
               <div className="grid gap-2">
                 <Label htmlFor="author">Author *</Label>
@@ -143,12 +160,7 @@ export default function AddBookPage() {
               </div>
               <div className="grid gap-2">
                 <Label htmlFor="isbn">ISBN</Label>
-                <Input
-                  id="isbn"
-                  name="isbn"
-                  value={formData.isbn}
-                  onChange={handleChange}
-                />
+                <Input id="isbn" name="isbn" value={formData.isbn} onChange={handleChange} />
               </div>
             </div>
 
@@ -168,7 +180,7 @@ export default function AddBookPage() {
                   </SelectContent>
                 </Select>
               </div>
-              
+
               <div className="grid gap-2">
                 <Label htmlFor="price">Price (₹) *</Label>
                 <Input
@@ -202,7 +214,7 @@ export default function AddBookPage() {
               <textarea
                 id="description"
                 name="description"
-                className="flex min-h-[80px] w-full rounded-md border border-input bg-transparent px-3 py-2 text-sm shadow-sm placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50"
+                className="border-input placeholder:text-muted-foreground focus-visible:ring-ring flex min-h-[80px] w-full rounded-md border bg-transparent px-3 py-2 text-sm shadow-sm focus-visible:ring-1 focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-50"
                 value={formData.description}
                 onChange={handleChange}
                 rows={4}

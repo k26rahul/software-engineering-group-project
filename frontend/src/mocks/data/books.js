@@ -7,8 +7,9 @@ export const books = [
     author: "Robert C. Martin",
     isbn: "9780132350884",
     category: "Technology",
-    price: 499.00,
-    description: "A handbook of agile software craftsmanship that teaches you how to write clean, maintainable code.",
+    price: 499.0,
+    description:
+      "A handbook of agile software craftsmanship that teaches you how to write clean, maintainable code.",
     available_copies: 2,
     average_rating: 4.5,
     created_at: "2024-01-10T08:00:00Z",
@@ -17,7 +18,7 @@ export const books = [
       { id: 1, book_id: 1, copy_number: 1, status: "AVAILABLE" },
       { id: 2, book_id: 1, copy_number: 2, status: "AVAILABLE" },
       { id: 3, book_id: 1, copy_number: 3, status: "ISSUED" },
-    ]
+    ],
   },
   {
     id: 2,
@@ -34,7 +35,7 @@ export const books = [
     copies: [
       { id: 4, book_id: 2, copy_number: 1, status: "AVAILABLE" },
       { id: 5, book_id: 2, copy_number: 2, status: "LOST" },
-    ]
+    ],
   },
   {
     id: 3,
@@ -42,7 +43,7 @@ export const books = [
     author: "Stephen Hawking",
     isbn: "9780553380163",
     category: "Science",
-    price: 399.50,
+    price: 399.5,
     description: "An exploration of cosmology, black holes, and the universe.",
     available_copies: 3,
     average_rating: 4.8,
@@ -52,7 +53,7 @@ export const books = [
       { id: 6, book_id: 3, copy_number: 1, status: "AVAILABLE" },
       { id: 7, book_id: 3, copy_number: 2, status: "AVAILABLE" },
       { id: 8, book_id: 3, copy_number: 3, status: "AVAILABLE" },
-    ]
+    ],
   },
   {
     id: 4,
@@ -60,7 +61,7 @@ export const books = [
     author: "George Orwell",
     isbn: "9780451524935",
     category: "Fiction",
-    price: 199.00,
+    price: 199.0,
     description: "A dystopian social science fiction novel and cautionary tale.",
     available_copies: 0,
     average_rating: 4.7,
@@ -69,7 +70,7 @@ export const books = [
     copies: [
       { id: 9, book_id: 4, copy_number: 1, status: "ISSUED" },
       { id: 10, book_id: 4, copy_number: 2, status: "ISSUED" },
-    ]
+    ],
   },
   {
     id: 5,
@@ -77,7 +78,7 @@ export const books = [
     author: "Yuval Noah Harari",
     isbn: "9780062316097",
     category: "History",
-    price: 550.00,
+    price: 550.0,
     description: "An exploration of the history of the human species.",
     available_copies: 2,
     average_rating: 4.6,
@@ -87,7 +88,7 @@ export const books = [
       { id: 11, book_id: 5, copy_number: 1, status: "AVAILABLE" },
       { id: 12, book_id: 5, copy_number: 2, status: "AVAILABLE" },
       { id: 13, book_id: 5, copy_number: 3, status: "DAMAGED" },
-    ]
+    ],
   },
   {
     id: 6,
@@ -95,7 +96,7 @@ export const books = [
     author: "Walter Isaacson",
     isbn: "9781451648539",
     category: "Biography",
-    price: 600.00,
+    price: 600.0,
     description: "The exclusive biography of Steve Jobs.",
     available_copies: 1,
     average_rating: 4.4,
@@ -104,7 +105,7 @@ export const books = [
     copies: [
       { id: 14, book_id: 6, copy_number: 1, status: "AVAILABLE" },
       { id: 15, book_id: 6, copy_number: 2, status: "ISSUED" },
-    ]
+    ],
   },
   {
     id: 7,
@@ -112,7 +113,7 @@ export const books = [
     author: "Erich Gamma, Richard Helm, Ralph Johnson, John Vlissides",
     isbn: "9780201633610",
     category: "Technology",
-    price: 750.00,
+    price: 750.0,
     description: "Elements of Reusable Object-Oriented Software.",
     available_copies: 4,
     average_rating: 4.3,
@@ -123,7 +124,7 @@ export const books = [
       { id: 17, book_id: 7, copy_number: 2, status: "AVAILABLE" },
       { id: 18, book_id: 7, copy_number: 3, status: "AVAILABLE" },
       { id: 19, book_id: 7, copy_number: 4, status: "AVAILABLE" },
-    ]
+    ],
   },
   {
     id: 8,
@@ -131,15 +132,13 @@ export const books = [
     author: "Harper Lee",
     isbn: "9780060935467",
     category: "Fiction",
-    price: 250.00,
+    price: 250.0,
     description: "A novel about the serious issues of rape and racial inequality.",
     available_copies: 0,
     average_rating: 4.9,
     created_at: "2024-05-20T10:00:00Z",
     is_archived: false,
-    copies: [
-      { id: 20, book_id: 8, copy_number: 1, status: "LOST" },
-    ]
+    copies: [{ id: 20, book_id: 8, copy_number: 1, status: "LOST" }],
   },
   {
     id: 9,
@@ -147,7 +146,7 @@ export const books = [
     author: "Richard Dawkins",
     isbn: "9780198788607",
     category: "Science",
-    price: 450.00,
+    price: 450.0,
     description: "A book on evolution by Richard Dawkins.",
     available_copies: 2,
     average_rating: 4.4,
@@ -156,7 +155,7 @@ export const books = [
     copies: [
       { id: 21, book_id: 9, copy_number: 1, status: "AVAILABLE" },
       { id: 22, book_id: 9, copy_number: 2, status: "AVAILABLE" },
-    ]
+    ],
   },
   {
     id: 10,
@@ -164,14 +163,12 @@ export const books = [
     author: "Anne Frank",
     isbn: "9780553296983",
     category: "Biography",
-    price: 180.00,
+    price: 180.0,
     description: "The writings from the Dutch-language diary kept by Anne Frank.",
     available_copies: 1,
     average_rating: 4.8,
     created_at: "2024-06-15T15:20:00Z",
     is_archived: true,
-    copies: [
-      { id: 23, book_id: 10, copy_number: 1, status: "AVAILABLE" },
-    ]
-  }
+    copies: [{ id: 23, book_id: 10, copy_number: 1, status: "AVAILABLE" }],
+  },
 ];

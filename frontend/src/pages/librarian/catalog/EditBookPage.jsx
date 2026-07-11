@@ -5,7 +5,13 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardHeader, CardTitle, CardFooter } from "@/components/ui/card";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { toast } from "sonner";
 import useCatalogStore from "@/store/catalogStore";
 import { categories } from "@/mocks/data/books";
@@ -14,7 +20,7 @@ export default function EditBookPage() {
   const { id } = useParams();
   const navigate = useNavigate();
   const { fetchBook, updateBook, isLoading } = useCatalogStore();
-  
+
   const [formData, setFormData] = useState({
     title: "",
     author: "",
@@ -38,14 +44,14 @@ export default function EditBookPage() {
           price: book.price ? String(book.price) : "",
           description: book.description || "",
         });
-      } catch (err) {
+      } catch {
         toast.error("Failed to load book details");
         navigate("/librarian/catalog");
       } finally {
         setIsFetching(false);
       }
     };
-    
+
     loadBook();
   }, [id, fetchBook, navigate]);
 
@@ -75,13 +81,13 @@ export default function EditBookPage() {
   if (isFetching) {
     return (
       <div className="flex h-[50vh] items-center justify-center">
-        <Loader2 className="h-8 w-8 animate-spin text-muted-foreground" />
+        <Loader2 className="text-muted-foreground h-8 w-8 animate-spin" />
       </div>
     );
   }
 
   return (
-    <div className="flex max-w-3xl flex-col gap-6 mx-auto w-full">
+    <div className="mx-auto flex w-full max-w-3xl flex-col gap-6">
       <div className="flex items-center gap-4">
         <Button variant="outline" size="icon" asChild>
           <Link to="/librarian/catalog">
@@ -107,7 +113,7 @@ export default function EditBookPage() {
                 required
               />
             </div>
-            
+
             <div className="grid grid-cols-1 gap-6 sm:grid-cols-2">
               <div className="grid gap-2">
                 <Label htmlFor="author">Author *</Label>
@@ -121,12 +127,7 @@ export default function EditBookPage() {
               </div>
               <div className="grid gap-2">
                 <Label htmlFor="isbn">ISBN</Label>
-                <Input
-                  id="isbn"
-                  name="isbn"
-                  value={formData.isbn}
-                  onChange={handleChange}
-                />
+                <Input id="isbn" name="isbn" value={formData.isbn} onChange={handleChange} />
               </div>
             </div>
 
@@ -146,7 +147,7 @@ export default function EditBookPage() {
                   </SelectContent>
                 </Select>
               </div>
-              
+
               <div className="grid gap-2">
                 <Label htmlFor="price">Price (₹) *</Label>
                 <Input
@@ -167,7 +168,7 @@ export default function EditBookPage() {
               <textarea
                 id="description"
                 name="description"
-                className="flex min-h-[80px] w-full rounded-md border border-input bg-transparent px-3 py-2 text-sm shadow-sm placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50"
+                className="border-input placeholder:text-muted-foreground focus-visible:ring-ring flex min-h-[80px] w-full rounded-md border bg-transparent px-3 py-2 text-sm shadow-sm focus-visible:ring-1 focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-50"
                 value={formData.description}
                 onChange={handleChange}
                 rows={4}

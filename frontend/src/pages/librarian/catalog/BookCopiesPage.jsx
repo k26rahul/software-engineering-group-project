@@ -39,14 +39,14 @@ export default function BookCopiesPage() {
     const loadBook = async () => {
       try {
         await fetchBook(Number(id));
-      } catch (err) {
+      } catch {
         toast.error("Failed to load book copies");
         navigate("/librarian/catalog");
       } finally {
         setIsFetching(false);
       }
     };
-    
+
     loadBook();
   }, [id, fetchBook, navigate]);
 
@@ -71,13 +71,13 @@ export default function BookCopiesPage() {
   if (isFetching || !selectedBook) {
     return (
       <div className="flex h-[50vh] items-center justify-center">
-        <Loader2 className="h-8 w-8 animate-spin text-muted-foreground" />
+        <Loader2 className="text-muted-foreground h-8 w-8 animate-spin" />
       </div>
     );
   }
 
   return (
-    <div className="flex max-w-4xl flex-col gap-6 mx-auto w-full">
+    <div className="mx-auto flex w-full max-w-4xl flex-col gap-6">
       <div className="flex items-center gap-4">
         <Button variant="outline" size="icon" asChild>
           <Link to="/librarian/catalog">
@@ -86,7 +86,9 @@ export default function BookCopiesPage() {
         </Button>
         <div className="flex flex-col">
           <h1 className="text-3xl font-semibold tracking-tight">Manage Copies</h1>
-          <p className="text-muted-foreground">{selectedBook.title} by {selectedBook.author}</p>
+          <p className="text-muted-foreground">
+            {selectedBook.title} by {selectedBook.author}
+          </p>
         </div>
       </div>
 
@@ -96,22 +98,26 @@ export default function BookCopiesPage() {
             <CardTitle className="text-lg">Summary</CardTitle>
           </CardHeader>
           <CardContent className="grid gap-4">
-            <div className="flex justify-between items-center">
-              <span className="text-sm font-medium text-muted-foreground">Total Copies</span>
+            <div className="flex items-center justify-between">
+              <span className="text-muted-foreground text-sm font-medium">Total Copies</span>
               <span className="font-bold">{selectedBook.copies?.length || 0}</span>
             </div>
-            <div className="flex justify-between items-center">
-              <span className="text-sm font-medium text-muted-foreground">Available</span>
+            <div className="flex items-center justify-between">
+              <span className="text-muted-foreground text-sm font-medium">Available</span>
               <Badge variant={selectedBook.available_copies > 0 ? "secondary" : "destructive"}>
                 {selectedBook.available_copies}
               </Badge>
             </div>
-            <div className="flex justify-between items-center">
-              <span className="text-sm font-medium text-muted-foreground">ISBN</span>
+            <div className="flex items-center justify-between">
+              <span className="text-muted-foreground text-sm font-medium">ISBN</span>
               <span className="text-sm">{selectedBook.isbn || "N/A"}</span>
             </div>
             <Button onClick={handleAddCopy} disabled={isLoading} className="mt-4 w-full">
-              {isLoading ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <Plus className="mr-2 h-4 w-4" />}
+              {isLoading ? (
+                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+              ) : (
+                <Plus className="mr-2 h-4 w-4" />
+              )}
               Add New Copy
             </Button>
           </CardContent>
@@ -136,7 +142,7 @@ export default function BookCopiesPage() {
                 <TableBody>
                   {!selectedBook.copies || selectedBook.copies.length === 0 ? (
                     <TableRow>
-                      <TableCell colSpan={4} className="h-24 text-center text-muted-foreground">
+                      <TableCell colSpan={4} className="text-muted-foreground h-24 text-center">
                         No copies found. Add one to get started.
                       </TableCell>
                     </TableRow>
@@ -151,12 +157,12 @@ export default function BookCopiesPage() {
                           </Badge>
                         </TableCell>
                         <TableCell className="text-right">
-                          <Select 
-                            value={copy.status} 
+                          <Select
+                            value={copy.status}
                             onValueChange={(val) => handleStatusChange(copy.id, val)}
                             disabled={isLoading}
                           >
-                            <SelectTrigger className="w-[140px] ml-auto h-8">
+                            <SelectTrigger className="ml-auto h-8 w-[140px]">
                               <SelectValue placeholder="Update status" />
                             </SelectTrigger>
                             <SelectContent>

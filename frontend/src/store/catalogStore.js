@@ -55,7 +55,10 @@ const useCatalogStore = create((set) => ({
       const response = await api.patch(`/books/${id}`, updates);
       set((state) => ({
         books: state.books.map((b) => (b.id === id ? { ...b, ...response.data } : b)),
-        selectedBook: state.selectedBook?.id === id ? { ...state.selectedBook, ...response.data } : state.selectedBook,
+        selectedBook:
+          state.selectedBook?.id === id
+            ? { ...state.selectedBook, ...response.data }
+            : state.selectedBook,
         isLoading: false,
       }));
       return response.data;
@@ -101,8 +104,8 @@ const useCatalogStore = create((set) => ({
         if (updatedSelectedBook && updatedSelectedBook.id === bookId) {
           updatedSelectedBook = { ...response.data };
         }
-        
-        const updatedBooks = state.books.map((b) => 
+
+        const updatedBooks = state.books.map((b) =>
           b.id === bookId ? { ...b, available_copies: response.data.available_copies } : b
         );
 
@@ -118,16 +121,16 @@ const useCatalogStore = create((set) => ({
       throw error;
     }
   },
-  
+
   addCopy: async (bookId) => {
     set({ isLoading: true, error: null });
     try {
       const response = await api.post(`/books/${bookId}/copies`);
-      
+
       set((state) => {
         let updatedSelectedBook = state.selectedBook;
         let updatedBooks = [...state.books];
-        
+
         if (updatedSelectedBook && updatedSelectedBook.id === bookId) {
           updatedSelectedBook = {
             ...updatedSelectedBook,
@@ -135,11 +138,11 @@ const useCatalogStore = create((set) => ({
             available_copies: updatedSelectedBook.available_copies + 1,
           };
         }
-        
-        updatedBooks = updatedBooks.map((b) => 
+
+        updatedBooks = updatedBooks.map((b) =>
           b.id === bookId ? { ...b, available_copies: b.available_copies + 1 } : b
         );
-        
+
         return {
           books: updatedBooks,
           selectedBook: updatedSelectedBook,
@@ -151,7 +154,7 @@ const useCatalogStore = create((set) => ({
       set({ error: error.message, isLoading: false });
       throw error;
     }
-  }
+  },
 }));
 
 export default useCatalogStore;
