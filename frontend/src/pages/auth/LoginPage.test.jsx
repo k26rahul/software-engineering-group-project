@@ -64,10 +64,15 @@ describe("LoginPage Component", () => {
 
     // Check store state updated
     expect(useAuthStore.getState().user).toEqual({
+      id: 10,
       email: "librarian@example.com",
       name: "Chitra",
       role: "LIBRARIAN",
       password: "password123",
+      phone: "9876543201",
+      approval_status: "APPROVED",
+      is_active: true,
+      created_at: "2026-01-01T09:00:00Z",
     });
     expect(useAuthStore.getState().accessToken).toBe("mock-jwt-token-librarian@example.com");
     expect(localStorage.getItem(ACCESS_TOKEN_KEY)).toBe("mock-jwt-token-librarian@example.com");
