@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import useAuthStore from "@/store/authStore";
-import api from "@/lib/api";
+import useMemberStore from "@/store/memberStore";
 import {
   User,
   Phone,
@@ -16,44 +16,13 @@ import {
   AlertCircle,
 } from "lucide-react";
 
-export default function MemberProfilePage() {
-  const user = useAuthStore((state) => state.user);
-  const [profile, setProfile] = useState(null);
-  const [history, setHistory] = useState([]);
-  const [loading, setLoading] = useState(true);
+function ProfileForm({ profile, memberId, updateProfile, error }) {
   const [saving, setSaving] = useState(false);
   const [successMsg, setSuccessMsg] = useState("");
   const [errorMsg, setErrorMsg] = useState("");
 
-  const [name, setName] = useState("");
-  const [phone, setPhone] = useState("");
-
-  const memberId = user?.id || 1;
-
-  useEffect(() => {
-    const fetchProfileData = async () => {
-      try {
-        setLoading(true);
-        const [profileRes, historyRes] = await Promise.all([
-          api.get(`/members/${memberId}`),
-          api.get(`/members/${memberId}/history`),
-        ]);
-
-        setProfile(profileRes.data);
-        setHistory(historyRes.data);
-        setName(profileRes.data.name || "");
-        setPhone(profileRes.data.phone || "");
-        setErrorMsg("");
-      } catch (err) {
-        console.error("Error loading profile data:", err);
-        setErrorMsg("Failed to load profile details. Please try again.");
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchProfileData();
-  }, [memberId]);
+  const [name, setName] = useState(profile?.name || "");
+  const [phone, setPhone] = useState(profile?.phone || "");
 
   const handleSave = async (e) => {
     e.preventDefault();
@@ -67,15 +36,11 @@ export default function MemberProfilePage() {
       setErrorMsg("");
       setSuccessMsg("");
 
-      const response = await api.patch(`/members/${memberId}/profile`, {
-        name,
-        phone,
-      });
+      const updatedProfile = await updateProfile(memberId, name, phone);
 
-      setProfile(response.data);
       // Sync changes to the authStore to keep the UI shell name in sync
       useAuthStore.setState((state) => ({
-        user: { ...state.user, name: response.data.name, phone: response.data.phone },
+        user: { ...state.user, name: updatedProfile.name, phone: updatedProfile.phone },
       }));
 
       setSuccessMsg("Profile details updated successfully!");
@@ -86,6 +51,122 @@ export default function MemberProfilePage() {
       setSaving(false);
     }
   };
+
+  const currentError = errorMsg || error;
+
+  return (
+    <Card className="border-border">
+      <CardHeader>
+        <CardTitle className="flex items-center gap-2 text-xl font-bold">
+          <User className="text-primary h-5 w-5" />
+          Personal Information
+        </CardTitle>
+        <CardDescription>
+          Update your contact details below. Fields marked as read-only are locked by
+          administration.
+        </CardDescription>
+      </CardHeader>
+      <CardContent>
+        <form onSubmit={handleSave} className="space-y-4">
+          {successMsg && (
+            <div className="flex items-center gap-2 rounded-xl border border-emerald-500/20 bg-emerald-500/10 p-4 text-sm font-medium text-emerald-500">
+              <CheckCircle2 className="h-5 w-5 shrink-0" />
+              <span>{successMsg}</span>
+            </div>
+          )}
+          {currentError && (
+            <div className="bg-destructive/10 border-destructive/20 text-destructive flex items-center gap-2 rounded-xl border p-4 text-sm font-medium">
+              <AlertCircle className="h-5 w-5 shrink-0" />
+              <span>{currentError}</span>
+            </div>
+          )}
+
+          <div className="grid gap-4 sm:grid-cols-2">
+            <div className="space-y-2">
+              <Label htmlFor="email" className="text-sm font-semibold">
+                Email Address
+              </Label>
+              <div className="relative">
+                <Mail className="text-muted-foreground absolute top-3 left-3 h-4 w-4" />
+                <Input
+                  id="email"
+                  type="email"
+                  value={profile?.email || ""}
+                  disabled
+                  className="bg-muted/50 cursor-not-allowed pl-9"
+                />
+              </div>
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="role" className="text-sm font-semibold">
+                Role
+              </Label>
+              <div className="relative">
+                <Award className="text-muted-foreground absolute top-3 left-3 h-4 w-4" />
+                <Input
+                  id="role"
+                  value={profile?.role || ""}
+                  disabled
+                  className="bg-muted/50 cursor-not-allowed pl-9 uppercase"
+                />
+              </div>
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="name" className="text-sm font-semibold">
+                Full Name
+              </Label>
+              <Input
+                id="name"
+                type="text"
+                value={name}
+                onChange={(e) => setName(e.target.value)}
+                placeholder="Your Name"
+                className="border-border"
+                required
+              />
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="phone" className="text-sm font-semibold">
+                Phone Number
+              </Label>
+              <div className="relative">
+                <Phone className="text-muted-foreground absolute top-3 left-3 h-4 w-4" />
+                <Input
+                  id="phone"
+                  type="tel"
+                  value={phone}
+                  onChange={(e) => setPhone(e.target.value)}
+                  placeholder="Phone Number"
+                  className="border-border pl-9"
+                />
+              </div>
+            </div>
+          </div>
+
+          <div className="flex justify-end pt-4">
+            <Button type="submit" disabled={saving}>
+              {saving ? "Saving Changes..." : "Save Changes"}
+            </Button>
+          </div>
+        </form>
+      </CardContent>
+    </Card>
+  );
+}
+
+export default function MemberProfilePage() {
+  const user = useAuthStore((state) => state.user);
+  const { profile, history, loading, error, fetchProfileAndHistory, updateProfile } =
+    useMemberStore();
+
+  const memberId = user?.id || 1;
+
+  useEffect(() => {
+    fetchProfileAndHistory(memberId);
+  }, [memberId, fetchProfileAndHistory]);
 
   if (loading) {
     return (
@@ -110,107 +191,17 @@ export default function MemberProfilePage() {
       </div>
 
       <div className="grid gap-6 md:grid-cols-3">
-        {/* Left column: Personal Details Form */}
+        {/* Left column: Personal Details Form & Borrowing History */}
         <div className="flex flex-col gap-6 md:col-span-2">
-          <Card className="border-border">
-            <CardHeader>
-              <CardTitle className="flex items-center gap-2 text-xl font-bold">
-                <User className="text-primary h-5 w-5" />
-                Personal Information
-              </CardTitle>
-              <CardDescription>
-                Update your contact details below. Fields marked as read-only are locked by
-                administration.
-              </CardDescription>
-            </CardHeader>
-            <CardContent>
-              <form onSubmit={handleSave} className="space-y-4">
-                {successMsg && (
-                  <div className="flex items-center gap-2 rounded-xl border border-emerald-500/20 bg-emerald-500/10 p-4 text-sm font-medium text-emerald-500">
-                    <CheckCircle2 className="h-5 w-5 shrink-0" />
-                    <span>{successMsg}</span>
-                  </div>
-                )}
-                {errorMsg && (
-                  <div className="bg-destructive/10 border-destructive/20 text-destructive flex items-center gap-2 rounded-xl border p-4 text-sm font-medium">
-                    <AlertCircle className="h-5 w-5 shrink-0" />
-                    <span>{errorMsg}</span>
-                  </div>
-                )}
-
-                <div className="grid gap-4 sm:grid-cols-2">
-                  <div className="space-y-2">
-                    <Label htmlFor="email" className="text-sm font-semibold">
-                      Email Address
-                    </Label>
-                    <div className="relative">
-                      <Mail className="text-muted-foreground absolute top-3 left-3 h-4 w-4" />
-                      <Input
-                        id="email"
-                        type="email"
-                        value={profile?.email || ""}
-                        disabled
-                        className="bg-muted/50 cursor-not-allowed pl-9"
-                      />
-                    </div>
-                  </div>
-
-                  <div className="space-y-2">
-                    <Label htmlFor="role" className="text-sm font-semibold">
-                      Role
-                    </Label>
-                    <div className="relative">
-                      <Award className="text-muted-foreground absolute top-3 left-3 h-4 w-4" />
-                      <Input
-                        id="role"
-                        value={profile?.role || ""}
-                        disabled
-                        className="bg-muted/50 cursor-not-allowed pl-9 uppercase"
-                      />
-                    </div>
-                  </div>
-
-                  <div className="space-y-2">
-                    <Label htmlFor="name" className="text-sm font-semibold">
-                      Full Name
-                    </Label>
-                    <Input
-                      id="name"
-                      type="text"
-                      value={name}
-                      onChange={(e) => setName(e.target.value)}
-                      placeholder="Your Name"
-                      className="border-border"
-                      required
-                    />
-                  </div>
-
-                  <div className="space-y-2">
-                    <Label htmlFor="phone" className="text-sm font-semibold">
-                      Phone Number
-                    </Label>
-                    <div className="relative">
-                      <Phone className="text-muted-foreground absolute top-3 left-3 h-4 w-4" />
-                      <Input
-                        id="phone"
-                        type="tel"
-                        value={phone}
-                        onChange={(e) => setPhone(e.target.value)}
-                        placeholder="Phone Number"
-                        className="border-border pl-9"
-                      />
-                    </div>
-                  </div>
-                </div>
-
-                <div className="flex justify-end pt-4">
-                  <Button type="submit" disabled={saving}>
-                    {saving ? "Saving Changes..." : "Save Changes"}
-                  </Button>
-                </div>
-              </form>
-            </CardContent>
-          </Card>
+          {profile && (
+            <ProfileForm
+              key={profile.id}
+              profile={profile}
+              memberId={memberId}
+              updateProfile={updateProfile}
+              error={error}
+            />
+          )}
 
           {/* Borrowing History Table */}
           <Card className="border-border">
@@ -316,7 +307,7 @@ export default function MemberProfilePage() {
               </div>
               <div className="flex items-center justify-between py-2">
                 <span className="text-muted-foreground text-sm">Cycle Renewal</span>
-                <span className="text-sm font-semibold">
+                <span className="font-mono text-sm font-semibold">
                   {profile?.membership_start_date || "N/A"}
                 </span>
               </div>

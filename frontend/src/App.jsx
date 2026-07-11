@@ -12,7 +12,6 @@ import LoginPage from "@/pages/auth/LoginPage";
 import RegisterPage from "@/pages/auth/RegisterPage";
 import LibrarianDashboard from "@/pages/librarian/LibrarianDashboard";
 import MemberDashboard from "@/pages/member/MemberDashboard";
-import MemberProfilePage from "@/pages/member/MemberProfilePage";
 import ManagementDashboard from "@/pages/management/ManagementDashboard";
 
 export default function App() {
@@ -68,18 +67,10 @@ export default function App() {
 
         {/* Member Routes */}
         <Route
-          path="/member"
+          path="/member/*"
           element={
             <DashboardLayout requiredRole="MEMBER">
               <MemberDashboard />
-            </DashboardLayout>
-          }
-        />
-        <Route
-          path="/member/profile"
-          element={
-            <DashboardLayout requiredRole="MEMBER">
-              <MemberProfilePage />
             </DashboardLayout>
           }
         />

@@ -1,9 +1,10 @@
-import { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
+import { useEffect } from "react";
+import { Link, Routes, Route } from "react-router-dom";
 import { Card, CardHeader, CardTitle, CardDescription, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import useAuthStore from "@/store/authStore";
-import api from "@/lib/api";
+import useMemberStore from "@/store/memberStore";
+import MemberProfilePage from "./MemberProfilePage";
 import {
   BookOpen,
   Calendar,
@@ -15,46 +16,24 @@ import {
   Book,
 } from "lucide-react";
 
-export default function MemberDashboard() {
+function MemberDashboardHome() {
   const user = useAuthStore((state) => state.user);
-  const [profile, setProfile] = useState(null);
-  const [issues, setIssues] = useState([]);
-  const [payments, setPayments] = useState([]);
-  const [recommendations, setRecommendations] = useState([]);
-  const [readingLists, setReadingLists] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState("");
+  const {
+    profile,
+    issues,
+    payments,
+    recommendations,
+    readingLists,
+    loading,
+    error,
+    fetchDashboardData,
+  } = useMemberStore();
 
   const memberId = user?.id || 1; // Fallback to 1 for mock member
 
   useEffect(() => {
-    const fetchDashboardData = async () => {
-      try {
-        setLoading(true);
-        const [profileRes, issuesRes, paymentsRes, recsRes, listsRes] = await Promise.all([
-          api.get(`/members/${memberId}`),
-          api.get(`/members/${memberId}/current-issues`),
-          api.get(`/members/${memberId}/payments`),
-          api.get(`/members/${memberId}/recommendations`),
-          api.get("/reading-lists"),
-        ]);
-
-        setProfile(profileRes.data);
-        setIssues(issuesRes.data);
-        setPayments(paymentsRes.data);
-        setRecommendations(recsRes.data);
-        setReadingLists(listsRes.data);
-        setError("");
-      } catch (err) {
-        console.error("Error loading dashboard data:", err);
-        setError("Could not load dashboard data. Please try again later.");
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchDashboardData();
-  }, [memberId]);
+    fetchDashboardData(memberId);
+  }, [memberId, fetchDashboardData]);
 
   if (loading) {
     return (
@@ -343,5 +322,14 @@ export default function MemberDashboard() {
         </div>
       </div>
     </div>
+  );
+}
+
+export default function MemberDashboard() {
+  return (
+    <Routes>
+      <Route path="" element={<MemberDashboardHome />} />
+      <Route path="profile" element={<MemberProfilePage />} />
+    </Routes>
   );
 }
