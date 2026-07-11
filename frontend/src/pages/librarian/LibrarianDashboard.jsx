@@ -115,7 +115,7 @@ export default function LibrarianDashboard() {
   return (
     <div className="animate-fade-in flex flex-col gap-8 pb-12 duration-300">
       <div className="flex flex-col gap-2">
-        <h1 className="from-primary bg-gradient-to-r to-emerald-600 bg-clip-text text-4xl font-extrabold tracking-tight text-transparent">
+        <h1 className="from-primary bg-linear-to-r to-emerald-600 bg-clip-text text-4xl font-extrabold tracking-tight text-transparent">
           Librarian Operations
         </h1>
         <p className="text-muted-foreground text-sm sm:text-base">

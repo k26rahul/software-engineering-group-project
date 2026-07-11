@@ -90,7 +90,7 @@ export default function ManagementDashboard() {
       {/* Page Header */}
       <div className="flex flex-col gap-2 md:flex-row md:items-center md:justify-between">
         <div>
-          <h1 className="bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-4xl font-extrabold tracking-tight text-transparent">
+          <h1 className="bg-linear-to-r from-blue-600 to-indigo-600 bg-clip-text text-4xl font-extrabold tracking-tight text-transparent">
             Management Overview
           </h1>
           <p className="text-muted-foreground text-sm sm:text-base">
