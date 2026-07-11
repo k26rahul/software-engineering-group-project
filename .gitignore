@@ -2,6 +2,8 @@ private/
 *.wav
 *.pdf
 milestone-1/honor-code/signatures/
+node_modules/
+
 
 # Frontend
 frontend/node_modules/
