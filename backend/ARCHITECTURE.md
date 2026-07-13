@@ -1,6 +1,6 @@
 # Backend Architecture
 
-> **For coding agents and PR reviewers:** This document is the authoritative reference for backend architecture. When writing or reviewing code, enforce every rule described here without exception. Flag any violation as a review finding.
+> **For coding agents and PR reviewers:** This document is the authoritative reference for backend architecture. Enforce every rule described here without exception.
 
 ## Tech Stack
 
@@ -21,43 +21,13 @@
 
 The backend is strictly layered. Each layer has a single responsibility and a defined boundary.
 
-```
-HTTP Request
-    │
-    ▼
-┌─────────────────────────────────────────────────────────┐
-│  Routers  (routers/)                                    │
-│  · Declare HTTP endpoints only                          │
-│  · Parse request bodies using models/ schemas           │
-│  · Delegate all logic to services/                      │
-│  · Return response using models/ schemas                │
-│  · No direct DB access, no business logic               │
-└────────────────────────┬────────────────────────────────┘
-                         │ calls
-                         ▼
-┌─────────────────────────────────────────────────────────┐
-│  Services  (services/)                                  │
-│  · Contain all business logic                           │
-│  · All database mutations happen here                   │
-│  · Raise HTTPException for business rule violations     │
-│  · Receive Session and model instances via arguments    │
-└────────────────────────┬────────────────────────────────┘
-                         │ reads/writes
-                         ▼
-┌─────────────────────────────────────────────────────────┐
-│  Models  (models/)                                      │
-│  · Define DB tables (SQLModel, table=True)              │
-│  · Define request/response schemas (plain SQLModel)     │
-│  · May contain small self-contained model methods       │
-└─────────────────────────────────────────────────────────┘
-                         │
-┌─────────────────────────────────────────────────────────┐
-│  Core  (core/)                                          │
-│  · Cross-cutting concerns used by all layers            │
-│  · Config, DB engine/session, auth utilities,           │
-│    FastAPI dependencies, DB seeding                     │
-└─────────────────────────────────────────────────────────┘
-```
+**Routers (`routers/`)** - Declare HTTP endpoints only. Parse request bodies using `models/` schemas, delegate all logic to `services/`, return responses using `models/` schemas. No direct DB access, no business logic.
+
+**Services (`services/`)** - Contain all business logic. All database mutations happen here. Raise `HTTPException` for business rule violations. Receive `Session` and model instances via arguments from routers.
+
+**Models (`models/`)** - Define DB tables (`SQLModel`, `table=True`) and request/response schemas (plain `SQLModel`). May contain small self-contained model methods.
+
+**Core (`core/`)** - Cross-cutting concerns used by all layers: config, DB engine/session, auth utilities, FastAPI dependencies, DB seeding.
 
 ---
 
@@ -65,7 +35,7 @@ HTTP Request
 
 ### `main.py`
 
-Application entry point. Responsibilities:
+Application entry point:
 - Creates the `FastAPI` app via `create_app()`.
 - Registers CORS middleware (allows `localhost:5173` and `localhost:5174`).
 - Registers all routers via `app.include_router(...)`.
@@ -85,19 +55,9 @@ Cross-cutting infrastructure. Imported freely by routers, services, and tests.
 | `database.py` | SQLModel engine, `create_db_and_tables()`, and `get_session()` generator dependency. |
 | `auth.py` | Low-level auth utilities: `hash_password`, `verify_password`, `create_access_token`, `decode_token`. Holds the in-memory `token_blocklist: set[str]`. |
 | `dependencies.py` | FastAPI `Depends`-based dependencies injected into routers. |
-| `seeding.py` | Seeds default dev users (librarian, member, management) on first startup if the DB is empty. |
+| `seeding.py` | Seeds default dev users on first startup if the DB is empty. |
 
-#### `core/dependencies.py` - Dependency Types
-
-| Name | Type | Resolves to |
-|---|---|---|
-| `SessionDep` | `Annotated[Session, Depends(get_session)]` | DB session per request |
-| `TokenDep` | `Annotated[str, Depends(oauth2_scheme)]` | Raw JWT string from `Authorization` header |
-| `CurrentUserDep` | `Annotated[User, Depends(get_current_user)]` | Authenticated `User`, blocklist + DB checked |
-| `LibrarianDep` | `Annotated[User, _require_role(LIBRARIAN)]` | Authenticated + role-enforced `User` |
-| `MemberDep` | `Annotated[User, _require_role(MEMBER)]` | Authenticated + role-enforced `User` |
-| `ManagementDep` | `Annotated[User, _require_role(CAMPUS_MANAGEMENT)]` | Authenticated + role-enforced `User` |
-| `StaffDep` | `Annotated[User, _require_role(LIBRARIAN, CAMPUS_MANAGEMENT)]` | Authenticated + either staff role |
+`core/dependencies.py` exports typed dependency aliases: `SessionDep`, `TokenDep`, `CurrentUserDep`, `LibrarianDep`, `MemberDep`, `ManagementDep`, `StaffDep`. These enforce authentication and role checks via dependency injection.
 
 **Rule:** All route protection must use one of these dependency types. Never manually check `user.role` inside a router.
 
@@ -107,51 +67,13 @@ Cross-cutting infrastructure. Imported freely by routers, services, and tests.
 
 All SQLModel definitions live here. Each file groups logically related domain models together.
 
-#### Model File Map
-
-| File | DB Tables | Request/Response Schemas |
-|---|---|---|
-| `base.py` | `IDMixin`, `CreatedAtMixin`, `UpdatedAtMixin` (mixins, not tables) | - |
-| `enums.py` | All `str, enum.Enum` types | - |
-| `auth.py` | - | `LoginRequest`, `RegisterRequest`, `ChangePasswordRequest`, `TokenResponse` |
-| `user.py` | `User` | `UserProfileResponse`, `MemberSummaryResponse`, `MemberDetailResponse`, `BorrowingHistoryItemResponse`, `UpdateProfileRequest` |
-| `catalog.py` | `Book`, `BookCopy` | `AddBookRequest`, `UpdateBookRequest`, `ISBNLookupRequest`, `UpdateCopyStatusRequest`, `BookSummaryResponse`, `BookDetailResponse`, `BookRecommendationResponse` |
-| `circulation.py` | `Transaction`, `Fine` | `IssueBookRequest`, `ReturnBookRequest`, `TransactionResponse`, `FineResponse` |
-| `reservation.py` | `Reservation` | reservation schemas |
-| `community.py` | `Review` | review schemas |
-| `reading_list.py` | `ReadingList`, `ReadingListBook` | reading list schemas |
-| `purchase_request.py` | `PurchaseRequest`, `PurchaseRequestVote` | purchase request schemas |
-| `subscription.py` | `Subscription`, `Magazine`, `Newspaper` | subscription schemas |
-| `budget.py` | `Vendor`, `BookPurchaseEntry` | budget schemas |
-| `notification.py` | `Notification` | notification schemas |
-| `payment.py` | `Payment` | payment schemas |
-
-#### Model Structure Pattern
-
-Each model file follows this pattern:
-
-```python
-# ── Models ────────────
-class EntityBase(SQLModel):       # shared fields
-    ...
-
-class Entity(EntityBase, IDMixin, ..., table=True):  # DB table
-    ...
-
-# ── Schemas ───────────
-class CreateEntityRequest(SQLModel):  # request body
-    ...
-
-class EntityResponse(SQLModel):       # response body
-    ...
-```
+Each model file follows this pattern: a shared `EntityBase` class for common fields, a `Entity(EntityBase, IDMixin, ..., table=True)` DB table class, and plain `SQLModel` schema classes for request/response bodies.
 
 **Rules:**
-- DB table classes use `table=True`.
-- Schema classes never use `table=True`.
-- Base classes (not tables) are composed via multiple inheritance.
-- `IDMixin`, `CreatedAtMixin`, `UpdatedAtMixin` from `base.py` are composed in where needed.
-- Model methods are permitted only when: the logic is self-contained, trivial, and requires only the model instance itself (e.g., `is_overdue()`, `days_overdue()`, `monthly_cost()`, `available_copies()`, `average_rating()`). Such methods must not encode business rules about when or whether an operation is allowed.
+- DB table classes use `table=True`. Schema classes never use `table=True`.
+- Base classes (`IDMixin`, `CreatedAtMixin`, `UpdatedAtMixin` from `base.py`) are composed via multiple inheritance.
+- Enums are defined in `enums.py` as `str, enum.Enum` types.
+- Model methods are permitted only when the logic is self-contained, trivial, and requires only the model instance itself (e.g., `is_overdue()`, `available_copies()`). Methods must not encode business rules about when or whether an operation is allowed.
 - `models/__init__.py` exports all table classes so SQLModel discovers them for schema creation.
 
 ---
@@ -159,42 +81,6 @@ class EntityResponse(SQLModel):       # response body
 ### `routers/`
 
 Thin HTTP layer. One file per domain area. Each file exports a single `APIRouter`.
-
-#### Router File Map
-
-| File | Router Variable | Route Prefix Pattern |
-|---|---|---|
-| `auth.py` | `auth_router` | `/auth/*` |
-| `catalog.py` | `catalog_router` | `/books/*` |
-| `circulation.py` | `circulation_router` | `/circulation/*` |
-| `members.py` | `members_router` | `/members/*` |
-| `reservations.py` | `reservations_router` | `/reservations/*` |
-| `requests.py` | `requests_router` | `/requests/*` |
-| `reviews.py` | `reviews_router` | `/reviews/*` |
-| `reading_lists.py` | `reading_lists_router` | `/reading-lists/*` |
-| `subscriptions.py` | `subscriptions_router` | `/subscriptions/*` |
-| `budget.py` | `budget_router` | `/budget/*` |
-| `recommendations.py` | `recommendations_router` | `/recommendations/*` |
-| `reports.py` | `reports_router` | `/reports/*` |
-| `payments.py` | `payments_router` | `/payments/*` |
-| `notifications.py` | `notifications_router` | `/notifications/*` |
-| `health.py` | `router` | `/health` |
-
-#### Correct Router Pattern
-
-```python
-from fastapi import APIRouter
-from core.dependencies import SessionDep, LibrarianDep
-from models.catalog import AddBookRequest, BookDetailResponse
-from services import catalog as catalog_service
-
-catalog_router = APIRouter(tags=["Catalog"])
-
-@catalog_router.post("/books", response_model=BookDetailResponse, status_code=201)
-def add_book(body: AddBookRequest, session: SessionDep, current_user: LibrarianDep) -> BookDetailResponse:
-    """Adds a new book to the catalog."""
-    return catalog_service.add_book(body, session)
-```
 
 **Rules:**
 - Routers must never call `session.exec()`, `session.get()`, `session.add()`, or `session.commit()`.
@@ -216,57 +102,13 @@ Business logic layer. One file per domain area, mirroring `routers/`.
 - Services return typed response model instances (schemas from `models/`).
 - Services must not import from `routers/`.
 
-#### Correct Service Pattern
-
-```python
-from fastapi import HTTPException, status
-from sqlmodel import Session, select
-from models.catalog import AddBookRequest, Book, BookDetailResponse
-
-def add_book(body: AddBookRequest, session: Session) -> BookDetailResponse:
-    """Creates a new book record."""
-    existing = session.exec(select(Book).where(Book.isbn == body.isbn)).first()
-    if existing:
-        raise HTTPException(status_code=status.HTTP_409_CONFLICT, detail="ISBN already exists.")
-    book = Book.model_validate(body)
-    session.add(book)
-    session.commit()
-    session.refresh(book)
-    return BookDetailResponse.model_validate(book)
-```
-
 ---
 
 ### `tests/`
 
-Test suite using pytest. Tests are organized by what they test, not by domain feature.
-
-```
-tests/
-├── conftest.py          # shared fixtures
-├── test_health.py       # health endpoint smoke test
-├── api/                 # router integration tests
-│   └── test_api_auth.py
-└── core/                # unit tests for core utilities
-    ├── test_core_auth.py
-    └── test_core_dependencies.py
-```
-
-#### `conftest.py` - Shared Fixtures
-
-| Fixture | Scope | Description |
-|---|---|---|
-| `clear_blocklist` | autouse | Clears `token_blocklist` before every test. |
-| `db_session` | function | In-memory SQLite session; tables created and dropped per test. |
-| `client` | function | `TestClient` with `get_session` dependency overridden to use `db_session`. |
-| `normal_user` | function | Active, approved `MEMBER` user in DB. |
-| `inactive_user` | function | Inactive, pending `MEMBER` user in DB. |
-| `librarian_user` | function | Active, approved `LIBRARIAN` user in DB. |
-| `normal_user_token` | function | Valid JWT for `normal_user` obtained via `/auth/login`. |
+Test suite using pytest. Router integration tests live in `tests/api/`, core unit tests in `tests/core/`. Shared fixtures in `conftest.py` provide in-memory SQLite sessions, `TestClient` with overridden dependencies, and pre-seeded user objects with tokens.
 
 **Rules:**
-- Router tests live in `tests/api/`. They test the full HTTP request-response cycle via `TestClient`.
-- Core tests live in `tests/core/`. They test utility functions in `core/` in isolation.
 - Services are not tested directly. Router tests exercise services implicitly.
 - All tests use in-memory SQLite to avoid polluting `library.db`.
 - New fixtures go into `conftest.py` if they are reusable across multiple test files.
