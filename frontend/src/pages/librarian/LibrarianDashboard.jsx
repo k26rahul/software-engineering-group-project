@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
-import api from "@/lib/api";
+import useDashboardStore from "@/store/dashboardStore";
 import { Card, CardHeader, CardTitle, CardDescription, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import {
@@ -20,60 +20,40 @@ import {
 } from "lucide-react";
 
 export default function LibrarianDashboard() {
-  const [stats, setStats] = useState(null);
-  const [alerts, setAlerts] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
-  const [actionLoading, setActionLoading] = useState({}); // tracks loading state for specific user approvals/rejections by id
-
-  const fetchDashboardData = async () => {
-    try {
-      setLoading(true);
-      setError(null);
-      const [statsRes, alertsRes] = await Promise.all([
-        api.get("/dashboard/librarian"),
-        api.get("/notifications"),
-      ]);
-      setStats(statsRes.data);
-      // Filter out read notifications for the active alerts widget
-      setAlerts(alertsRes.data.filter((n) => !n.is_read));
-    } catch (err) {
-      console.error("Error fetching librarian dashboard data:", err);
-      setError(err.message || "Failed to load dashboard data. Please try again.");
-    } finally {
-      setLoading(false);
-    }
-  };
+  const {
+    librarianStats: stats,
+    alerts,
+    loading,
+    error,
+    actionLoading,
+    fetchLibrarianDashboard,
+    dismissAlert,
+    handleMemberAction: storeMemberAction,
+  } = useDashboardStore();
+  const [actionError, setActionError] = useState(null);
 
   useEffect(() => {
-    fetchDashboardData();
-  }, []);
-
-  const handleDismissAlert = async (id) => {
-    try {
-      await api.patch(`/notifications/${id}/read`);
-      // Smoothly update the alerts state
-      setAlerts((prev) => prev.filter((alert) => alert.id !== id));
-    } catch (err) {
-      console.error("Failed to dismiss alert:", err);
+    let mounted = true;
+    if (mounted) {
+      fetchLibrarianDashboard();
     }
+    return () => {
+      mounted = false;
+    };
+  }, [fetchLibrarianDashboard]);
+
+  const handleDismissAlert = (id) => {
+    dismissAlert(id);
   };
 
   const handleMemberAction = async (id, action) => {
-    setActionLoading((prev) => ({ ...prev, [id]: action }));
     try {
-      await api.patch(`/members/${id}/${action}`);
-      // Remove from the local list and decrease count
-      setStats((prev) => ({
-        ...prev,
-        pending_approvals_count: Math.max(0, prev.pending_approvals_count - 1),
-        pending_approvals: prev.pending_approvals.filter((u) => u.id !== id),
-      }));
+      setActionError(null);
+      await storeMemberAction(id, action);
     } catch (err) {
       console.error(`Failed to ${action} member:`, err);
-      alert(`Error processing request: ${err.message}`);
-    } finally {
-      setActionLoading((prev) => ({ ...prev, [id]: null }));
+      setActionError(`Error processing request: ${err.message}`);
+      setTimeout(() => setActionError(null), 3000);
     }
   };
 
@@ -94,12 +74,14 @@ export default function LibrarianDashboard() {
           <h3 className="text-lg font-semibold">Could not load dashboard</h3>
           <p className="mt-1 text-sm opacity-90">{error}</p>
         </div>
-        <Button variant="outline" onClick={fetchDashboardData} className="gap-2">
+        <Button variant="outline" onClick={fetchLibrarianDashboard} className="gap-2">
           <RotateCcw className="h-4 w-4" /> Try Again
         </Button>
       </div>
     );
   }
+
+  if (!stats) return null;
 
   const budgetPercent = stats
     ? Math.min(100, Math.round((stats.budget_spent / stats.budget_limit) * 100))
@@ -345,6 +327,11 @@ export default function LibrarianDashboard() {
                 View Directory <ArrowRight className="h-3 w-3" />
               </Link>
             </div>
+            {actionError && (
+              <div className="mt-2 text-sm text-destructive bg-destructive/10 p-2 rounded">
+                {actionError}
+              </div>
+            )}
           </CardHeader>
           <CardContent className="flex-1 p-0">
             {stats.pending_approvals.length === 0 ? (

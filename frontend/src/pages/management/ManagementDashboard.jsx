@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
-import api from "@/lib/api";
+import useDashboardStore from "@/store/dashboardStore";
 import { Card, CardHeader, CardTitle, CardDescription, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import {
@@ -33,27 +33,22 @@ import {
 const COLORS = ["#10b981", "#3b82f6", "#f59e0b", "#8b5cf6", "#ef4444"];
 
 export default function ManagementDashboard() {
-  const [data, setData] = useState(null);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
-
-  const fetchManagementData = async () => {
-    try {
-      setLoading(true);
-      setError(null);
-      const res = await api.get("/dashboard/management");
-      setData(res.data);
-    } catch (err) {
-      console.error("Error fetching management dashboard:", err);
-      setError(err.message || "Failed to load dashboard metrics. Please try again.");
-    } finally {
-      setLoading(false);
-    }
-  };
+  const {
+    managementStats: data,
+    loading,
+    error,
+    fetchManagementDashboard,
+  } = useDashboardStore();
 
   useEffect(() => {
-    fetchManagementData();
-  }, []);
+    let mounted = true;
+    if (mounted) {
+      fetchManagementDashboard();
+    }
+    return () => {
+      mounted = false;
+    };
+  }, [fetchManagementDashboard]);
 
   if (loading) {
     return (
@@ -74,12 +69,14 @@ export default function ManagementDashboard() {
           <h3 className="text-lg font-semibold">Could not load metrics</h3>
           <p className="mt-1 text-sm opacity-90">{error}</p>
         </div>
-        <Button variant="outline" onClick={fetchManagementData} className="gap-2">
+        <Button variant="outline" onClick={fetchManagementDashboard} className="gap-2">
           Try Again
         </Button>
       </div>
     );
   }
+
+  if (!data) return null;
 
   const budgetPercent = data
     ? Math.min(100, Math.round((data.budget_spent / data.budget_limit) * 100))
