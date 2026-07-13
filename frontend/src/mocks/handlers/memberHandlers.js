@@ -1,9 +1,6 @@
 import { http, HttpResponse } from "msw";
 import { baseURL } from "@/lib/api";
-import {
-  getMemberApprovalMockResponse,
-  getMemberRejectionMockResponse,
-} from "../data/memberData";
+import { getMemberApprovalMockResponse, getMemberRejectionMockResponse } from "../data/memberData";
 
 export const memberHandlers = [
   http.patch(`${baseURL}/members/:id/approve`, ({ params }) => {

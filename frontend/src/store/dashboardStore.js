@@ -1,7 +1,7 @@
 import { create } from "zustand";
 import api from "@/lib/api";
 
-const useDashboardStore = create((set, get) => ({
+const useDashboardStore = create((set) => ({
   librarianStats: null,
   managementStats: null,
   alerts: [],
@@ -61,7 +61,10 @@ const useDashboardStore = create((set, get) => ({
         librarianStats: state.librarianStats
           ? {
               ...state.librarianStats,
-              pending_approvals_count: Math.max(0, state.librarianStats.pending_approvals_count - 1),
+              pending_approvals_count: Math.max(
+                0,
+                state.librarianStats.pending_approvals_count - 1
+              ),
               pending_approvals: state.librarianStats.pending_approvals.filter((u) => u.id !== id),
             }
           : null,
@@ -72,8 +75,8 @@ const useDashboardStore = create((set, get) => ({
       throw err;
     }
   },
-  
-  clearError: () => set({ error: null })
+
+  clearError: () => set({ error: null }),
 }));
 
 export default useDashboardStore;

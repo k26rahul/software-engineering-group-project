@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useEffect } from "react";
 import { Link } from "react-router-dom";
 import useDashboardStore from "@/store/dashboardStore";
 import { Card, CardHeader, CardTitle, CardDescription, CardContent } from "@/components/ui/card";
@@ -33,12 +33,7 @@ import {
 const COLORS = ["#10b981", "#3b82f6", "#f59e0b", "#8b5cf6", "#ef4444"];
 
 export default function ManagementDashboard() {
-  const {
-    managementStats: data,
-    loading,
-    error,
-    fetchManagementDashboard,
-  } = useDashboardStore();
+  const { managementStats: data, loading, error, fetchManagementDashboard } = useDashboardStore();
 
   useEffect(() => {
     let mounted = true;

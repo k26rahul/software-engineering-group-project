@@ -328,7 +328,7 @@ export default function LibrarianDashboard() {
               </Link>
             </div>
             {actionError && (
-              <div className="mt-2 text-sm text-destructive bg-destructive/10 p-2 rounded">
+              <div className="text-destructive bg-destructive/10 mt-2 rounded p-2 text-sm">
                 {actionError}
               </div>
             )}

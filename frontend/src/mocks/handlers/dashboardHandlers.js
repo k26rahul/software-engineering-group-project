@@ -1,9 +1,6 @@
 import { http, HttpResponse } from "msw";
 import { baseURL } from "@/lib/api";
-import {
-  librarianDashboardMockData,
-  managementDashboardMockData,
-} from "../data/dashboardData";
+import { librarianDashboardMockData, managementDashboardMockData } from "../data/dashboardData";
 
 export const dashboardHandlers = [
   http.get(`${baseURL}/dashboard/librarian`, () => {
