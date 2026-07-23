@@ -1,7 +1,6 @@
-import { useEffect, useState, useMemo } from "react";
+import { useEffect, useState } from "react";
 import { Link, useSearchParams } from "react-router-dom";
 import {
-  FileBarChart,
   Download,
   TrendingUp,
   DollarSign,
@@ -13,7 +12,6 @@ import {
   AlertCircle,
   FileSpreadsheet,
   FileText,
-  ArrowUpRight,
   BarChart3,
   Sparkles,
   ArrowLeft,
@@ -58,8 +56,15 @@ import useReportsStore from "@/store/reportsStore";
 const PIE_COLORS = ["#3b82f6", "#10b981", "#8b5cf6", "#f59e0b", "#f43f5e"];
 
 export default function ManagementReportsPage() {
-  const { usageReport, expenseReport, isLoading, error, fetchReportsData, downloadReport, downloadingType } =
-    useReportsStore();
+  const {
+    usageReport,
+    expenseReport,
+    isLoading,
+    error,
+    fetchReportsData,
+    downloadReport,
+    downloadingType,
+  } = useReportsStore();
 
   const [searchParams, setSearchParams] = useSearchParams();
   const activeTab = searchParams.get("tab") || "usage"; // "usage" | "financial" | "executive"
@@ -91,8 +96,11 @@ export default function ManagementReportsPage() {
     <div className="flex flex-col gap-8 pb-12">
       {/* Top Header & Breadcrumb Navigation */}
       <div className="flex flex-col gap-4">
-        <div className="flex items-center gap-2 text-xs font-semibold text-muted-foreground">
-          <Link to="/management" className="flex items-center gap-1 hover:text-foreground transition-colors">
+        <div className="text-muted-foreground flex items-center gap-2 text-xs font-semibold">
+          <Link
+            to="/management"
+            className="hover:text-foreground flex items-center gap-1 transition-colors"
+          >
             <ArrowLeft className="h-3.5 w-3.5" /> Back to Overview
           </Link>
           <span>/</span>
@@ -105,7 +113,8 @@ export default function ManagementReportsPage() {
               Reports & Analytics Center
             </h1>
             <p className="text-muted-foreground mt-1 text-sm">
-              Comprehensive operational audit metrics, circulation velocity, and budget allocation reports.
+              Comprehensive operational audit metrics, circulation velocity, and budget allocation
+              reports.
             </p>
           </div>
 
@@ -114,7 +123,7 @@ export default function ManagementReportsPage() {
             <div className="w-[180px]">
               <Select value={period} onValueChange={setPeriod}>
                 <SelectTrigger>
-                  <Calendar className="mr-2 h-4 w-4 text-muted-foreground" />
+                  <Calendar className="text-muted-foreground mr-2 h-4 w-4" />
                   <SelectValue placeholder="Period" />
                 </SelectTrigger>
                 <SelectContent>
@@ -149,11 +158,13 @@ export default function ManagementReportsPage() {
       </div>
 
       {/* Navigation Tab Bar */}
-      <div className="flex items-center gap-2 border-b pb-1 overflow-x-auto">
+      <div className="flex items-center gap-2 overflow-x-auto border-b pb-1">
         <Button
           variant={activeTab === "usage" ? "default" : "ghost"}
           className={`gap-2 text-sm font-semibold transition-all ${
-            activeTab === "usage" ? "bg-primary text-primary-foreground shadow-xs" : "text-muted-foreground"
+            activeTab === "usage"
+              ? "bg-primary text-primary-foreground shadow-xs"
+              : "text-muted-foreground"
           }`}
           onClick={() => setActiveTab("usage")}
         >
@@ -163,7 +174,9 @@ export default function ManagementReportsPage() {
         <Button
           variant={activeTab === "financial" ? "default" : "ghost"}
           className={`gap-2 text-sm font-semibold transition-all ${
-            activeTab === "financial" ? "bg-primary text-primary-foreground shadow-xs" : "text-muted-foreground"
+            activeTab === "financial"
+              ? "bg-primary text-primary-foreground shadow-xs"
+              : "text-muted-foreground"
           }`}
           onClick={() => setActiveTab("financial")}
         >
@@ -173,7 +186,9 @@ export default function ManagementReportsPage() {
         <Button
           variant={activeTab === "executive" ? "default" : "ghost"}
           className={`gap-2 text-sm font-semibold transition-all ${
-            activeTab === "executive" ? "bg-primary text-primary-foreground shadow-xs" : "text-muted-foreground"
+            activeTab === "executive"
+              ? "bg-primary text-primary-foreground shadow-xs"
+              : "text-muted-foreground"
           }`}
           onClick={() => setActiveTab("executive")}
         >
@@ -188,16 +203,24 @@ export default function ManagementReportsPage() {
             {Array.from({ length: 4 }).map((_, i) => (
               // eslint-disable-next-line @eslint-react/no-array-index-key
               <Card key={i}>
-                <CardHeader className="p-4"><Skeleton className="h-4 w-24" /></CardHeader>
-                <CardContent className="p-4 pt-0"><Skeleton className="h-8 w-16" /></CardContent>
+                <CardHeader className="p-4">
+                  <Skeleton className="h-4 w-24" />
+                </CardHeader>
+                <CardContent className="p-4 pt-0">
+                  <Skeleton className="h-8 w-16" />
+                </CardContent>
               </Card>
             ))}
           </div>
-          <Card><CardContent className="p-8"><Skeleton className="h-64 w-full" /></CardContent></Card>
+          <Card>
+            <CardContent className="p-8">
+              <Skeleton className="h-64 w-full" />
+            </CardContent>
+          </Card>
         </div>
       ) : error ? (
         <Card className="border-destructive/20 bg-destructive/5 text-destructive p-8 text-center">
-          <AlertCircle className="mx-auto h-10 w-10 mb-2" />
+          <AlertCircle className="mx-auto mb-2 h-10 w-10" />
           <h3 className="text-lg font-bold">Failed to load reports</h3>
           <p className="mt-1 text-sm">{error}</p>
           <Button variant="outline" onClick={fetchReportsData} className="mt-4">
@@ -211,22 +234,29 @@ export default function ManagementReportsPage() {
             <div className="flex flex-col gap-6">
               {/* Usage Summary KPI Cards */}
               <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-                <Card className="hover:shadow-md transition-all">
+                <Card className="transition-all hover:shadow-md">
                   <CardHeader className="flex flex-row items-center justify-between pb-2">
-                    <CardTitle className="text-xs font-semibold uppercase text-muted-foreground">Total Checkouts</CardTitle>
+                    <CardTitle className="text-muted-foreground text-xs font-semibold uppercase">
+                      Total Checkouts
+                    </CardTitle>
                     <BookOpen className="h-4 w-4 text-blue-600" />
                   </CardHeader>
                   <CardContent>
                     <div className="text-2xl font-bold">{usageSummary?.total_checkouts}</div>
-                    <Badge variant="secondary" className="mt-1 bg-blue-500/10 text-blue-600 text-[10px]">
+                    <Badge
+                      variant="secondary"
+                      className="mt-1 bg-blue-500/10 text-[10px] text-blue-600"
+                    >
                       +14% vs last period
                     </Badge>
                   </CardContent>
                 </Card>
 
-                <Card className="hover:shadow-md transition-all">
+                <Card className="transition-all hover:shadow-md">
                   <CardHeader className="flex flex-row items-center justify-between pb-2">
-                    <CardTitle className="text-xs font-semibold uppercase text-muted-foreground">Active Borrowers</CardTitle>
+                    <CardTitle className="text-muted-foreground text-xs font-semibold uppercase">
+                      Active Borrowers
+                    </CardTitle>
                     <Users className="h-4 w-4 text-emerald-600" />
                   </CardHeader>
                   <CardContent>
@@ -235,9 +265,11 @@ export default function ManagementReportsPage() {
                   </CardContent>
                 </Card>
 
-                <Card className="hover:shadow-md transition-all">
+                <Card className="transition-all hover:shadow-md">
                   <CardHeader className="flex flex-row items-center justify-between pb-2">
-                    <CardTitle className="text-xs font-semibold uppercase text-muted-foreground">Top Genre</CardTitle>
+                    <CardTitle className="text-muted-foreground text-xs font-semibold uppercase">
+                      Top Genre
+                    </CardTitle>
                     <PieIcon className="h-4 w-4 text-indigo-600" />
                   </CardHeader>
                   <CardContent>
@@ -246,14 +278,20 @@ export default function ManagementReportsPage() {
                   </CardContent>
                 </Card>
 
-                <Card className="hover:shadow-md transition-all">
+                <Card className="transition-all hover:shadow-md">
                   <CardHeader className="flex flex-row items-center justify-between pb-2">
-                    <CardTitle className="text-xs font-semibold uppercase text-muted-foreground">Return On-Time Rate</CardTitle>
+                    <CardTitle className="text-muted-foreground text-xs font-semibold uppercase">
+                      Return On-Time Rate
+                    </CardTitle>
                     <CheckCircle2 className="h-4 w-4 text-emerald-600" />
                   </CardHeader>
                   <CardContent>
-                    <div className="text-2xl font-bold text-emerald-600">{usageSummary?.return_rate_percentage}%</div>
-                    <p className="text-muted-foreground mt-1 text-xs">Avg hold: {usageSummary?.avg_borrow_duration_days} days</p>
+                    <div className="text-2xl font-bold text-emerald-600">
+                      {usageSummary?.return_rate_percentage}%
+                    </div>
+                    <p className="text-muted-foreground mt-1 text-xs">
+                      Avg hold: {usageSummary?.avg_borrow_duration_days} days
+                    </p>
                   </CardContent>
                 </Card>
               </div>
@@ -265,7 +303,9 @@ export default function ManagementReportsPage() {
                     <CardTitle className="flex items-center gap-2 text-lg font-bold">
                       <BarChart3 className="h-5 w-5 text-blue-600" /> Monthly Circulation Velocity
                     </CardTitle>
-                    <CardDescription>Comparison of book issues vs returned inventory</CardDescription>
+                    <CardDescription>
+                      Comparison of book issues vs returned inventory
+                    </CardDescription>
                   </CardHeader>
                   <CardContent>
                     <div className="h-72 w-full">
@@ -274,10 +314,26 @@ export default function ManagementReportsPage() {
                           <CartesianGrid strokeDasharray="3 3" className="stroke-muted" />
                           <XAxis dataKey="month" className="text-xs" />
                           <YAxis className="text-xs" />
-                          <Tooltip contentStyle={{ backgroundColor: "var(--card)", borderColor: "var(--border)", color: "var(--foreground)" }} />
+                          <Tooltip
+                            contentStyle={{
+                              backgroundColor: "var(--card)",
+                              borderColor: "var(--border)",
+                              color: "var(--foreground)",
+                            }}
+                          />
                           <Legend verticalAlign="top" height={36} />
-                          <Bar dataKey="checkouts" name="Books Issued" fill="#3b82f6" radius={[4, 4, 0, 0]} />
-                          <Bar dataKey="returns" name="Books Returned" fill="#10b981" radius={[4, 4, 0, 0]} />
+                          <Bar
+                            dataKey="checkouts"
+                            name="Books Issued"
+                            fill="#3b82f6"
+                            radius={[4, 4, 0, 0]}
+                          />
+                          <Bar
+                            dataKey="returns"
+                            name="Books Returned"
+                            fill="#10b981"
+                            radius={[4, 4, 0, 0]}
+                          />
                         </BarChart>
                       </ResponsiveContainer>
                     </div>
@@ -305,10 +361,19 @@ export default function ManagementReportsPage() {
                             dataKey="checkouts"
                           >
                             {usageReport?.category_breakdown.map((entry, index) => (
-                              <Cell key={`cell-${entry.category}`} fill={PIE_COLORS[index % PIE_COLORS.length]} />
+                              <Cell
+                                key={`cell-${entry.category}`}
+                                fill={PIE_COLORS[index % PIE_COLORS.length]}
+                              />
                             ))}
                           </Pie>
-                          <Tooltip contentStyle={{ backgroundColor: "var(--card)", borderColor: "var(--border)", color: "var(--foreground)" }} />
+                          <Tooltip
+                            contentStyle={{
+                              backgroundColor: "var(--card)",
+                              borderColor: "var(--border)",
+                              color: "var(--foreground)",
+                            }}
+                          />
                         </PieChart>
                       </ResponsiveContainer>
                     </div>
@@ -316,8 +381,13 @@ export default function ManagementReportsPage() {
                     <div className="mt-2 grid w-full grid-cols-2 gap-2 text-xs">
                       {usageReport?.category_breakdown.map((c, i) => (
                         <div key={c.category} className="flex items-center gap-2">
-                          <span className="h-2.5 w-2.5 rounded-full" style={{ backgroundColor: PIE_COLORS[i % PIE_COLORS.length] }}></span>
-                          <span className="truncate font-medium">{c.category} ({c.percentage}%)</span>
+                          <span
+                            className="h-2.5 w-2.5 rounded-full"
+                            style={{ backgroundColor: PIE_COLORS[i % PIE_COLORS.length] }}
+                          ></span>
+                          <span className="truncate font-medium">
+                            {c.category} ({c.percentage}%)
+                          </span>
                         </div>
                       ))}
                     </div>
@@ -346,12 +416,18 @@ export default function ManagementReportsPage() {
                     <TableBody>
                       {usageReport?.top_borrowed_books.map((b, idx) => (
                         <TableRow key={b.id}>
-                          <TableCell className="font-bold text-muted-foreground">#{idx + 1}</TableCell>
+                          <TableCell className="text-muted-foreground font-bold">
+                            #{idx + 1}
+                          </TableCell>
                           <TableCell className="font-semibold">{b.title}</TableCell>
                           <TableCell>{b.author}</TableCell>
-                          <TableCell><Badge variant="outline">{b.category}</Badge></TableCell>
-                          <TableCell className="font-bold text-primary">{b.checkouts}</TableCell>
-                          <TableCell className="text-right font-medium">{b.available} available</TableCell>
+                          <TableCell>
+                            <Badge variant="outline">{b.category}</Badge>
+                          </TableCell>
+                          <TableCell className="text-primary font-bold">{b.checkouts}</TableCell>
+                          <TableCell className="text-right font-medium">
+                            {b.available} available
+                          </TableCell>
                         </TableRow>
                       ))}
                     </TableBody>
@@ -366,46 +442,64 @@ export default function ManagementReportsPage() {
             <div className="flex flex-col gap-6">
               {/* Financial KPI Cards */}
               <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-                <Card className="hover:shadow-md transition-all">
+                <Card className="transition-all hover:shadow-md">
                   <CardHeader className="flex flex-row items-center justify-between pb-2">
-                    <CardTitle className="text-xs font-semibold uppercase text-muted-foreground">Budget Allocated</CardTitle>
+                    <CardTitle className="text-muted-foreground text-xs font-semibold uppercase">
+                      Budget Allocated
+                    </CardTitle>
                     <DollarSign className="h-4 w-4 text-blue-600" />
                   </CardHeader>
                   <CardContent>
-                    <div className="text-2xl font-bold">₹{expenseSummary?.total_budget.toLocaleString()}</div>
+                    <div className="text-2xl font-bold">
+                      ₹{expenseSummary?.total_budget.toLocaleString()}
+                    </div>
                     <p className="text-muted-foreground mt-1 text-xs">Annual approved cap</p>
                   </CardContent>
                 </Card>
 
-                <Card className="hover:shadow-md transition-all">
+                <Card className="transition-all hover:shadow-md">
                   <CardHeader className="flex flex-row items-center justify-between pb-2">
-                    <CardTitle className="text-xs font-semibold uppercase text-muted-foreground">Total Expenses</CardTitle>
+                    <CardTitle className="text-muted-foreground text-xs font-semibold uppercase">
+                      Total Expenses
+                    </CardTitle>
                     <DollarSign className="h-4 w-4 text-emerald-600" />
                   </CardHeader>
                   <CardContent>
-                    <div className="text-2xl font-bold text-emerald-600">₹{expenseSummary?.total_spent.toLocaleString()}</div>
-                    <p className="text-muted-foreground mt-1 text-xs">{expenseSummary?.budget_utilization_percent}% utilized</p>
+                    <div className="text-2xl font-bold text-emerald-600">
+                      ₹{expenseSummary?.total_spent.toLocaleString()}
+                    </div>
+                    <p className="text-muted-foreground mt-1 text-xs">
+                      {expenseSummary?.budget_utilization_percent}% utilized
+                    </p>
                   </CardContent>
                 </Card>
 
-                <Card className="hover:shadow-md transition-all">
+                <Card className="transition-all hover:shadow-md">
                   <CardHeader className="flex flex-row items-center justify-between pb-2">
-                    <CardTitle className="text-xs font-semibold uppercase text-muted-foreground">Fine Income Collected</CardTitle>
+                    <CardTitle className="text-muted-foreground text-xs font-semibold uppercase">
+                      Fine Income Collected
+                    </CardTitle>
                     <TrendingUp className="h-4 w-4 text-indigo-600" />
                   </CardHeader>
                   <CardContent>
-                    <div className="text-2xl font-bold text-indigo-600">₹{expenseSummary?.fine_income.toLocaleString()}</div>
+                    <div className="text-2xl font-bold text-indigo-600">
+                      ₹{expenseSummary?.fine_income.toLocaleString()}
+                    </div>
                     <p className="text-muted-foreground mt-1 text-xs">Overdue payments log</p>
                   </CardContent>
                 </Card>
 
-                <Card className="hover:shadow-md transition-all">
+                <Card className="transition-all hover:shadow-md">
                   <CardHeader className="flex flex-row items-center justify-between pb-2">
-                    <CardTitle className="text-xs font-semibold uppercase text-muted-foreground">Net Expenditure</CardTitle>
+                    <CardTitle className="text-muted-foreground text-xs font-semibold uppercase">
+                      Net Expenditure
+                    </CardTitle>
                     <CheckCircle2 className="h-4 w-4 text-violet-600" />
                   </CardHeader>
                   <CardContent>
-                    <div className="text-2xl font-bold">₹{expenseSummary?.net_spend.toLocaleString()}</div>
+                    <div className="text-2xl font-bold">
+                      ₹{expenseSummary?.net_spend.toLocaleString()}
+                    </div>
                     <p className="text-muted-foreground mt-1 text-xs">Expenses minus fines</p>
                   </CardContent>
                 </Card>
@@ -417,7 +511,9 @@ export default function ManagementReportsPage() {
                   <CardTitle className="flex items-center gap-2 text-lg font-bold">
                     <DollarSign className="h-5 w-5 text-emerald-600" /> Budget vs Expense Breakdown
                   </CardTitle>
-                  <CardDescription>Monthly expense tracking against limits and fine income</CardDescription>
+                  <CardDescription>
+                    Monthly expense tracking against limits and fine income
+                  </CardDescription>
                 </CardHeader>
                 <CardContent>
                   <div className="h-72 w-full">
@@ -426,10 +522,28 @@ export default function ManagementReportsPage() {
                         <CartesianGrid strokeDasharray="3 3" className="stroke-muted" />
                         <XAxis dataKey="month" className="text-xs" />
                         <YAxis className="text-xs" />
-                        <Tooltip contentStyle={{ backgroundColor: "var(--card)", borderColor: "var(--border)", color: "var(--foreground)" }} />
+                        <Tooltip
+                          contentStyle={{
+                            backgroundColor: "var(--card)",
+                            borderColor: "var(--border)",
+                            color: "var(--foreground)",
+                          }}
+                        />
                         <Legend verticalAlign="top" height={36} />
-                        <Line type="monotone" dataKey="spent" name="Expenses (₹)" stroke="#10b981" strokeWidth={3} />
-                        <Line type="monotone" dataKey="income" name="Fine Revenue (₹)" stroke="#8b5cf6" strokeWidth={2} />
+                        <Line
+                          type="monotone"
+                          dataKey="spent"
+                          name="Expenses (₹)"
+                          stroke="#10b981"
+                          strokeWidth={3}
+                        />
+                        <Line
+                          type="monotone"
+                          dataKey="income"
+                          name="Fine Revenue (₹)"
+                          stroke="#8b5cf6"
+                          strokeWidth={2}
+                        />
                       </LineChart>
                     </ResponsiveContainer>
                   </div>
@@ -440,7 +554,9 @@ export default function ManagementReportsPage() {
               <Card>
                 <CardHeader>
                   <CardTitle className="text-xl font-bold">Recent Expense Itemization</CardTitle>
-                  <CardDescription>Audited book purchases, subscriptions, and maintenance</CardDescription>
+                  <CardDescription>
+                    Audited book purchases, subscriptions, and maintenance
+                  </CardDescription>
                 </CardHeader>
                 <CardContent className="p-0">
                   <Table>
@@ -458,10 +574,19 @@ export default function ManagementReportsPage() {
                         <TableRow key={e.id}>
                           <TableCell className="font-mono text-xs">{e.date}</TableCell>
                           <TableCell className="font-semibold">{e.description}</TableCell>
-                          <TableCell><Badge variant="outline">{e.category}</Badge></TableCell>
-                          <TableCell className="font-bold text-emerald-600">₹{e.amount.toFixed(2)}</TableCell>
+                          <TableCell>
+                            <Badge variant="outline">{e.category}</Badge>
+                          </TableCell>
+                          <TableCell className="font-bold text-emerald-600">
+                            ₹{e.amount.toFixed(2)}
+                          </TableCell>
                           <TableCell className="text-right">
-                            <Badge variant={e.status === "PAID" ? "secondary" : "default"} className={e.status === "PAID" ? "bg-emerald-500/10 text-emerald-600" : ""}>
+                            <Badge
+                              variant={e.status === "PAID" ? "secondary" : "default"}
+                              className={
+                                e.status === "PAID" ? "bg-emerald-500/10 text-emerald-600" : ""
+                              }
+                            >
                               {e.status}
                             </Badge>
                           </TableCell>
@@ -478,31 +603,39 @@ export default function ManagementReportsPage() {
           {activeTab === "executive" && (
             <div className="flex flex-col gap-6">
               <div className="grid gap-6 md:grid-cols-2">
-                <Card className="border-primary/20 bg-linear-to-br from-primary/5 via-transparent to-transparent">
+                <Card className="border-primary/20 from-primary/5 bg-linear-to-br via-transparent to-transparent">
                   <CardHeader>
-                    <div className="flex items-center gap-2 text-primary font-bold text-lg">
+                    <div className="text-primary flex items-center gap-2 text-lg font-bold">
                       <Sparkles className="h-5 w-5" /> Executive Highlights
                     </div>
                   </CardHeader>
                   <CardContent className="flex flex-col gap-4 text-sm leading-relaxed">
-                    <div className="border-border rounded-lg border p-4 bg-background/60">
-                      <h4 className="font-bold text-foreground">High Book Utilization in Tech & Science</h4>
+                    <div className="border-border bg-background/60 rounded-lg border p-4">
+                      <h4 className="text-foreground font-bold">
+                        High Book Utilization in Tech & Science
+                      </h4>
                       <p className="text-muted-foreground mt-1 text-xs">
-                        Technology and Science genres represent 60.5% of overall checkout volume. Recommend allocating +15% budget to new technology editions for next quarter.
+                        Technology and Science genres represent 60.5% of overall checkout volume.
+                        Recommend allocating +15% budget to new technology editions for next
+                        quarter.
                       </p>
                     </div>
 
-                    <div className="border-border rounded-lg border p-4 bg-background/60">
-                      <h4 className="font-bold text-foreground">Strong On-Time Return Compliance</h4>
+                    <div className="border-border bg-background/60 rounded-lg border p-4">
+                      <h4 className="text-foreground font-bold">
+                        Strong On-Time Return Compliance
+                      </h4>
                       <p className="text-muted-foreground mt-1 text-xs">
-                        94.2% of borrowed items are returned within standard limits, maintaining high physical availability and minimal overdue penalties.
+                        94.2% of borrowed items are returned within standard limits, maintaining
+                        high physical availability and minimal overdue penalties.
                       </p>
                     </div>
 
-                    <div className="border-border rounded-lg border p-4 bg-background/60">
-                      <h4 className="font-bold text-foreground">Budget Under Utilization Margin</h4>
+                    <div className="border-border bg-background/60 rounded-lg border p-4">
+                      <h4 className="text-foreground font-bold">Budget Under Utilization Margin</h4>
                       <p className="text-muted-foreground mt-1 text-xs">
-                        Current expense utilization stands at 32.5% of total annual budget limit, leaving ample headroom for planned digital journal subscriptions in Q3.
+                        Current expense utilization stands at 32.5% of total annual budget limit,
+                        leaving ample headroom for planned digital journal subscriptions in Q3.
                       </p>
                     </div>
                   </CardContent>
@@ -514,16 +647,24 @@ export default function ManagementReportsPage() {
                     <CardTitle className="flex items-center gap-2 text-xl font-bold">
                       <FileText className="h-5 w-5 text-indigo-600" /> Exportable Audit Packages
                     </CardTitle>
-                    <CardDescription>Official formatted reports ready for committee distribution</CardDescription>
+                    <CardDescription>
+                      Official formatted reports ready for committee distribution
+                    </CardDescription>
                   </CardHeader>
 
                   <CardContent className="flex flex-col gap-4">
                     <div className="border-border hover:bg-muted/50 flex items-center justify-between rounded-xl border p-4 transition-all">
                       <div>
                         <h4 className="font-semibold">Full Monthly Operations Audit</h4>
-                        <p className="text-muted-foreground text-xs">Complete breakdown of circulation, inventory, and fines.</p>
+                        <p className="text-muted-foreground text-xs">
+                          Complete breakdown of circulation, inventory, and fines.
+                        </p>
                       </div>
-                      <Button size="sm" variant="outline" onClick={() => handleDownload("monthly_audit")}>
+                      <Button
+                        size="sm"
+                        variant="outline"
+                        onClick={() => handleDownload("monthly_audit")}
+                      >
                         <Download className="mr-1.5 h-3.5 w-3.5" /> PDF
                       </Button>
                     </div>
@@ -531,9 +672,15 @@ export default function ManagementReportsPage() {
                     <div className="border-border hover:bg-muted/50 flex items-center justify-between rounded-xl border p-4 transition-all">
                       <div>
                         <h4 className="font-semibold">Financial & Expense Statement</h4>
-                        <p className="text-muted-foreground text-xs">Itemized ledger of all library purchases and subscription costs.</p>
+                        <p className="text-muted-foreground text-xs">
+                          Itemized ledger of all library purchases and subscription costs.
+                        </p>
                       </div>
-                      <Button size="sm" variant="outline" onClick={() => handleDownload("expense_statement")}>
+                      <Button
+                        size="sm"
+                        variant="outline"
+                        onClick={() => handleDownload("expense_statement")}
+                      >
                         <Download className="mr-1.5 h-3.5 w-3.5" /> CSV
                       </Button>
                     </div>
@@ -541,9 +688,15 @@ export default function ManagementReportsPage() {
                     <div className="border-border hover:bg-muted/50 flex items-center justify-between rounded-xl border p-4 transition-all">
                       <div>
                         <h4 className="font-semibold">Category Utilization Analytics</h4>
-                        <p className="text-muted-foreground text-xs">Book demand split and waitlist statistics by department.</p>
+                        <p className="text-muted-foreground text-xs">
+                          Book demand split and waitlist statistics by department.
+                        </p>
                       </div>
-                      <Button size="sm" variant="outline" onClick={() => handleDownload("category_analytics")}>
+                      <Button
+                        size="sm"
+                        variant="outline"
+                        onClick={() => handleDownload("category_analytics")}
+                      >
                         <Download className="mr-1.5 h-3.5 w-3.5" /> PDF
                       </Button>
                     </div>

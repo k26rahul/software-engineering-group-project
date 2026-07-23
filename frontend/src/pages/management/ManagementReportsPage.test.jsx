@@ -35,7 +35,9 @@ describe("ManagementReportsPage Component", () => {
     );
 
     // Header check
-    expect(screen.getByRole("heading", { name: /Reports & Analytics Center/i })).toBeInTheDocument();
+    expect(
+      screen.getByRole("heading", { name: /Reports & Analytics Center/i })
+    ).toBeInTheDocument();
 
     // Wait for mock data to load
     await waitFor(() => {

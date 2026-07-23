@@ -47,10 +47,14 @@ import { categories } from "@/mocks/data/books";
 
 // Category badge color theme mapping
 const CATEGORY_STYLES = {
-  Technology: "bg-blue-500/10 text-blue-600 dark:text-blue-400 border-blue-200 dark:border-blue-800",
-  Science: "bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border-emerald-200 dark:border-emerald-800",
-  History: "bg-amber-500/10 text-amber-600 dark:text-amber-400 border-amber-200 dark:border-amber-800",
-  Fiction: "bg-purple-500/10 text-purple-600 dark:text-purple-400 border-purple-200 dark:border-purple-800",
+  Technology:
+    "bg-blue-500/10 text-blue-600 dark:text-blue-400 border-blue-200 dark:border-blue-800",
+  Science:
+    "bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border-emerald-200 dark:border-emerald-800",
+  History:
+    "bg-amber-500/10 text-amber-600 dark:text-amber-400 border-amber-200 dark:border-amber-800",
+  Fiction:
+    "bg-purple-500/10 text-purple-600 dark:text-purple-400 border-purple-200 dark:border-purple-800",
   Biography: "bg-rose-500/10 text-rose-600 dark:text-rose-400 border-rose-200 dark:border-rose-800",
 };
 
@@ -133,7 +137,10 @@ export default function MemberCatalogPage() {
             <BookOpen className="text-primary h-3.5 w-3.5" />
             <span className="font-semibold">{totalBooksCount}</span> Total Books
           </Badge>
-          <Badge variant="secondary" className="bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 gap-1.5 px-3 py-1 text-xs">
+          <Badge
+            variant="secondary"
+            className="gap-1.5 bg-emerald-500/10 px-3 py-1 text-xs text-emerald-600 dark:text-emerald-400"
+          >
             <CheckCircle2 className="h-3.5 w-3.5" />
             <span className="font-semibold">{availableBooksCount}</span> Available Now
           </Badge>
@@ -275,12 +282,24 @@ export default function MemberCatalogPage() {
                   {Array.from({ length: 5 }).map((_, i) => (
                     // eslint-disable-next-line @eslint-react/no-array-index-key
                     <TableRow key={i}>
-                      <TableCell><Skeleton className="h-4 w-40" /></TableCell>
-                      <TableCell><Skeleton className="h-4 w-28" /></TableCell>
-                      <TableCell><Skeleton className="h-4 w-20" /></TableCell>
-                      <TableCell><Skeleton className="h-4 w-16" /></TableCell>
-                      <TableCell><Skeleton className="h-4 w-24" /></TableCell>
-                      <TableCell className="text-right"><Skeleton className="ml-auto h-8 w-20" /></TableCell>
+                      <TableCell>
+                        <Skeleton className="h-4 w-40" />
+                      </TableCell>
+                      <TableCell>
+                        <Skeleton className="h-4 w-28" />
+                      </TableCell>
+                      <TableCell>
+                        <Skeleton className="h-4 w-20" />
+                      </TableCell>
+                      <TableCell>
+                        <Skeleton className="h-4 w-16" />
+                      </TableCell>
+                      <TableCell>
+                        <Skeleton className="h-4 w-24" />
+                      </TableCell>
+                      <TableCell className="text-right">
+                        <Skeleton className="ml-auto h-8 w-20" />
+                      </TableCell>
                     </TableRow>
                   ))}
                 </TableBody>
@@ -291,7 +310,7 @@ export default function MemberCatalogPage() {
       ) : processedBooks.length === 0 ? (
         // Empty State
         <Card className="border-dashed p-12 text-center">
-          <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-muted">
+          <div className="bg-muted mx-auto flex h-16 w-16 items-center justify-center rounded-full">
             <BookOpen className="text-muted-foreground h-8 w-8" />
           </div>
           <h3 className="mt-4 text-lg font-bold">No books found</h3>
@@ -314,7 +333,8 @@ export default function MemberCatalogPage() {
         // Grid View Cards
         <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
           {processedBooks.map((book) => {
-            const categoryStyle = CATEGORY_STYLES[book.category] || "bg-muted text-muted-foreground";
+            const categoryStyle =
+              CATEGORY_STYLES[book.category] || "bg-muted text-muted-foreground";
             const isAvailable = book.available_copies > 0;
 
             return (
@@ -325,7 +345,7 @@ export default function MemberCatalogPage() {
                 <div>
                   {/* Decorative Banner Header */}
                   <div className="from-primary/10 via-primary/5 relative flex h-28 items-center justify-between border-b bg-linear-to-br to-transparent p-4">
-                    <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-background/80 shadow-xs backdrop-blur-xs">
+                    <div className="bg-background/80 flex h-12 w-12 items-center justify-center rounded-xl shadow-xs backdrop-blur-xs">
                       <BookCopy className="text-primary h-6 w-6" />
                     </div>
                     <Badge variant="outline" className={`border font-semibold ${categoryStyle}`}>
@@ -392,7 +412,7 @@ export default function MemberCatalogPage() {
                     <Button
                       size="sm"
                       variant="secondary"
-                      className="bg-amber-500/10 text-amber-700 dark:text-amber-300 hover:bg-amber-500/20 text-xs font-semibold"
+                      className="bg-amber-500/10 text-xs font-semibold text-amber-700 hover:bg-amber-500/20 dark:text-amber-300"
                       disabled={reservingBookId === book.id}
                       onClick={() => handleReserve(book)}
                     >
@@ -419,14 +439,15 @@ export default function MemberCatalogPage() {
             </TableHeader>
             <TableBody>
               {processedBooks.map((book) => {
-                const categoryStyle = CATEGORY_STYLES[book.category] || "bg-muted text-muted-foreground";
+                const categoryStyle =
+                  CATEGORY_STYLES[book.category] || "bg-muted text-muted-foreground";
                 const isAvailable = book.available_copies > 0;
 
                 return (
                   <TableRow key={book.id} className="hover:bg-muted/50 transition-colors">
                     <TableCell>
                       <div>
-                        <div className="font-semibold text-foreground">{book.title}</div>
+                        <div className="text-foreground font-semibold">{book.title}</div>
                         <div className="text-muted-foreground text-xs">by {book.author}</div>
                       </div>
                     </TableCell>
@@ -436,7 +457,7 @@ export default function MemberCatalogPage() {
                       </Badge>
                     </TableCell>
                     <TableCell className="hidden md:table-cell">
-                      <div className="flex items-center gap-1 font-semibold text-amber-500 text-xs">
+                      <div className="flex items-center gap-1 text-xs font-semibold text-amber-500">
                         <Star className="h-3.5 w-3.5 fill-amber-500" />
                         <span>{book.average_rating ? book.average_rating.toFixed(1) : "N/A"}</span>
                       </div>
@@ -444,25 +465,25 @@ export default function MemberCatalogPage() {
                     <TableCell>
                       <Badge
                         variant={isAvailable ? "secondary" : "destructive"}
-                        className={isAvailable ? "bg-emerald-500/10 text-emerald-600 dark:text-emerald-400" : ""}
+                        className={
+                          isAvailable
+                            ? "bg-emerald-500/10 text-emerald-600 dark:text-emerald-400"
+                            : ""
+                        }
                       >
                         {isAvailable ? `${book.available_copies} Copies Available` : "Out of Stock"}
                       </Badge>
                     </TableCell>
                     <TableCell className="text-right">
                       <div className="flex items-center justify-end gap-2">
-                        <Button
-                          variant="ghost"
-                          size="sm"
-                          onClick={() => setSelectedBook(book)}
-                        >
+                        <Button variant="ghost" size="sm" onClick={() => setSelectedBook(book)}>
                           Details
                         </Button>
                         {!isAvailable && (
                           <Button
                             size="sm"
                             variant="secondary"
-                            className="bg-amber-500/10 text-amber-700 dark:text-amber-300 hover:bg-amber-500/20 text-xs font-semibold"
+                            className="bg-amber-500/10 text-xs font-semibold text-amber-700 hover:bg-amber-500/20 dark:text-amber-300"
                             disabled={reservingBookId === book.id}
                             onClick={() => handleReserve(book)}
                           >
@@ -481,7 +502,10 @@ export default function MemberCatalogPage() {
 
       {/* Book Details Modal Dialog */}
       {selectedBook && (
-        <Dialog open={Boolean(selectedBook)} onOpenChange={(open) => !open && setSelectedBook(null)}>
+        <Dialog
+          open={Boolean(selectedBook)}
+          onOpenChange={(open) => !open && setSelectedBook(null)}
+        >
           <DialogContent className="sm:max-w-lg">
             <DialogHeader>
               <div className="flex items-center gap-2">
@@ -494,18 +518,25 @@ export default function MemberCatalogPage() {
                   {selectedBook.category}
                 </Badge>
                 {selectedBook.isbn && (
-                  <span className="text-muted-foreground text-xs font-mono">ISBN: {selectedBook.isbn}</span>
+                  <span className="text-muted-foreground font-mono text-xs">
+                    ISBN: {selectedBook.isbn}
+                  </span>
                 )}
               </div>
               <DialogTitle className="text-2xl font-bold">{selectedBook.title}</DialogTitle>
-              <DialogDescription className="text-sm font-medium">by {selectedBook.author}</DialogDescription>
+              <DialogDescription className="text-sm font-medium">
+                by {selectedBook.author}
+              </DialogDescription>
             </DialogHeader>
 
             <div className="flex flex-col gap-4 py-2">
               <div className="bg-muted/40 border-border rounded-lg border p-4">
-                <h4 className="text-muted-foreground mb-1 text-xs font-semibold uppercase">Description</h4>
+                <h4 className="text-muted-foreground mb-1 text-xs font-semibold uppercase">
+                  Description
+                </h4>
                 <p className="text-foreground text-sm leading-relaxed">
-                  {selectedBook.description || "No description provided for this book catalog item."}
+                  {selectedBook.description ||
+                    "No description provided for this book catalog item."}
                 </p>
               </div>
 
@@ -514,7 +545,10 @@ export default function MemberCatalogPage() {
                   <span className="text-muted-foreground text-xs">Average Rating</span>
                   <div className="mt-1 flex items-center gap-1.5 font-bold text-amber-500">
                     <Star className="h-4 w-4 fill-amber-500" />
-                    <span>{selectedBook.average_rating ? selectedBook.average_rating.toFixed(1) : "N/A"} / 5.0</span>
+                    <span>
+                      {selectedBook.average_rating ? selectedBook.average_rating.toFixed(1) : "N/A"}{" "}
+                      / 5.0
+                    </span>
                   </div>
                 </div>
 
