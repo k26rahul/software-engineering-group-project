@@ -1,16 +1,6 @@
 import { useEffect } from "react";
-import { useParams, Link, useNavigate } from "react-router-dom";
-import {
-  ArrowLeft,
-  BookOpen,
-  Star,
-  Copy,
-  Info,
-  CheckCircle,
-  XCircle,
-  Library,
-  Calendar,
-} from "lucide-react";
+import { useParams, useNavigate } from "react-router-dom";
+import { ArrowLeft, BookOpen, Star, Copy, Info, CheckCircle, XCircle, Library } from "lucide-react";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
