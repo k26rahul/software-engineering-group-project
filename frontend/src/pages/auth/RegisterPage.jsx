@@ -30,7 +30,6 @@ export default function RegisterPage() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError("");
-    setSuccess(false);
     setLoading(true);
 
     try {

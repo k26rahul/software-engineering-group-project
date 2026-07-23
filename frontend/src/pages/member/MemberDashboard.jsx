@@ -85,7 +85,7 @@ function MemberDashboardHome() {
   if (profile && approvalStatus === "REJECTED") {
     return (
       <div className="flex min-h-[60vh] flex-col items-center justify-center gap-6 text-center">
-        <div className="flex h-20 w-20 items-center justify-center rounded-full bg-destructive/10">
+        <div className="bg-destructive/10 flex h-20 w-20 items-center justify-center rounded-full">
           <XCircle className="text-destructive h-10 w-10" />
         </div>
         <div className="space-y-2">

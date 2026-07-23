@@ -19,25 +19,31 @@ export default function PendingApprovalPage() {
           <h1 className="text-2xl font-bold tracking-tight">Registration Submitted!</h1>
           <p className="text-muted-foreground text-sm leading-relaxed">
             Your account has been created and is currently{" "}
-            <span className="text-amber-600 font-medium">pending approval</span> from a librarian.
+            <span className="font-medium text-amber-600">pending approval</span> from a librarian.
             You'll be able to borrow books once your account is approved.
           </p>
         </div>
 
         {/* What happens next */}
-        <div className="bg-muted/50 w-full rounded-xl border p-4 text-left space-y-3">
+        <div className="bg-muted/50 w-full space-y-3 rounded-xl border p-4 text-left">
           <p className="text-sm font-semibold">What happens next?</p>
           <ol className="text-muted-foreground space-y-2 text-sm">
             <li className="flex gap-3">
-              <span className="bg-primary text-primary-foreground mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full text-xs font-bold">1</span>
+              <span className="bg-primary text-primary-foreground mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full text-xs font-bold">
+                1
+              </span>
               A librarian will review your registration request.
             </li>
             <li className="flex gap-3">
-              <span className="bg-primary text-primary-foreground mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full text-xs font-bold">2</span>
+              <span className="bg-primary text-primary-foreground mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full text-xs font-bold">
+                2
+              </span>
               Once approved, your borrowing privileges will be activated.
             </li>
             <li className="flex gap-3">
-              <span className="bg-primary text-primary-foreground mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full text-xs font-bold">3</span>
+              <span className="bg-primary text-primary-foreground mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full text-xs font-bold">
+                3
+              </span>
               Log in to check your account status at any time.
             </li>
           </ol>

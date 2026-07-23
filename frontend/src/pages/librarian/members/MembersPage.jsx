@@ -23,7 +23,6 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { toast } from "sonner";
 import useMemberStore from "@/store/memberStore";
 
-
 const STATUS_OPTIONS = [
   { value: "all", label: "All Statuses" },
   { value: "APPROVED", label: "Approved" },
@@ -66,7 +65,15 @@ function StatusBadge({ status, isActive }) {
 }
 
 export default function MembersPage() {
-  const { members, membersLoading, membersError, memberActionLoading, fetchMembers, approveMember, rejectMember } = useMemberStore();
+  const {
+    members,
+    membersLoading,
+    membersError,
+    memberActionLoading,
+    fetchMembers,
+    approveMember,
+    rejectMember,
+  } = useMemberStore();
 
   const [search, setSearch] = useState("");
   const [statusFilter, setStatusFilter] = useState("all");
@@ -152,9 +159,7 @@ export default function MembersPage() {
 
         <Card className="border-l-primary border-l-4">
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-muted-foreground text-sm font-medium">
-              Total Shown
-            </CardTitle>
+            <CardTitle className="text-muted-foreground text-sm font-medium">Total Shown</CardTitle>
             <div className="text-primary bg-primary/10 rounded-lg p-2">
               <Users className="h-4 w-4" />
             </div>
@@ -209,12 +214,7 @@ export default function MembersPage() {
             <div className="bg-destructive/10 text-destructive border-destructive/20 mb-4 flex items-center gap-3 rounded-lg border p-4 text-sm">
               <AlertTriangle className="h-4 w-4 shrink-0" />
               <span>{membersError}</span>
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={load}
-                className="ml-auto gap-1.5"
-              >
+              <Button variant="outline" size="sm" onClick={load} className="ml-auto gap-1.5">
                 <RotateCcw className="h-3.5 w-3.5" />
                 Retry
               </Button>

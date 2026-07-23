@@ -24,6 +24,7 @@ const useMemberStore = create((set) => ({
       const response = await api.get(`/members?${query.toString()}`);
       set({ members: response.data, membersLoading: false });
     } catch (err) {
+      console.error("Error loading members list in store:", err);
       set({
         membersError: "Could not load members list. Please try again.",
         membersLoading: false,

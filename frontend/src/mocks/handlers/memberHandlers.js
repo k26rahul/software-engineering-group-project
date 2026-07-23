@@ -38,9 +38,7 @@ export const memberHandlers = [
 
     if (search) {
       result = result.filter(
-        (m) =>
-          m.name.toLowerCase().includes(search) ||
-          m.email.toLowerCase().includes(search)
+        (m) => m.name.toLowerCase().includes(search) || m.email.toLowerCase().includes(search)
       );
     }
 
