@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { Link } from "react-router-dom";
+import { Link, Routes, Route } from "react-router-dom";
 import useDashboardStore from "@/store/dashboardStore";
 import { Card, CardHeader, CardTitle, CardDescription, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -18,8 +18,12 @@ import {
   AlertTriangle,
   Loader2,
 } from "lucide-react";
+import CatalogPage from "./catalog/CatalogPage";
+import AddBookPage from "./catalog/AddBookPage";
+import EditBookPage from "./catalog/EditBookPage";
+import BookCopiesPage from "./catalog/BookCopiesPage";
 
-export default function LibrarianDashboard() {
+function LibrarianHome() {
   const {
     librarianStats: stats,
     alerts,
@@ -93,7 +97,6 @@ export default function LibrarianDashboard() {
     if (percent >= 75) return "bg-amber-500";
     return "bg-primary";
   };
-
   return (
     <div className="animate-fade-in flex flex-col gap-8 pb-12 duration-300">
       <div className="flex flex-col gap-2">
@@ -509,4 +512,16 @@ function getAlertIconBg(type) {
     default:
       return "bg-muted";
   }
+}
+
+export default function LibrarianDashboard() {
+  return (
+    <Routes>
+      <Route path="/" element={<LibrarianHome />} />
+      <Route path="catalog" element={<CatalogPage />} />
+      <Route path="catalog/add" element={<AddBookPage />} />
+      <Route path="catalog/:id/edit" element={<EditBookPage />} />
+      <Route path="catalog/:id/copies" element={<BookCopiesPage />} />
+    </Routes>
+  );
 }

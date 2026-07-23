@@ -1,7 +1,7 @@
 import { Link, useLocation } from "react-router-dom";
 import { cn } from "@/lib/utils";
 import useAuthStore from "@/store/authStore";
-import { LayoutDashboard, Users, BookCopy, BarChart } from "lucide-react";
+import { LayoutDashboard, Users, BookCopy, BarChart, User } from "lucide-react";
 
 export function Sidebar({ className }) {
   const location = useLocation();
@@ -19,6 +19,7 @@ export function Sidebar({ className }) {
   } else if (user?.role === "MEMBER") {
     links = [
       { name: "Dashboard", href: "/member", icon: LayoutDashboard },
+      { name: "Profile", href: "/member/profile", icon: User },
       { name: "Catalog", href: "/member/catalog", icon: BookCopy },
     ];
   } else if (user?.role === "CAMPUS_MANAGEMENT") {
