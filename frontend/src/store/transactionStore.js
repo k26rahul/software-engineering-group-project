@@ -66,32 +66,28 @@ const useTransactionStore = create((set) => ({
   },
 
   addBudgetEntry: async (entryData) => {
-    try {
-      const response = await api.post("/budget/entries", entryData);
-      set((state) => ({
-        budget: state.budget
-          ? {
-              ...state.budget,
-              entries: [...state.budget.entries, response.data],
-              budget_spent:
-                entryData.type === "EXPENSE"
-                  ? state.budget.budget_spent + entryData.amount
-                  : state.budget.budget_spent - entryData.amount,
-              total_expenses:
-                entryData.type === "EXPENSE"
-                  ? state.budget.total_expenses + entryData.amount
-                  : state.budget.total_expenses,
-              total_income:
-                entryData.type === "INCOME"
-                  ? state.budget.total_income + entryData.amount
-                  : state.budget.total_income,
-            }
-          : null,
-      }));
-      return response.data;
-    } catch (err) {
-      throw err;
-    }
+    const response = await api.post("/budget/entries", entryData);
+    set((state) => ({
+      budget: state.budget
+        ? {
+            ...state.budget,
+            entries: [...state.budget.entries, response.data],
+            budget_spent:
+              entryData.type === "EXPENSE"
+                ? state.budget.budget_spent + entryData.amount
+                : state.budget.budget_spent - entryData.amount,
+            total_expenses:
+              entryData.type === "EXPENSE"
+                ? state.budget.total_expenses + entryData.amount
+                : state.budget.total_expenses,
+            total_income:
+              entryData.type === "INCOME"
+                ? state.budget.total_income + entryData.amount
+                : state.budget.total_income,
+          }
+        : null,
+    }));
+    return response.data;
   },
 }));
 

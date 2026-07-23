@@ -36,9 +36,7 @@ export default function ProcessReturnPage() {
       const result = await returnBook(transaction.transaction_id);
       const fine = result?.fine_amount;
       if (fine > 0) {
-        toast.warning(
-          `"${transaction.book_title}" returned. Fine of ₹${fine.toFixed(2)} applied.`
-        );
+        toast.warning(`"${transaction.book_title}" returned. Fine of ₹${fine.toFixed(2)} applied.`);
       } else {
         toast.success(`"${transaction.book_title}" returned successfully.`);
       }
@@ -78,7 +76,9 @@ export default function ProcessReturnPage() {
           </CardContent>
         </Card>
 
-        <Card className={`border-l-4 ${overdueCount > 0 ? "border-l-destructive" : "border-l-emerald-500"}`}>
+        <Card
+          className={`border-l-4 ${overdueCount > 0 ? "border-l-destructive" : "border-l-emerald-500"}`}
+        >
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-muted-foreground text-sm font-medium">
               Overdue Returns
@@ -140,12 +140,24 @@ export default function ProcessReturnPage() {
                   Array.from({ length: 4 }).map((_, i) => (
                     // eslint-disable-next-line @eslint-react/no-array-index-key
                     <TableRow key={i}>
-                      <TableCell><Skeleton className="h-4 w-28" /></TableCell>
-                      <TableCell className="hidden sm:table-cell"><Skeleton className="h-4 w-36" /></TableCell>
-                      <TableCell className="hidden md:table-cell"><Skeleton className="h-4 w-24" /></TableCell>
-                      <TableCell><Skeleton className="h-4 w-24" /></TableCell>
-                      <TableCell><Skeleton className="h-5 w-16 rounded-full" /></TableCell>
-                      <TableCell className="text-right"><Skeleton className="ml-auto h-7 w-20 rounded-md" /></TableCell>
+                      <TableCell>
+                        <Skeleton className="h-4 w-28" />
+                      </TableCell>
+                      <TableCell className="hidden sm:table-cell">
+                        <Skeleton className="h-4 w-36" />
+                      </TableCell>
+                      <TableCell className="hidden md:table-cell">
+                        <Skeleton className="h-4 w-24" />
+                      </TableCell>
+                      <TableCell>
+                        <Skeleton className="h-4 w-24" />
+                      </TableCell>
+                      <TableCell>
+                        <Skeleton className="h-5 w-16 rounded-full" />
+                      </TableCell>
+                      <TableCell className="text-right">
+                        <Skeleton className="ml-auto h-7 w-20 rounded-md" />
+                      </TableCell>
                     </TableRow>
                   ))
                 ) : activeTransactions.length === 0 ? (
@@ -167,7 +179,9 @@ export default function ProcessReturnPage() {
                           {tx.member_email}
                         </p>
                       </TableCell>
-                      <TableCell className="hidden text-sm sm:table-cell">{tx.book_title}</TableCell>
+                      <TableCell className="hidden text-sm sm:table-cell">
+                        {tx.book_title}
+                      </TableCell>
                       <TableCell className="text-muted-foreground hidden text-sm md:table-cell">
                         {new Date(tx.issue_date).toLocaleDateString()}
                       </TableCell>

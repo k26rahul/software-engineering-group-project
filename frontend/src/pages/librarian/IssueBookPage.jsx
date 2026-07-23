@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useMemo } from "react";
 import { Search, BookOpen, User, Check, Loader2, AlertTriangle, ChevronRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -48,7 +48,12 @@ export default function IssueBookPage() {
   const [bookSearch, setBookSearch] = useState("");
   const [selectedMember, setSelectedMember] = useState(null);
   const [selectedBook, setSelectedBook] = useState(null);
-  const [selectedCopy, setSelectedCopy] = useState(null);
+
+  const issueDateStr = useMemo(() => new Date().toLocaleDateString(), []);
+  const dueDateStr = useMemo(
+    () => new Date(Date.now() + 14 * 24 * 60 * 60 * 1000).toLocaleDateString(),
+    []
+  );
 
   // Load members (only APPROVED+active)
   const loadMembers = useCallback(() => {
@@ -81,8 +86,6 @@ export default function IssueBookPage() {
 
   const handleSelectBook = (book) => {
     setSelectedBook(book);
-    // Auto-select the first available copy from the full books data
-    setSelectedCopy(null);
     setStep(3);
   };
 
@@ -97,7 +100,6 @@ export default function IssueBookPage() {
       setStep(1);
       setSelectedMember(null);
       setSelectedBook(null);
-      setSelectedCopy(null);
       setMemberSearch("");
       setBookSearch("");
     } catch (err) {
@@ -273,32 +275,30 @@ export default function IssueBookPage() {
               <CardContent className="flex flex-col gap-4">
                 <div className="bg-muted/40 grid gap-4 rounded-lg border p-4 sm:grid-cols-2">
                   <div>
-                    <p className="text-muted-foreground mb-1 text-xs font-medium uppercase tracking-wide">
+                    <p className="text-muted-foreground mb-1 text-xs font-medium tracking-wide uppercase">
                       Member
                     </p>
                     <p className="font-semibold">{selectedMember.name}</p>
                     <p className="text-muted-foreground text-sm">{selectedMember.email}</p>
                   </div>
                   <div>
-                    <p className="text-muted-foreground mb-1 text-xs font-medium uppercase tracking-wide">
+                    <p className="text-muted-foreground mb-1 text-xs font-medium tracking-wide uppercase">
                       Book
                     </p>
                     <p className="font-semibold">{selectedBook.title}</p>
                     <p className="text-muted-foreground text-sm">{selectedBook.author}</p>
                   </div>
                   <div>
-                    <p className="text-muted-foreground mb-1 text-xs font-medium uppercase tracking-wide">
+                    <p className="text-muted-foreground mb-1 text-xs font-medium tracking-wide uppercase">
                       Issue Date
                     </p>
-                    <p className="font-semibold">{new Date().toLocaleDateString()}</p>
+                    <p className="font-semibold">{issueDateStr}</p>
                   </div>
                   <div>
-                    <p className="text-muted-foreground mb-1 text-xs font-medium uppercase tracking-wide">
+                    <p className="text-muted-foreground mb-1 text-xs font-medium tracking-wide uppercase">
                       Due Date
                     </p>
-                    <p className="font-semibold">
-                      {new Date(Date.now() + 14 * 24 * 60 * 60 * 1000).toLocaleDateString()}
-                    </p>
+                    <p className="font-semibold">{dueDateStr}</p>
                     <p className="text-muted-foreground text-xs">14-day loan period</p>
                   </div>
                 </div>
@@ -331,7 +331,7 @@ export default function IssueBookPage() {
           </CardHeader>
           <CardContent className="flex flex-col gap-4">
             <div>
-              <p className="text-muted-foreground mb-1 text-xs font-medium uppercase tracking-wide">
+              <p className="text-muted-foreground mb-1 text-xs font-medium tracking-wide uppercase">
                 Member
               </p>
               {selectedMember ? (
@@ -341,7 +341,7 @@ export default function IssueBookPage() {
               )}
             </div>
             <div>
-              <p className="text-muted-foreground mb-1 text-xs font-medium uppercase tracking-wide">
+              <p className="text-muted-foreground mb-1 text-xs font-medium tracking-wide uppercase">
                 Book
               </p>
               {selectedBook ? (
@@ -351,7 +351,7 @@ export default function IssueBookPage() {
               )}
             </div>
             {selectedMember && (
-              <div className="bg-amber-500/10 flex items-start gap-2 rounded-lg p-3 text-xs text-amber-700">
+              <div className="flex items-start gap-2 rounded-lg bg-amber-500/10 p-3 text-xs text-amber-700">
                 <AlertTriangle className="mt-0.5 h-3.5 w-3.5 shrink-0" />
                 Verify member ID before issuing.
               </div>

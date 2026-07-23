@@ -95,7 +95,10 @@ export const transactionHandlers = [
     // Remove from active transactions
     transactionsDB.splice(txIdx, 1);
 
-    return HttpResponse.json({ detail: "Book returned successfully.", fine_amount: tx.fine_amount });
+    return HttpResponse.json({
+      detail: "Book returned successfully.",
+      fine_amount: tx.fine_amount,
+    });
   }),
 
   // GET /budget - budget summary + line items

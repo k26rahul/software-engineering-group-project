@@ -55,8 +55,7 @@ function SpendGauge({ spent, limit }) {
 }
 
 export default function BudgetTrackerPage() {
-  const { budget, budgetLoading, budgetError, fetchBudget, addBudgetEntry } =
-    useTransactionStore();
+  const { budget, budgetLoading, budgetError, fetchBudget, addBudgetEntry } = useTransactionStore();
 
   const [open, setOpen] = useState(false);
   const [saving, setSaving] = useState(false);
@@ -289,11 +288,21 @@ export default function BudgetTrackerPage() {
                   Array.from({ length: 5 }).map((_, i) => (
                     // eslint-disable-next-line @eslint-react/no-array-index-key
                     <TableRow key={i}>
-                      <TableCell><Skeleton className="h-4 w-20" /></TableCell>
-                      <TableCell><Skeleton className="h-4 w-28" /></TableCell>
-                      <TableCell className="hidden sm:table-cell"><Skeleton className="h-4 w-40" /></TableCell>
-                      <TableCell><Skeleton className="h-5 w-16 rounded-full" /></TableCell>
-                      <TableCell className="text-right"><Skeleton className="ml-auto h-4 w-20" /></TableCell>
+                      <TableCell>
+                        <Skeleton className="h-4 w-20" />
+                      </TableCell>
+                      <TableCell>
+                        <Skeleton className="h-4 w-28" />
+                      </TableCell>
+                      <TableCell className="hidden sm:table-cell">
+                        <Skeleton className="h-4 w-40" />
+                      </TableCell>
+                      <TableCell>
+                        <Skeleton className="h-5 w-16 rounded-full" />
+                      </TableCell>
+                      <TableCell className="text-right">
+                        <Skeleton className="ml-auto h-4 w-20" />
+                      </TableCell>
                     </TableRow>
                   ))
                 ) : sorted.length === 0 ? (
