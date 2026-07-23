@@ -30,14 +30,14 @@ export default function DashboardLayout({ children, requiredRole }) {
     <div className="bg-muted/40 flex min-h-screen w-full flex-col">
       <div
         className={cn(
-          "flex flex-col sm:gap-4 sm:py-4 transition-all duration-300",
+          "flex flex-col transition-all duration-300 sm:gap-4 sm:py-4",
           isCollapsed ? "sm:pl-16" : "sm:pl-64"
         )}
       >
         {/* Desktop Sidebar */}
         <aside
           className={cn(
-            "bg-background fixed inset-y-0 left-0 z-10 hidden flex-col border-r sm:flex transition-all duration-300",
+            "bg-background fixed inset-y-0 left-0 z-10 hidden flex-col border-r transition-all duration-300 sm:flex",
             isCollapsed ? "w-16" : "w-64"
           )}
         >
