@@ -1,5 +1,5 @@
 import { http, HttpResponse } from "msw";
-import { users } from "@/mocks/data";
+import { users, generateNewMockUser } from "@/mocks/data";
 import { baseURL } from "@/lib/api";
 
 export const authHandlers = [
@@ -36,17 +36,7 @@ export const authHandlers = [
 
     return HttpResponse.json(
       {
-        user: {
-          id: 999,
-          email,
-          name,
-          phone: phone || null,
-          role: "MEMBER",
-          membership_type,
-          approval_status: "PENDING",
-          is_active: false,
-          created_at: new Date().toISOString(),
-        },
+        user: generateNewMockUser(email, name, phone, membership_type),
         access_token: `mock-jwt-token-${email}`,
       },
       { status: 201 }

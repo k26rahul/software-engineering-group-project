@@ -36,3 +36,15 @@ export const users = {
     created_at: "2026-01-01T09:00:00Z",
   },
 };
+
+export const generateNewMockUser = (email, name, phone, membership_type) => ({
+  id: 999,
+  email,
+  name,
+  phone: phone || null,
+  role: "MEMBER",
+  membership_type,
+  approval_status: "PENDING",
+  is_active: false,
+  created_at: new Date().toISOString(),
+});
