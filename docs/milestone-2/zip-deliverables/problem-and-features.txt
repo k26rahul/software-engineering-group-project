@@ -1,0 +1,261 @@
+# Problem Statement
+
+## Application Overview
+
+We are building a **Library Management System** for the Rashtrotthana Vidya Kendra (RVK) campus library. This web application will transition the library from manual, paper-based operations — physical cards, registers, and verbal requests — into an automated, digital workflow system. The platform will manage memberships, book catalogs, issue/return cycles, reservation queues, budget tracking, and community features like book reviews and recommendations.
+
+## The Current Landscape
+
+- **Location:** Rashtrotthana Vidya Kendra (RVK) campus, which houses four distinct schools.
+- **Inventory:** Approximately 5,000 books in the library catalog.
+- **User Base:**
+  - ~1,500 active campus students.
+  - ~600 registered off-campus members from the outside community.
+
+## The Core Problem
+
+- **100% Paper-Based Operations:** Every workflow — issuing books, tracking returns, managing reservations, and tallying the monthly budget — is handled manually across multiple physical registers.
+- **Severe Administrative Overload:** Managing 2,100+ members and 5,000+ books on paper forces the librarian to work through Sundays just to keep records accurate.
+- **Poor Experience for Members:** Members cannot search the catalog digitally, there is no formal reservation system, and they are forced to return all their books just to renew an expired card.
+
+## The Digital Transformation Impact
+
+### For the Librarian
+
+- **Manual Tracking** ➔ **Automated Management:** Eliminates the overhead of managing 2,100+ members and 5,000+ books across multiple physical registers.
+- **Administrative Burnout** ➔ **Freed Capacity:** Removes the need for weekend catch-up work, giving the librarian her time back.
+- **Clerical Data Entry** ➔ **Creative Focus:** Frees the librarian to invest time in interacting with readers, curating reading lists, moderating reviews, and reading herself.
+
+### For Members
+
+- **Rack-by-Rack Search** ➔ **Instant Digital Discovery:** Members can find any book in seconds by searching the catalog instead of physically browsing racks.
+- **Verbal Reservation Requests** ➔ **Automated, Fair Waitlist:** A formal digital queue replaces the informal, memory-based system that leads to confusion and unfair outcomes.
+- **Forced Full-Return Card Renewals** ➔ **Continuous Digital Access:** Members no longer need to return all their books just to renew a card. Their digital account continues without disruption.
+
+
+# Current Workflows and Pain Points
+
+This document outlines the current manual operations, workflows, and associated bottlenecks within the Rashtrotthana Vidya Kendra (RVK) campus library.
+
+---
+
+## 1. Librarian Workflows & Challenges
+
+### 1.1 Membership Management
+
+- **Workflow:**
+  - Student/Member applies ➔ Librarian issues a physical library card (acts like a bank passbook).
+  - The card tracks borrowing history. Capacity is limited to approximately 20 entries (front and back).
+  - When full ➔ Librarian collects the old card ➔ Issues a new blank card.
+  - *(Note: RVK campus students are default members; off-campus students pay an annual ₹100 fee, strictly tied to the academic year.)*
+- **Pain Points:**
+  - Constantly issuing and managing physical replacement cards is a major administrative overhead.
+
+### 1.2 Issuing Books & Tracking Returns
+
+- **Workflow:**
+  - **Issuing:**
+    - Member selects a book or magazine ➔ Librarian writes the transaction in a physical register: `Member Name`, `Item Name`, `Date of Issue`, and `Expected Return Date`.
+    - Register pages are organized chronologically by issue date. For example, all transactions from June 28 fill pages 1–3; transactions from June 29 start on page 4 onwards.
+    - A single register book typically lasts 2–3 months before it is full.
+    - For magazines: the transaction is recorded only in the librarian's own register, not in the member's library card.
+  - **Return Deadlines:**
+    - The return deadline is set by the librarian's judgment at the time of issue:
+      - **5 days** → Magazines only. A magazine can only be issued once it is at least half its publication cycle old (e.g., a monthly magazine after 15 days from arrival; a weekly magazine after 4 days from arrival).
+      - **10 or 20 days** → Standard for most books. The librarian decides based on the book's demand and availability.
+      - **30 days** → Reserved for specific cases where a member needs extended access, such as large biographies or novels for long-term reading or research.
+      - High-demand books that the library needs to keep in circulation may be restricted to a 10-day deadline only, at the librarian's discretion.
+  - **Returning:**
+    - When a member returns an item, the librarian must manually locate the original issue entry in the register to mark it as returned.
+    - If the item was issued weeks or months ago, the librarian must retrieve the correct archived register from the archive room and find the exact page by date.
+    - Old registers cannot be discarded — they are the only permanent record of all past transactions. Over time, these accumulate into large piles of register books in the archive room.
+- **Pain Points:**
+  - **Overdue Tracking:** To find members who haven't returned items, the librarian must manually scan through previous pages across potentially multiple registers to identify entries without a "returned" mark.
+  - **Return Lookup:** Finding the original issue record for a returned item is slow — especially for late returns from months ago, which require digging through archived registers to locate the exact page by date.
+  - **Fines Calculation:** When a book is returned late, damaged, or declared lost, the librarian must manually calculate fines (0.5x book price for damaged, 1.5x book price for lost) by referencing the original book cost.
+
+### 1.3 Book Catalog & Inventory Management
+
+- **Workflow:**
+  - The library catalog is maintained across multiple physical registers, segregated by category (e.g., Fiction, Non-Fiction, Self-Help, Academic, Biographies).
+- **Pain Points:**
+  - **No Availability Status:** A register confirms that a book is owned by the library, but gives no indication of whether it is currently on the shelf or issued out to a member.
+  - **Complexity:** Managing multiple copies of the exact same book is highly complicated in a manual register.
+  - **Accuracy:** Keeping records updated when books are permanently lost or damaged is time-consuming and prone to human error.
+
+### 1.4 Managing Reviews & Reading Lists
+
+- **Workflow (Reviews):**
+  - Member writes a review on paper ➔ Submits to librarian ➔ Librarian pins it to the library display board.
+  - Librarian routinely rotates older reviews out for new ones.
+- **Workflow (Reading Lists):**
+  - Librarian curates topic-based lists to encourage reading and writes them down in a register.
+- **Pain Points:**
+  - Old reviews are completely lost or very difficult to retrieve once removed from the board. There is no way to associate reviews with specific books for future readers.
+  - Modifying curated reading lists in a physical register is messy and inflexible.
+
+### 1.5 Budget & Book Purchase Management
+
+- **Workflow:**
+  - Library receives a monthly allowance of up to ₹10,000 from campus management.
+  - New books are purchased based on verbal demands and requests from members.
+  - At month-end, the librarian tallies all spending and submits the total to campus management, who reimburse the exact amount spent.
+- **Pain Points:**
+  - With limited funds, the librarian has to manually balance and prioritize the most frequently requested books against their prices, relying heavily on handwritten notes and memory.
+  - There is no running total of how much has been spent so far in the current month, making it easy to accidentally overspend or underspend.
+
+### 1.6 Subscription Management (Newspapers & Magazines)
+
+- **Workflow:**
+  - The library subscribes to 5 newspapers (2 copies each) and roughly 10-15 magazines (2 copies each, with varying frequencies — weekly, bi-weekly, or monthly).
+  - Sellers deliver the subscribed titles. At month-end, the librarian manually calculates the total payout owed to each seller.
+  - This subscription cost is combined with book purchase costs to compile the full month-end expense report for campus management.
+- **Pain Points:**
+  - There is no central record of all subscriptions. The librarian has to remember every title, copy count, price, and delivery frequency from memory or scattered notes.
+  - Calculating monthly subscription costs is tedious — a weekly title incurs ~4 charges, a bi-weekly title ~2, and a monthly title 1. Doing this for all subscriptions by hand is error-prone.
+  - Combining subscription costs with book purchase costs at month-end into a single accurate report is time-consuming and difficult to verify.
+
+---
+
+## 2. Member Workflows & Challenges
+
+### 2.1 Searching for Books
+
+- **Workflow:**
+  - Member wants a specific book ➔ Physically searches rack-by-rack.
+  - If not found ➔ Asks the librarian ➔ Librarian checks category registers or relies on memory.
+- **Pain Points:**
+  - Because there are thousands of books, the librarian cannot memorize the entire inventory. It frequently happens that a requested book is physically present but the member leaves empty-handed because they couldn't find it.
+
+### 2.2 The Card Renewal Bottleneck
+
+- **Workflow:**
+  - Cards must be renewed either when the ~20 entry limit is reached, or at the start of every new academic year (July).
+  - Off-campus students must pay the ₹100 annual fee again at the start of the academic session, even if they joined late in the previous session (e.g., January).
+  - To get a new card ➔ Member must return **all** currently issued books ➔ Submit old card ➔ Receive new card.
+- **Pain Points:**
+  - If a member's card is full, they must return all currently issued books just to facilitate the renewal process — regardless of their due dates.
+  - The rigid academic year fee structure means off-campus members who joined late in the year get very little value before having to pay the full amount again.
+
+### 2.3 Reserving Unavailable Books
+
+- **Workflow:**
+  - Member discovers all copies of a desired book are currently issued to others.
+  - Member verbally requests the librarian to hold the book for them upon its return.
+- **Pain Points:**
+  - There is no formal reservation queue. The librarian has to mentally remember who asked for a book first. When multiple members want the same book, it leads to confusion and an unfair, informal waitlist.
+
+### 2.4 Requesting New Books
+
+- **Workflow:**
+  - Member wants a book not owned by the library ➔ Verbally tells the librarian ➔ Librarian jots it down in a request register.
+- **Pain Points:**
+  - Members have no visibility on whether their request is being considered, how many other people want the same book, or when it might be purchased.
+
+
+﻿# Requirements Analysis
+
+This document maps the identified user requirements to the system features being built. Each module is grounded in a real pain point discovered during requirements gathering, and the features listed are the direct solutions to those problems.
+
+---
+
+## 1. Authentication & Identity Module
+
+*The library identifies members through physical library cards, but there is no digital access control — member records, approval status, and borrowing privileges are all managed manually.*
+
+- **Secure Access** ➔ Role-based routing to the administrative (Librarian), member (Student), or management (Campus Management) dashboard upon login.
+- **Member Onboarding** ➔ Self-registration for students ➔ Librarian approval queue ➔ Member notified on approval or rejection.
+
+---
+
+## 2. Membership Management Module
+
+*Member records are maintained on physical passbooks with a ~20-entry limit. Off-campus member billing is tracked manually with no automated reminders.*
+
+- **Digital Profiles** ➔ Replaces physical passbooks. Tracks complete borrowing history, outstanding fines, and active issue limits.
+- **Billing & Renewals** ➔ Automatically tracks the rolling 1-year cycle for off-campus members ➔ Flags the librarian when renewal is due.
+- **In-App Payments** ➔ Facilitates payments for annual membership renewals and outstanding fines directly within the application.
+
+---
+
+## 3. Catalog & Inventory Module
+
+*The catalog exists across multiple physical registers with no real-time availability — the librarian and members have no way to know if a book is on the shelf or issued out.*
+
+- **Catalog Management** ➔ Librarian can add, edit, and categorize the library's 5,000+ books.
+- **ISBN Barcode Scanning** ➔ Librarian can scan a book's ISBN barcode when adding it to the catalog ➔ System auto-fills the title, author, and genre from an online ISBN database ➔ Reduces manual data entry during the initial setup.
+- **Copy-Level Tracking** ➔ Librarian can mark specific copies as lost or damaged ➔ Keeps real-time availability accurate for all members.
+- **Book Search & Discovery** ➔ Members can search by title, author, or category ➔ View real-time availability (e.g., "Available" vs. "All copies issued").
+
+---
+
+## 4. Circulation (Issue/Return) Module
+
+*Every issue and return is recorded manually in a physical register. Finding an old entry, tracking overdue items, and calculating fines all require going through pages of handwritten records.*
+
+- **Digital Issue/Return** ➔ Logs transactions instantly and clears member accounts upon return.
+- **Deadline Tracking** ➔ Librarian sets a return deadline (5, 10, 20, or 30 days) at the time of issue based on the item type and demand ➔ System records and tracks the exact due date automatically.
+- **Automated Fines** ➔ Calculates exact penalties (0.5x price for damaged, 1.5x price for lost) based on the book's base price when a condition is flagged on return.
+- **Overdue Alerts** ➔ Maintains a list of all overdue books across the library ➔ Sends automated email or web push notifications to members with overdue items.
+
+---
+
+## 5. Reservation & Request Module
+
+*There is no formal reservation system. The librarian has to mentally remember who asked for a book first, leading to confusion and unfair outcomes. Book purchase requests are verbal with no visibility.*
+
+- **Digital Waitlist** ➔ Members place holds on out-of-stock books ➔ Enter an automated first-in, first-out queue ➔ Can cancel their reservation at any time.
+- **Availability Alerts** ➔ System prompts the librarian when a returned book has an active reservation ➔ Automatically notifies the queued member to collect.
+- **Book Purchase Requests** ➔ Members suggest new books ➔ Community upvotes ➔ Librarian views a ranked list to prioritize the monthly budget ➔ Marks requests as "Purchased" once fulfilled.
+
+---
+
+## 6. Community & Curation Module
+
+*Member reviews are pinned to a physical display board and lost when rotated out. Reading lists are kept in a register and are hard to update or share.*
+
+- **Digital Reviews** ➔ Members submit ratings and written reviews ➔ Librarian moderates ➔ Displayed permanently on each book's detail page.
+- **Reading Lists** ➔ Librarian creates and manages themed collections (e.g., "Best Sci-Fi", "Required Physics Reading") ➔ Displayed on member dashboards.
+
+---
+
+## 7. Recommendations Module
+
+*Members have no way to discover books beyond physically browsing the racks or asking the librarian.*
+
+- **Reading History Tracking** ➔ System tracks the genres and authors from each member's borrowing history.
+- **Personalized Suggestions** ➔ Surfaces books from matching genres and authors that the member has not yet read ➔ Displayed on the member dashboard as "Based on your reading".
+
+---
+
+## 8. Budget & Subscription Module
+
+*The librarian manually tallies all subscription costs and book purchases at month-end. There is no running total, making it easy to overspend without realizing it.*
+
+- **Subscription Management** ➔ Librarian adds, modifies, or cancels newspaper and magazine subscriptions (title, copies, price per copy, frequency).
+- **Automatic Monthly Cost Calculation** ➔ System calculates the total subscription payout each month based on all active subscriptions and their frequencies.
+- **Book Purchase Entry** ➔ Librarian manually enters new book purchases (title, copies, price per copy, vendor) ➔ Cost is immediately added to the month's running total.
+- **Running Budget Tracker** ➔ Displays real-time utilization of the ₹10,000 monthly allowance as expenses are added.
+- **Month-End Expense Report** ➔ Generates an itemized breakdown (newspapers, magazines, books, vendor totals) ➔ Available on the Campus Management dashboard for reimbursement approval and download.
+
+---
+
+## 9. Reporting Module
+
+*Campus management has no way to view library usage data without asking the librarian directly. Budget reimbursement approvals are based on manually compiled totals.*
+
+- **Library Usage Reports** ➔ Generates metrics such as total active members, books issued per month, and most popular categories ➔ Available for Campus Management to view and download.
+
+---
+
+## Special / USP Features
+
+Features that go beyond the basics.
+
+- **Book Recommendation System** ➔ The library never had a way to suggest books to members. This does it automatically, based on what each member has already read — no effort from the librarian or the member.
+- **Newspaper & Magazine Subscription Tracking** ➔ The librarian currently calculates monthly payout for 10-15 subscriptions by hand, accounting for different frequencies. This removes that entirely.
+- **Community Book Purchase Requests with Upvoting** ➔ Previously, requests were verbal and often forgotten. Now members can see what others have requested and vote on it — the librarian gets a ranked list instead of relying on memory.
+- **Reading Lists Curated by the Librarian** ➔ Gives the librarian a creative tool — she can highlight books by theme and have them show up on member dashboards. Encourages reading beyond just what members already know.
+- **ISBN Barcode Scanning** ➔ Entering 5,000 books into a catalog manually would be a huge task. Scanning a barcode and auto-filling the details makes this significantly faster and less error-prone.
+
+
