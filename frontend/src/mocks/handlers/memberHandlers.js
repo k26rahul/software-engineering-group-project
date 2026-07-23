@@ -1,4 +1,5 @@
 import { http, HttpResponse } from "msw";
+import { baseURL } from "@/lib/api";
 import {
   users,
   borrowingHistory,
@@ -7,7 +8,7 @@ import {
   recommendations,
   readingLists,
 } from "@/mocks/data";
-import { baseURL } from "@/lib/api";
+import { getMemberApprovalMockResponse, getMemberRejectionMockResponse } from "../data/memberData";
 
 // Helper to find a user by ID
 const findUserById = (id) => {
@@ -15,6 +16,16 @@ const findUserById = (id) => {
 };
 
 export const memberHandlers = [
+  http.patch(`${baseURL}/members/:id/approve`, ({ params }) => {
+    const id = parseInt(params.id);
+    return HttpResponse.json(getMemberApprovalMockResponse(id));
+  }),
+
+  http.patch(`${baseURL}/members/:id/reject`, ({ params }) => {
+    const id = parseInt(params.id);
+    return HttpResponse.json(getMemberRejectionMockResponse(id));
+  }),
+
   // GET /members/{id}
   http.get(`${baseURL}/members/:id`, async ({ params }) => {
     const userId = parseInt(params.id);
