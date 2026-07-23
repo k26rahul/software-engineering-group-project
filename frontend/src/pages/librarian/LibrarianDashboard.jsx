@@ -288,7 +288,10 @@ function LibrarianHome() {
               variant="outline"
               className="group h-11 w-full justify-between text-left"
             >
-              <Link to="/librarian/catalog" className="flex w-full items-center justify-between">
+              <Link
+                to="/librarian/catalog/add"
+                className="flex w-full items-center justify-between"
+              >
                 <span className="flex items-center gap-3">
                   <Plus className="text-primary h-5 w-5" />
                   <span className="text-foreground font-semibold">Add Book to Catalog</span>
