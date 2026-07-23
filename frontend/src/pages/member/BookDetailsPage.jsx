@@ -1,6 +1,16 @@
 import { useEffect } from "react";
 import { useParams, Link, useNavigate } from "react-router-dom";
-import { ArrowLeft, BookOpen, Star, Copy, Info, CheckCircle, XCircle, Library, Calendar } from "lucide-react";
+import {
+  ArrowLeft,
+  BookOpen,
+  Star,
+  Copy,
+  Info,
+  CheckCircle,
+  XCircle,
+  Library,
+  Calendar,
+} from "lucide-react";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -62,13 +72,13 @@ export default function BookDetailsPage() {
               <BookOpen className="text-muted-foreground/30 h-32 w-32" />
             </div>
           </Card>
-          
+
           <Card className="border-border shadow-sm">
             <CardContent className="flex flex-col gap-4 p-6">
               <div className="flex items-center justify-between">
                 <span className="text-muted-foreground text-sm font-medium">Availability</span>
                 {isAvailable ? (
-                  <Badge className="bg-green-500 hover:bg-green-600 gap-1">
+                  <Badge className="gap-1 bg-green-500 hover:bg-green-600">
                     <CheckCircle className="h-3 w-3" /> {selectedBook.available_copies} Available
                   </Badge>
                 ) : (
@@ -100,7 +110,7 @@ export default function BookDetailsPage() {
                     by {selectedBook.author}
                   </p>
                 </div>
-                <Badge variant="secondary" className="text-sm px-3 py-1">
+                <Badge variant="secondary" className="px-3 py-1 text-sm">
                   {selectedBook.category}
                 </Badge>
               </div>
@@ -108,8 +118,10 @@ export default function BookDetailsPage() {
             <CardContent className="flex flex-col gap-6">
               <div className="flex items-center gap-4">
                 <div className="flex items-center gap-1 text-yellow-500">
-                  <Star className="fill-current h-5 w-5" />
-                  <span className="font-bold text-foreground">{selectedBook.average_rating?.toFixed(1) || "New"}</span>
+                  <Star className="h-5 w-5 fill-current" />
+                  <span className="text-foreground font-bold">
+                    {selectedBook.average_rating?.toFixed(1) || "New"}
+                  </span>
                 </div>
                 <span className="text-muted-foreground text-sm">
                   ({selectedBook.reviews?.length || 0} reviews)
@@ -127,21 +139,31 @@ export default function BookDetailsPage() {
                 <h4 className="mb-3 font-semibold">Book Metadata</h4>
                 <div className="grid grid-cols-2 gap-4 sm:grid-cols-4">
                   <div className="flex flex-col gap-1">
-                    <span className="text-muted-foreground text-xs font-medium uppercase tracking-wider">ISBN</span>
+                    <span className="text-muted-foreground text-xs font-medium tracking-wider uppercase">
+                      ISBN
+                    </span>
                     <span className="font-medium">{selectedBook.isbn || "N/A"}</span>
                   </div>
                   <div className="flex flex-col gap-1">
-                    <span className="text-muted-foreground text-xs font-medium uppercase tracking-wider">Price</span>
+                    <span className="text-muted-foreground text-xs font-medium tracking-wider uppercase">
+                      Price
+                    </span>
                     <span className="font-medium">₹{selectedBook.price?.toFixed(2)}</span>
                   </div>
                   <div className="flex flex-col gap-1">
-                    <span className="text-muted-foreground text-xs font-medium uppercase tracking-wider">Total Copies</span>
+                    <span className="text-muted-foreground text-xs font-medium tracking-wider uppercase">
+                      Total Copies
+                    </span>
                     <span className="font-medium">{selectedBook.copies?.length || 0}</span>
                   </div>
                   <div className="flex flex-col gap-1">
-                    <span className="text-muted-foreground text-xs font-medium uppercase tracking-wider">Added On</span>
+                    <span className="text-muted-foreground text-xs font-medium tracking-wider uppercase">
+                      Added On
+                    </span>
                     <span className="font-medium">
-                      {selectedBook.created_at ? new Date(selectedBook.created_at).toLocaleDateString() : "N/A"}
+                      {selectedBook.created_at
+                        ? new Date(selectedBook.created_at).toLocaleDateString()
+                        : "N/A"}
                     </span>
                   </div>
                 </div>
@@ -161,12 +183,20 @@ export default function BookDetailsPage() {
               {selectedBook.copies && selectedBook.copies.length > 0 ? (
                 <div className="grid gap-3 sm:grid-cols-2">
                   {selectedBook.copies.map((copy) => (
-                    <div key={copy.id} className="border-border flex items-center justify-between rounded-lg border p-3">
+                    <div
+                      key={copy.id}
+                      className="border-border flex items-center justify-between rounded-lg border p-3"
+                    >
                       <div className="flex items-center gap-2">
                         <Copy className="text-muted-foreground h-4 w-4" />
                         <span className="font-medium">Copy #{copy.copy_number}</span>
                       </div>
-                      <Badge variant={copy.status === "AVAILABLE" ? "default" : "secondary"} className={copy.status === "AVAILABLE" ? "bg-green-500 hover:bg-green-600" : ""}>
+                      <Badge
+                        variant={copy.status === "AVAILABLE" ? "default" : "secondary"}
+                        className={
+                          copy.status === "AVAILABLE" ? "bg-green-500 hover:bg-green-600" : ""
+                        }
+                      >
                         {copy.status.replace("_", " ")}
                       </Badge>
                     </div>
@@ -177,7 +207,6 @@ export default function BookDetailsPage() {
               )}
             </CardContent>
           </Card>
-
         </div>
       </div>
     </div>

@@ -36,8 +36,8 @@ export function Sidebar({ className, isCollapsed }) {
         <div className="px-3 py-2">
           <h2
             className={cn(
-              "mb-2 px-4 text-lg font-semibold tracking-tight transition-all whitespace-nowrap",
-              isCollapsed ? "w-0 px-0 opacity-0 overflow-hidden" : ""
+              "mb-2 px-4 text-lg font-semibold tracking-tight whitespace-nowrap transition-all",
+              isCollapsed ? "w-0 overflow-hidden px-0 opacity-0" : ""
             )}
           >
             RVK Library

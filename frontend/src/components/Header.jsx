@@ -23,7 +23,12 @@ export function Header({ onLogout, onToggleSidebar }) {
       </Sheet>
 
       {/* Desktop Sidebar Toggle */}
-      <Button variant="outline" size="icon" className="hidden sm:flex shrink-0" onClick={onToggleSidebar}>
+      <Button
+        variant="outline"
+        size="icon"
+        className="hidden shrink-0 sm:flex"
+        onClick={onToggleSidebar}
+      >
         <Menu className="h-5 w-5" />
         <span className="sr-only">Toggle Sidebar</span>
       </Button>

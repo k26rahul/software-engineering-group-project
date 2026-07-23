@@ -28,7 +28,7 @@ export default function CatalogPage() {
     const params = {};
     if (debouncedSearch) params.search = debouncedSearch;
     if (selectedCategory !== "ALL") params.category = selectedCategory;
-    
+
     fetchBooks(params);
   }, [debouncedSearch, selectedCategory, fetchBooks]);
 
@@ -41,7 +41,7 @@ export default function CatalogPage() {
 
     // Filter by Availability
     if (availabilityFilter === "AVAILABLE") {
-      filtered = filtered.filter(book => book.available_copies > 0);
+      filtered = filtered.filter((book) => book.available_copies > 0);
     }
 
     // Sorting
@@ -142,7 +142,8 @@ export default function CatalogPage() {
           <BookOpen className="text-muted-foreground mb-4 h-12 w-12" />
           <h3 className="text-lg font-bold">No books found</h3>
           <p className="text-muted-foreground mt-1 max-w-sm text-sm">
-            We couldn't find any books matching your search criteria. Try adjusting your filters or search term.
+            We couldn't find any books matching your search criteria. Try adjusting your filters or
+            search term.
           </p>
           {(searchTerm || selectedCategory !== "ALL" || availabilityFilter !== "ALL") && (
             <Button
@@ -163,9 +164,9 @@ export default function CatalogPage() {
           {processedBooks.map((book) => (
             <Link key={book.id} to={`/member/catalog/${book.id}`} className="group h-full">
               <Card className="border-border hover:border-primary/50 flex h-full flex-col overflow-hidden shadow-xs transition-all hover:shadow-md">
-                <div className="bg-muted relative flex h-52 w-full shrink-0 items-center justify-center border-b overflow-hidden group-hover:opacity-90 transition-all">
+                <div className="bg-muted relative flex h-52 w-full shrink-0 items-center justify-center overflow-hidden border-b transition-all group-hover:opacity-90">
                   <div className="absolute inset-0 bg-linear-to-b from-transparent to-black/5" />
-                  <BookOpen className="text-muted-foreground/30 h-16 w-16 group-hover:scale-110 transition-transform duration-300" />
+                  <BookOpen className="text-muted-foreground/30 h-16 w-16 transition-transform duration-300 group-hover:scale-110" />
                   {book.available_copies > 0 ? (
                     <Badge className="absolute top-2 right-2 bg-green-500 hover:bg-green-600">
                       Available
@@ -177,12 +178,10 @@ export default function CatalogPage() {
                   )}
                 </div>
                 <CardContent className="flex grow flex-col p-4">
-                  <div className="mb-2 line-clamp-2 min-h-[3rem] font-bold leading-tight group-hover:text-primary transition-colors">
+                  <div className="group-hover:text-primary mb-2 line-clamp-2 min-h-[3rem] leading-tight font-bold transition-colors">
                     {book.title}
                   </div>
-                  <p className="text-muted-foreground mb-4 text-sm font-medium">
-                    {book.author}
-                  </p>
+                  <p className="text-muted-foreground mb-4 text-sm font-medium">{book.author}</p>
                   <div className="mt-auto flex items-center justify-between">
                     <span className="bg-secondary text-secondary-foreground rounded-md px-2 py-1 text-xs font-semibold">
                       {book.category}
