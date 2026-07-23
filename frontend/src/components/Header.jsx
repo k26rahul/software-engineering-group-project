@@ -3,7 +3,7 @@ import { Menu } from "lucide-react";
 import { Sheet, SheetContent, SheetTrigger } from "./ui/sheet";
 import { Sidebar } from "./Sidebar";
 import useAuthStore from "@/store/authStore";
-export function Header({ onLogout }) {
+export function Header({ onLogout, onToggleSidebar }) {
   const user = useAuthStore((state) => state.user);
 
   return (
@@ -21,6 +21,17 @@ export function Header({ onLogout }) {
           </nav>
         </SheetContent>
       </Sheet>
+
+      {/* Desktop Sidebar Toggle */}
+      <Button
+        variant="outline"
+        size="icon"
+        className="hidden shrink-0 sm:flex"
+        onClick={onToggleSidebar}
+      >
+        <Menu className="h-5 w-5" />
+        <span className="sr-only">Toggle Sidebar</span>
+      </Button>
 
       <div className="flex w-full items-center justify-between gap-4 sm:justify-end">
         <div className="flex-1 sm:hidden">
