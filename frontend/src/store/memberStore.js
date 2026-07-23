@@ -10,6 +10,61 @@ const useMemberStore = create((set) => ({
   history: [],
   loading: false,
   error: "",
+  members: [],
+  membersLoading: false,
+  membersError: "",
+  memberActionLoading: {},
+
+  fetchMembers: async (params = {}) => {
+    set({ membersLoading: true, membersError: "" });
+    try {
+      const query = new URLSearchParams();
+      if (params.search) query.append("search", params.search);
+      if (params.approval_status) query.append("approval_status", params.approval_status);
+      const response = await api.get(`/members?${query.toString()}`);
+      set({ members: response.data, membersLoading: false });
+    } catch (err) {
+      console.error("Error loading members list in store:", err);
+      set({
+        membersError: "Could not load members list. Please try again.",
+        membersLoading: false,
+      });
+    }
+  },
+
+  approveMember: async (id) => {
+    set((state) => ({ memberActionLoading: { ...state.memberActionLoading, [id]: "approve" } }));
+    try {
+      await api.patch(`/members/${id}/approve`);
+      // Optimistically update the row in place
+      set((state) => ({
+        members: state.members.map((m) =>
+          m.id === id ? { ...m, approval_status: "APPROVED", is_active: true } : m
+        ),
+        memberActionLoading: { ...state.memberActionLoading, [id]: null },
+      }));
+    } catch (err) {
+      set((state) => ({ memberActionLoading: { ...state.memberActionLoading, [id]: null } }));
+      throw err;
+    }
+  },
+
+  rejectMember: async (id) => {
+    set((state) => ({ memberActionLoading: { ...state.memberActionLoading, [id]: "reject" } }));
+    try {
+      await api.patch(`/members/${id}/reject`);
+      // Optimistically update the row in place
+      set((state) => ({
+        members: state.members.map((m) =>
+          m.id === id ? { ...m, approval_status: "REJECTED", is_active: false } : m
+        ),
+        memberActionLoading: { ...state.memberActionLoading, [id]: null },
+      }));
+    } catch (err) {
+      set((state) => ({ memberActionLoading: { ...state.memberActionLoading, [id]: null } }));
+      throw err;
+    }
+  },
 
   fetchDashboardData: async (memberId) => {
     try {

@@ -57,7 +57,7 @@ describe("RegisterPage Component", () => {
       <MemoryRouter initialEntries={["/register"]}>
         <Routes>
           <Route path="/register" element={<RegisterPage />} />
-          <Route path="/member" element={<div>Member Dashboard Page</div>} />
+          <Route path="/pending-approval" element={<div>Pending Approval Page</div>} />
         </Routes>
       </MemoryRouter>
     );
@@ -74,7 +74,7 @@ describe("RegisterPage Component", () => {
     await user.click(screen.getByRole("button", { name: /create account/i }));
 
     await waitFor(() => {
-      expect(screen.getByText("Member Dashboard Page")).toBeInTheDocument();
+      expect(screen.getByText("Pending Approval Page")).toBeInTheDocument();
     });
 
     // Check store state updated

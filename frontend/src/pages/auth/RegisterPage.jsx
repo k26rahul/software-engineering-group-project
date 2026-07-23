@@ -22,7 +22,6 @@ export default function RegisterPage() {
   const [phone, setPhone] = useState("");
   const [membershipType, setMembershipType] = useState("ON_CAMPUS");
   const [error, setError] = useState("");
-  const [success, setSuccess] = useState(false);
   const [loading, setLoading] = useState(false);
 
   const navigate = useNavigate();
@@ -31,19 +30,11 @@ export default function RegisterPage() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError("");
-    setSuccess(false);
     setLoading(true);
 
     try {
       await register(name, email, password, phone, membershipType);
-      setSuccess(true);
-      // Clear form
-      setName("");
-      setEmail("");
-      setPassword("");
-      setPhone("");
-      setMembershipType("ON_CAMPUS");
-      navigate("/member");
+      navigate("/pending-approval");
     } catch (err) {
       setError(err.message);
     } finally {
@@ -60,11 +51,6 @@ export default function RegisterPage() {
         </CardHeader>
         <CardContent className="grid gap-4">
           {error && <div className="text-destructive text-sm font-medium">{error}</div>}
-          {success && (
-            <div className="text-sm font-medium text-emerald-600">
-              Registration successful! Your account is pending approval.
-            </div>
-          )}
           <div className="grid gap-2">
             <Label htmlFor="name">Full Name</Label>
             <Input

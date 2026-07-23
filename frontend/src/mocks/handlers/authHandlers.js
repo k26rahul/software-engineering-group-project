@@ -1,6 +1,7 @@
 import { http, HttpResponse } from "msw";
 import { users, generateNewMockUser } from "@/mocks/data";
 import { baseURL } from "@/lib/api";
+import { addMemberToDirectory } from "./memberHandlers";
 
 export const authHandlers = [
   http.post(`${baseURL}/auth/login`, async ({ request }) => {
@@ -34,9 +35,17 @@ export const authHandlers = [
       });
     }
 
+    const newUser = generateNewMockUser(email, name, phone, membership_type);
+
+    // Persist into the users map so GET /auth/me can resolve this token after a refresh.
+    users[email] = { ...newUser, password: "irrelevant" };
+
+    // Add to the librarian's member directory so it shows up immediately.
+    addMemberToDirectory(newUser);
+
     return HttpResponse.json(
       {
-        user: generateNewMockUser(email, name, phone, membership_type),
+        user: newUser,
         access_token: `mock-jwt-token-${email}`,
       },
       { status: 201 }

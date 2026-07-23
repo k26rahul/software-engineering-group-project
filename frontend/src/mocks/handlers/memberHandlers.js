@@ -2,6 +2,7 @@ import { http, HttpResponse } from "msw";
 import { baseURL } from "@/lib/api";
 import {
   users,
+  membersList,
   borrowingHistory,
   currentIssues,
   payments,
@@ -10,19 +11,61 @@ import {
 } from "@/mocks/data";
 import { getMemberApprovalMockResponse, getMemberRejectionMockResponse } from "../data/memberData";
 
-// Helper to find a user by ID
+// Mutable in-memory member directory seeded from static mock data.
+// Exported so authHandlers can push newly-registered users into it.
+export let membersDB = structuredClone(membersList);
+
+// Adds a newly-registered user to the live directory.
+export function addMemberToDirectory(user) {
+  membersDB.push(user);
+}
+
+// Helper to find a user by ID - checks membersDB first, then the users map.
 const findUserById = (id) => {
+  const fromDB = membersDB.find((m) => m.id === id);
+  if (fromDB) return fromDB;
   return Object.values(users).find((user) => user.id === id);
 };
 
 export const memberHandlers = [
+  // GET /members - list all members with optional search and status filter
+  http.get(`${baseURL}/members`, ({ request }) => {
+    const url = new URL(request.url);
+    const search = url.searchParams.get("search")?.toLowerCase() || "";
+    const status = url.searchParams.get("approval_status") || "";
+
+    let result = membersDB;
+
+    if (search) {
+      result = result.filter(
+        (m) => m.name.toLowerCase().includes(search) || m.email.toLowerCase().includes(search)
+      );
+    }
+
+    if (status) {
+      result = result.filter((m) => m.approval_status === status);
+    }
+
+    return HttpResponse.json(result);
+  }),
+
   http.patch(`${baseURL}/members/:id/approve`, ({ params }) => {
     const id = parseInt(params.id);
+    const member = membersDB.find((m) => m.id === id);
+    if (member) {
+      member.approval_status = "APPROVED";
+      member.is_active = true;
+    }
     return HttpResponse.json(getMemberApprovalMockResponse(id));
   }),
 
   http.patch(`${baseURL}/members/:id/reject`, ({ params }) => {
     const id = parseInt(params.id);
+    const member = membersDB.find((m) => m.id === id);
+    if (member) {
+      member.approval_status = "REJECTED";
+      member.is_active = false;
+    }
     return HttpResponse.json(getMemberRejectionMockResponse(id));
   }),
 
@@ -45,8 +88,8 @@ export const memberHandlers = [
       phone: user.phone || null,
       role: user.role,
       membership_type: user.membership_type || "ON_CAMPUS",
-      approval_status: user.approval_status || "APPROVED",
-      is_active: user.is_active,
+      approval_status: user.approval_status || "PENDING",
+      is_active: user.is_active ?? false,
       created_at: user.created_at,
       membership_start_date: user.membership_start_date || null,
       max_issue_limit: user.max_issue_limit || 5,
