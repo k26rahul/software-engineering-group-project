@@ -41,3 +41,19 @@ Describes what the UML class diagram contains - data models, services, enumerati
 Describes what the ER diagram contains - database entities (mapped from data models), their attributes, and relationships with cardinality. The actual Mermaid diagram code will be generated from this specification.
 
 **View the Database Design Diagram here:** [https://mermaid.ai/d/51df6326-1c91-4859-9266-8cefe5af24a8](https://mermaid.ai/d/51df6326-1c91-4859-9266-8cefe5af24a8)
+
+---
+
+## ✅ Sprint Schedule
+
+### 4_sprint-schedule.md
+
+Outlines the sprint schedule for Milestone 2 (UI Implementation Phase) and planned sprints for future milestones (Milestones 3, 4, and 5). Includes sprint goals and completed/planned tasks.
+
+---
+
+## ✅ Scrum Meetings Schedule
+
+### 5_scrum-meetings-schedule.md
+
+Summarizes the past scrum meetings held during Milestone 2 and provides a future roadmap for meetings in upcoming milestones.
