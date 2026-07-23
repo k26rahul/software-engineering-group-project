@@ -22,6 +22,10 @@ import CatalogPage from "./catalog/CatalogPage";
 import AddBookPage from "./catalog/AddBookPage";
 import EditBookPage from "./catalog/EditBookPage";
 import BookCopiesPage from "./catalog/BookCopiesPage";
+import MembersPage from "./members/MembersPage";
+import IssueBookPage from "./IssueBookPage";
+import ProcessReturnPage from "./ProcessReturnPage";
+import BudgetTrackerPage from "./BudgetTrackerPage";
 
 function LibrarianHome() {
   const {
@@ -522,6 +526,10 @@ export default function LibrarianDashboard() {
       <Route path="catalog/add" element={<AddBookPage />} />
       <Route path="catalog/:id/edit" element={<EditBookPage />} />
       <Route path="catalog/:id/copies" element={<BookCopiesPage />} />
+      <Route path="members" element={<MembersPage />} />
+      <Route path="issue" element={<IssueBookPage />} />
+      <Route path="return" element={<ProcessReturnPage />} />
+      <Route path="budget" element={<BudgetTrackerPage />} />
     </Routes>
   );
 }
