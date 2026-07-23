@@ -3,17 +3,8 @@ import { Menu } from "lucide-react";
 import { Sheet, SheetContent, SheetTrigger } from "./ui/sheet";
 import { Sidebar } from "./Sidebar";
 import useAuthStore from "@/store/authStore";
-import { useNavigate } from "react-router-dom";
-
-export function Header() {
+export function Header({ onLogout }) {
   const user = useAuthStore((state) => state.user);
-  const logout = useAuthStore((state) => state.logout);
-  const navigate = useNavigate();
-
-  const handleLogout = () => {
-    logout();
-    navigate("/login");
-  };
 
   return (
     <header className="bg-background sticky top-0 z-30 flex h-14 items-center gap-4 border-b px-4 sm:static sm:h-auto sm:border-0 sm:bg-transparent sm:px-6">
@@ -39,7 +30,7 @@ export function Header() {
           <span className="text-muted-foreground hidden text-sm font-medium sm:inline-block">
             {user?.name} ({user?.role})
           </span>
-          <Button variant="secondary" size="sm" onClick={handleLogout}>
+          <Button variant="secondary" size="sm" onClick={onLogout}>
             Logout
           </Button>
         </div>

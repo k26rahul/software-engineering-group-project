@@ -172,3 +172,20 @@ export const books = [
     copies: [{ id: 23, book_id: 10, copy_number: 1, status: "AVAILABLE" }],
   },
 ];
+
+export const mockLookupDB = {
+  9781491950296: {
+    title: "Programming TypeScript",
+    author: "Boris Cherny",
+    category: "Technology",
+    price: 399,
+    description: "Making Your JavaScript Applications Scale",
+  },
+  9780596517748: {
+    title: "JavaScript: The Good Parts",
+    author: "Douglas Crockford",
+    category: "Technology",
+    price: 299,
+    description: "Unearthing the Excellence in JavaScript",
+  },
+};

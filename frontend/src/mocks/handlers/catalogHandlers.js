@@ -1,5 +1,5 @@
 import { http, HttpResponse } from "msw";
-import { books as mockBooks } from "@/mocks/data";
+import { books as mockBooks, mockLookupDB } from "@/mocks/data";
 import { baseURL } from "@/lib/api";
 
 // Keep a mutable in-memory copy
@@ -108,25 +108,8 @@ export const catalogHandlers = [
   http.post(`${baseURL}/books/isbn-lookup`, async ({ request }) => {
     const { isbn } = await request.json();
 
-    // Mock data for known ISBNs
-    const mockLookupDB = {
-      9781491950296: {
-        title: "Programming TypeScript",
-        author: "Boris Cherny",
-        category: "Technology",
-        price: 399,
-        description: "Making Your JavaScript Applications Scale",
-      },
-      9780596517748: {
-        title: "JavaScript: The Good Parts",
-        author: "Douglas Crockford",
-        category: "Technology",
-        price: 299,
-        description: "Unearthing the Excellence in JavaScript",
-      },
-    };
-
     const result = mockLookupDB[isbn];
+
     if (result) {
       return HttpResponse.json({ isbn, ...result });
     }

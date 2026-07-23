@@ -1,10 +1,17 @@
-import { Navigate } from "react-router-dom";
+import { Navigate, useNavigate } from "react-router-dom";
 import useAuthStore from "@/store/authStore";
 import { Sidebar } from "@/components/Sidebar";
 import { Header } from "@/components/Header";
 
 export default function DashboardLayout({ children, requiredRole }) {
   const user = useAuthStore((state) => state.user);
+  const logout = useAuthStore((state) => state.logout);
+  const navigate = useNavigate();
+
+  const handleLogout = () => {
+    logout();
+    navigate("/login");
+  };
 
   // Simple route protection
   if (!user) {
@@ -25,7 +32,7 @@ export default function DashboardLayout({ children, requiredRole }) {
         </aside>
 
         {/* Header & Main content */}
-        <Header />
+        <Header onLogout={handleLogout} />
 
         <main className="flex-1 items-start gap-4 p-4 sm:px-6 sm:py-0 md:gap-8">{children}</main>
       </div>
