@@ -11,6 +11,9 @@ import {
   RotateCcw,
   PlusCircle,
   FileText,
+  TrendingUp,
+  DollarSign,
+  Sparkles,
 } from "lucide-react";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 
@@ -42,7 +45,12 @@ export function Sidebar({ className, isCollapsed }) {
   } else if (user?.role === "CAMPUS_MANAGEMENT") {
     links = [
       { name: "Dashboard", href: "/management", icon: LayoutDashboard },
-      { name: "Reports", href: "/management/reports", icon: BarChart },
+      { name: "Reports Center", href: "/management/reports", icon: BarChart },
+    ];
+    quickLinks = [
+      { name: "Circulation & Usage", href: "/management/reports?tab=usage", icon: TrendingUp },
+      { name: "Financial Audit", href: "/management/reports?tab=financial", icon: DollarSign },
+      { name: "Executive Insights", href: "/management/reports?tab=executive", icon: Sparkles },
     ];
   }
 
@@ -50,11 +58,16 @@ export function Sidebar({ className, isCollapsed }) {
     <div className="flex flex-col gap-1">
       {items.map((link) => {
         const Icon = link.icon;
+        const currentPathWithSearch = location.pathname + location.search;
+        const isLinkActive =
+          currentPathWithSearch === link.href ||
+          (location.pathname === link.href && !location.search && !link.href.includes("?"));
+
         const linkContent = (
           <span
             className={cn(
               "group hover:bg-accent hover:text-accent-foreground flex items-center rounded-md px-3 py-2 text-sm font-medium",
-              location.pathname === link.href ? "bg-accent text-accent-foreground" : "transparent",
+              isLinkActive ? "bg-accent text-accent-foreground font-semibold" : "transparent",
               isCollapsed ? "justify-center px-0" : ""
             )}
           >

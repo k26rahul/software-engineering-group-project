@@ -1,6 +1,7 @@
 import { useEffect } from "react";
-import { Link } from "react-router-dom";
+import { Link, Routes, Route } from "react-router-dom";
 import useDashboardStore from "@/store/dashboardStore";
+import ManagementReportsPage from "./ManagementReportsPage";
 import { Card, CardHeader, CardTitle, CardDescription, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import {
@@ -32,7 +33,7 @@ import {
 
 const COLORS = ["#10b981", "#3b82f6", "#f59e0b", "#8b5cf6", "#ef4444"];
 
-export default function ManagementDashboard() {
+function ManagementHome() {
   const { managementStats: data, loading, error, fetchManagementDashboard } = useDashboardStore();
 
   useEffect(() => {
@@ -388,5 +389,14 @@ export default function ManagementDashboard() {
         </Card>
       </div>
     </div>
+  );
+}
+
+export default function ManagementDashboard() {
+  return (
+    <Routes>
+      <Route path="" element={<ManagementHome />} />
+      <Route path="reports/*" element={<ManagementReportsPage />} />
+    </Routes>
   );
 }
