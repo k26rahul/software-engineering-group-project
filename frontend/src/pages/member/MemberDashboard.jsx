@@ -14,6 +14,7 @@ import {
   ArrowRight,
   Library,
   Book,
+  XCircle,
 } from "lucide-react";
 
 function MemberDashboardHome() {
@@ -60,22 +61,46 @@ function MemberDashboardHome() {
     .filter((p) => p.type === "FINE_PAYMENT" && p.status === "PAID")
     .reduce((sum, p) => sum + p.amount, 0);
 
-  // Let's assume outstanding dues is 15.00 INR or calculate from fines if any
   const outstandingFines = overdueIssuesCount > 0 ? 50.0 : 0.0;
+
+  // Block the dashboard for non-approved members.
+  const approvalStatus = profile?.approval_status;
+  if (profile && approvalStatus === "PENDING") {
+    return (
+      <div className="flex min-h-[60vh] flex-col items-center justify-center gap-6 text-center">
+        <div className="relative flex h-20 w-20 items-center justify-center rounded-full bg-amber-500/10">
+          <Clock className="h-10 w-10 text-amber-500" />
+        </div>
+        <div className="space-y-2">
+          <h2 className="text-xl font-bold">Awaiting Approval</h2>
+          <p className="text-muted-foreground max-w-sm text-sm">
+            Your registration is under review. A librarian will approve your account shortly.
+            Borrowing features will be unlocked once approved.
+          </p>
+        </div>
+      </div>
+    );
+  }
+
+  if (profile && approvalStatus === "REJECTED") {
+    return (
+      <div className="flex min-h-[60vh] flex-col items-center justify-center gap-6 text-center">
+        <div className="flex h-20 w-20 items-center justify-center rounded-full bg-destructive/10">
+          <XCircle className="text-destructive h-10 w-10" />
+        </div>
+        <div className="space-y-2">
+          <h2 className="text-xl font-bold">Registration Rejected</h2>
+          <p className="text-muted-foreground max-w-sm text-sm">
+            Your account application was not approved. Please contact the library desk for more
+            information or to appeal this decision.
+          </p>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="flex flex-col gap-8 pb-8">
-      {/* Alert for deactivated status */}
-      {profile && !profile.is_active && (
-        <div className="bg-destructive/10 text-destructive border-destructive/20 flex items-center gap-3 rounded-xl border p-4 text-sm font-medium">
-          <AlertTriangle className="h-5 w-5 shrink-0" />
-          <div>
-            Your account is currently pending approval from a librarian. Some borrowing privileges
-            are restricted.
-          </div>
-        </div>
-      )}
-
       {/* Header and Welcome */}
       <div className="flex flex-col gap-2">
         <h1 className="from-primary to-primary-foreground bg-linear-to-r bg-clip-text text-4xl font-extrabold tracking-tight text-transparent">

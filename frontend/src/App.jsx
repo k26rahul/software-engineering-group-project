@@ -10,6 +10,7 @@ import DashboardLayout from "@/layouts/DashboardLayout";
 import HomePage from "@/pages/HomePage";
 import LoginPage from "@/pages/auth/LoginPage";
 import RegisterPage from "@/pages/auth/RegisterPage";
+import PendingApprovalPage from "@/pages/auth/PendingApprovalPage";
 import LibrarianDashboard from "@/pages/librarian/LibrarianDashboard";
 import MemberDashboard from "@/pages/member/MemberDashboard";
 import ManagementDashboard from "@/pages/management/ManagementDashboard";
@@ -52,6 +53,7 @@ export default function App() {
             </AuthLayout>
           }
         />
+        <Route path="/pending-approval" element={<PendingApprovalPage />} />
 
         {/* Authenticated Routes (Dashboards) */}
 
