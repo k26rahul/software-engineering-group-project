@@ -155,6 +155,18 @@ const useCatalogStore = create((set) => ({
       throw error;
     }
   },
+
+  reserveBook: async (bookId) => {
+    set({ isLoading: true, error: null });
+    try {
+      const response = await api.post("/reservations", { book_id: bookId });
+      set({ isLoading: false });
+      return response.data;
+    } catch (error) {
+      set({ error: error.message, isLoading: false });
+      throw error;
+    }
+  },
 }));
 
 export default useCatalogStore;

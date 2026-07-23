@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import useAuthStore from "@/store/authStore";
 import useMemberStore from "@/store/memberStore";
 import MemberProfilePage from "./MemberProfilePage";
+import MemberCatalogPage from "./MemberCatalogPage";
 import {
   BookOpen,
   Calendar,
@@ -355,6 +356,7 @@ export default function MemberDashboard() {
     <Routes>
       <Route path="" element={<MemberDashboardHome />} />
       <Route path="profile" element={<MemberProfilePage />} />
+      <Route path="catalog" element={<MemberCatalogPage />} />
     </Routes>
   );
 }

@@ -158,4 +158,23 @@ export const catalogHandlers = [
 
     return HttpResponse.json(newCopy, { status: 201 });
   }),
+
+  http.post(`${baseURL}/reservations`, async ({ request }) => {
+    const { book_id } = await request.json();
+    const book = booksDB.find((b) => b.id === Number(book_id));
+    if (!book) {
+      return HttpResponse.json({ detail: "Book not found" }, { status: 404 });
+    }
+
+    return HttpResponse.json(
+      {
+        id: Math.floor(Math.random() * 1000) + 1,
+        book_id: Number(book_id),
+        status: "WAITING",
+        created_at: new Date().toISOString(),
+        notified_at: null,
+      },
+      { status: 201 }
+    );
+  }),
 ];

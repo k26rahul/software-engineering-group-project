@@ -1,5 +1,6 @@
 import { useEffect } from "react";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { Toaster } from "@/components/ui/sonner";
 import useAuthStore from "@/store/authStore";
 
 // Layouts
@@ -33,6 +34,7 @@ export default function App() {
 
   return (
     <BrowserRouter>
+      <Toaster />
       <Routes>
         {/* Unauthenticated Routes */}
         <Route path="/" element={<HomePage />} />
