@@ -1173,70 +1173,70 @@ This is a rough roadmap of future meetings to coordinate the backend API develop
 
 ### GitHub Project Management
 
-![Gantt Chart - SE Project Dashboard](../github-screenshots/Gantt-Chart-%C2%B7-SE-Project-Dashboard-07-23-2026_10_47_PM.png)
+![Gantt Chart - SE Project Dashboard](github-screenshots/Gantt-Chart-%C2%B7-SE-Project-Dashboard-07-23-2026_10_47_PM.png)
 *The Gantt Chart illustrating the timeline and scheduled phases for the Software Engineering Project.*
 
-![Kanban Board - SE Project Dashboard](../github-screenshots/Kanban-Board-%C2%B7-SE-Project-Dashboard-07-23-2026_10_48_PM.png)
+![Kanban Board - SE Project Dashboard](github-screenshots/Kanban-Board-%C2%B7-SE-Project-Dashboard-07-23-2026_10_48_PM.png)
 *The Kanban Board used to track the progress of individual tasks across different sprint columns (To Do, In Progress, Done).*
 
-![Table View - SE Project Dashboard](../github-screenshots/Table-View-%C2%B7-SE-Project-Dashboard-07-23-2026_10_48_PM.png)
+![Table View - SE Project Dashboard](github-screenshots/Table-View-%C2%B7-SE-Project-Dashboard-07-23-2026_10_48_PM.png)
 *The Table View providing a detailed, sortable list of all project issues along with their assignees, statuses, and linked milestones.*
 
-![Issues - MAY2026-Team-052 Repository](../github-screenshots/Issues-%C2%B7-k26rahul-MAY2026-Team-052-07-23-2026_10_50_PM.png)
+![Issues - MAY2026-Team-052 Repository](github-screenshots/Issues-%C2%B7-k26rahul-MAY2026-Team-052-07-23-2026_10_50_PM.png)
 *The GitHub Issues page showing the backlog of all reported bugs, user stories, and tasks for the repository.*
 
-![Pull Requests - MAY2026-Team-052 Repository](../github-screenshots/Pull-requests-%C2%B7-k26rahul-MAY2026-Team-052-07-23-2026_10_49_PM.png)
+![Pull Requests - MAY2026-Team-052 Repository](github-screenshots/Pull-requests-%C2%B7-k26rahul-MAY2026-Team-052-07-23-2026_10_49_PM.png)
 *The Pull Requests page displaying active and merged code contributions from team members undergoing code review.*
 
 ### Frontend Implementation
 
 #### 1. Landing Page
-![Landing Page (Hero Section)](../frontend-screenshots/landing-page.png)
+![Landing Page (Hero Section)](frontend-screenshots/landing-page.png)
 
-![Landing Page (Features/About)](../frontend-screenshots/landing-page-2.png)
+![Landing Page (Features/About)](frontend-screenshots/landing-page-2.png)
 
-![Landing Page (Testimonials/Stats)](../frontend-screenshots/landing-page-3.png)
+![Landing Page (Testimonials/Stats)](frontend-screenshots/landing-page-3.png)
 
-![Landing Page (Footer/Call to Action)](../frontend-screenshots/landing-page-4.png)
+![Landing Page (Footer/Call to Action)](frontend-screenshots/landing-page-4.png)
 
 #### 2. Authentication
-![Login Page](../frontend-screenshots/login-page.png)
+![Login Page](frontend-screenshots/login-page.png)
 
-![Registration Page](../frontend-screenshots/registration-page.png)
+![Registration Page](frontend-screenshots/registration-page.png)
 
 #### 3. Member Portal
-![Member Dashboard](../frontend-screenshots/http-localhost-5173-member.png)
+![Member Dashboard](frontend-screenshots/http-localhost-5173-member.png)
 
-![Member Profile](../frontend-screenshots/http-localhost-5173-member-profile.png)
+![Member Profile](frontend-screenshots/http-localhost-5173-member-profile.png)
 
-![Member Catalog Search](../frontend-screenshots/http-localhost-5173-member-catalog.png)
+![Member Catalog Search](frontend-screenshots/http-localhost-5173-member-catalog.png)
 
-![Member Catalog Book Details](../frontend-screenshots/http-localhost-5173-member-catalog-2.png)
+![Member Catalog Book Details](frontend-screenshots/http-localhost-5173-member-catalog-2.png)
 
 #### 4. Librarian Dashboard & Management
-![Librarian Dashboard Overview](../frontend-screenshots/http-localhost-5173-librarian.png)
+![Librarian Dashboard Overview](frontend-screenshots/http-localhost-5173-librarian.png)
 
-![Librarian Member Management](../frontend-screenshots/http-localhost-5173-librarian-members.png)
+![Librarian Member Management](frontend-screenshots/http-localhost-5173-librarian-members.png)
 
-![Librarian Member Details](../frontend-screenshots/http-localhost-5173-librarian-members-2.png)
+![Librarian Member Details](frontend-screenshots/http-localhost-5173-librarian-members-2.png)
 
-![Librarian Catalog View](../frontend-screenshots/http-localhost-5173-librarian-catalog.png)
+![Librarian Catalog View](frontend-screenshots/http-localhost-5173-librarian-catalog.png)
 
-![Librarian Add/Edit Book](../frontend-screenshots/http-localhost-5173-librarian-catalog-add.png)
+![Librarian Add/Edit Book](frontend-screenshots/http-localhost-5173-librarian-catalog-add.png)
 
-![Librarian Issue Book](../frontend-screenshots/http-localhost-5173-librarian-issue.png)
+![Librarian Issue Book](frontend-screenshots/http-localhost-5173-librarian-issue.png)
 
-![Librarian Issue Book Details](../frontend-screenshots/http-localhost-5173-librarian-issue-2.png)
+![Librarian Issue Book Details](frontend-screenshots/http-localhost-5173-librarian-issue-2.png)
 
-![Librarian Return Book Processing](../frontend-screenshots/http-localhost-5173-librarian-return.png)
+![Librarian Return Book Processing](frontend-screenshots/http-localhost-5173-librarian-return.png)
 
-![Librarian Budget Tracker](../frontend-screenshots/http-localhost-5173-librarian-budget.png)
+![Librarian Budget Tracker](frontend-screenshots/http-localhost-5173-librarian-budget.png)
 
-![Librarian Purchase Entry](../frontend-screenshots/http-localhost-5173-librarian-budget-2.png)
+![Librarian Purchase Entry](frontend-screenshots/http-localhost-5173-librarian-budget-2.png)
 
 #### 5. Campus Management
-![Management Dashboard](../frontend-screenshots/http-localhost-5173-management.png)
+![Management Dashboard](frontend-screenshots/http-localhost-5173-management.png)
 
-![Management Usage Reports](../frontend-screenshots/http-localhost-5173-management-reports.png)
+![Management Usage Reports](frontend-screenshots/http-localhost-5173-management-reports.png)
 
-![Management Executive Reports](../frontend-screenshots/http-localhost-5173-management-reports-tab-executive.png)
+![Management Executive Reports](frontend-screenshots/http-localhost-5173-management-reports-tab-executive.png)
