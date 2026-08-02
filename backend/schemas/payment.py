@@ -15,7 +15,8 @@ class PaymentResponse(SQLModel):
   id: int
   amount: float
   type: PaymentType
-  fine_id: int | None
+  fine_id: int | None = None
+  status: str | None = None
   created_at: datetime
 
 

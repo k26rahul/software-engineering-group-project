@@ -25,3 +25,12 @@ class TransactionResponse(SQLModel):
   return_date: date | None
   return_condition: ReturnCondition | None
   is_overdue: bool
+
+
+class BorrowingHistoryItemResponse(SQLModel):
+  transaction_id: int
+  book_title: str
+  issue_date: date
+  due_date: date
+  return_date: date | None = None
+  is_overdue: bool

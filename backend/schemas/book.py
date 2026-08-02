@@ -52,8 +52,10 @@ class BookDetailResponse(BookSummaryResponse):
 
 
 class BookRecommendationResponse(SQLModel):
-  book_id: int
+  id: int | None = None
+  book_id: int | None = None
   title: str
   author: str
   category: str
-  reason: str
+  availability: int | None = None
+  reason: str | None = None

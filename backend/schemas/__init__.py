@@ -49,12 +49,12 @@ from schemas.subscription import (
   UpdateSubscriptionRequest,
 )
 from schemas.transaction import (
+  BorrowingHistoryItemResponse,
   IssueBookRequest,
   ReturnBookRequest,
   TransactionResponse,
 )
 from schemas.user import (
-  BorrowingHistoryItemResponse,
   MemberDetailResponse,
   MemberSummaryResponse,
   UpdateProfileRequest,

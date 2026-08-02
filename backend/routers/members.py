@@ -14,11 +14,11 @@ members_router = APIRouter(tags=["Members"])
 #
 # PATCH  /members/{id}/approve
 #   Description: Librarian-only. Approves a pending member registration.
-#   Response: MemberDetailResponse
+#   Response: status_code 204 (No Content)
 #
 # PATCH  /members/{id}/reject
 #   Description: Librarian-only. Rejects a pending member registration.
-#   Response: MemberDetailResponse
+#   Response: status_code 204 (No Content)
 #
 # PATCH  /members/{id}/profile
 #   Description: Updates a specific member's profile details.
