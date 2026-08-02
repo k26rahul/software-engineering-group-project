@@ -120,3 +120,31 @@ def librarian_user_token_fixture(client: TestClient, librarian_user: User) -> st
     json={"email": librarian_user.email, "password": "password123"},
   )
   return response.json()["access_token"]
+
+
+@pytest.fixture(name="management_user")
+def management_user_fixture(db_session: Session) -> User:
+  """Creates and returns an active campus management user in the database."""
+  user = User(
+    email="management@test.com",
+    name="Test Manager",
+    password_hash=hash_password("password123"),
+    role=UserRole.CAMPUS_MANAGEMENT,
+    is_active=True,
+    approval_status=MemberApprovalStatus.APPROVED,
+    max_issue_limit=10,
+  )
+  db_session.add(user)
+  db_session.commit()
+  db_session.refresh(user)
+  return user
+
+
+@pytest.fixture(name="management_user_token")
+def management_user_token_fixture(client: TestClient, management_user: User) -> str:
+  """Retrieves a valid JWT access token for the management user."""
+  response = client.post(
+    "/auth/login",
+    json={"email": management_user.email, "password": "password123"},
+  )
+  return response.json()["access_token"]
