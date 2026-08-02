@@ -102,9 +102,7 @@ class BooksService:
     return BooksService.get_book_by_id(session, book.id)
 
   @staticmethod
-  def update_book(
-    session: Session, book_id: int, request: UpdateBookRequest
-  ) -> BookDetailResponse:
+  def update_book(session: Session, book_id: int, request: UpdateBookRequest) -> BookDetailResponse:
     """Update metadata for an existing book."""
     book = session.get(Book, book_id)
     if not book:
