@@ -44,35 +44,43 @@ src/
 ├── assets/
 ├── components/
 │   ├── ui/
-│   │   └── ...
 │   ├── Header.jsx
 │   └── Sidebar.jsx
 ├── layouts/
 │   ├── AppLayout.jsx
-│   └── ...
+│   ├── AuthLayout.jsx
+│   └── DashboardLayout.jsx
+├── lib/
+│   ├── api.js
+│   └── utils.js
+├── mocks/
+│   ├── data/
+│   ├── handlers/
+│   │   ├── authHandlers.js
+│   │   ├── booksHandlers.js
+│   │   ├── ...
+│   │   └── index.js
+│   ├── browser.js
+│   └── server.js
 ├── pages/
 │   ├── auth/
 │   │   ├── LoginPage.jsx
 │   │   └── RegisterPage.jsx
-│   └── ...
-├── store/
-│   └── authStore.js
-├── lib/
-│   ├── api.js
-│   └── utils.js
-└── mocks/
-    ├── handlers/
-    │   ├── authHandlers.js
-    │   └── index.js
-    ├── browser.js
-    └── mockData.js
+│   ├── librarian/
+│   ├── management/
+│   ├── member/
+│   └── HomePage.jsx
+└── store/
+    ├── authStore.js
+    ├── bookStore.js
+    └── ...
 ```
 
 ## 🏗️ Architecture
 
 - **Components:** Render data read from a store, capture user interaction, and call store actions in response.
 - **Stores:** Hold the relevant slice of app state, make the API call directly (via the shared `axios` instance in `lib/api.js`), update state from the response, and surface errors.
-- **Mocking:** MSW intercepts outgoing requests at the network level via handlers defined per-domain in `mocks/handlers/`, backed by mock data in `mocks/mockData.js`. This is why there is no separate API/service layer — MSW already mocks at the HTTP boundary, so stores can make API calls directly without needing an extra indirection layer.
+- **Mocking:** MSW intercepts outgoing requests at the network level via handlers defined per-domain in `mocks/handlers/`, backed by mock data in `mocks/data/`. This is why there is no separate API/service layer — MSW already mocks at the HTTP boundary, so stores can make API calls directly without needing an extra indirection layer.
 
 ## 🛠️ Commands
 
