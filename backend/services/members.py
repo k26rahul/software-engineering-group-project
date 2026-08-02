@@ -114,9 +114,7 @@ class MembersService:
     return MembersService.get_member(session, member_id)
 
   @staticmethod
-  def get_member_history(
-    session: Session, member_id: int
-  ) -> list[TransactionHistoryItemResponse]:
+  def get_member_history(session: Session, member_id: int) -> list[TransactionHistoryItemResponse]:
     """Retrieve borrowing history for a specific member."""
     user = session.get(User, member_id)
     if not user:
@@ -125,9 +123,7 @@ class MembersService:
         detail=f"Member with ID {member_id} not found.",
       )
 
-    transactions = session.exec(
-      select(Transaction).where(Transaction.member_id == member_id)
-    ).all()
+    transactions = session.exec(select(Transaction).where(Transaction.member_id == member_id)).all()
 
     history = []
     for t in transactions:

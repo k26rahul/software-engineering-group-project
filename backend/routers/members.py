@@ -1,4 +1,4 @@
-"""Members Management API router handling member listings, profile updates, approvals, and borrowing history."""
+"""Members Management API router for member directory, profile updates, and approvals."""
 
 from fastapi import APIRouter, Query, Response, status
 

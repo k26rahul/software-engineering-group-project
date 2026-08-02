@@ -1,6 +1,7 @@
 """Tests for Members Management API endpoints."""
 
 from fastapi.testclient import TestClient
+
 from models.user import User
 
 
