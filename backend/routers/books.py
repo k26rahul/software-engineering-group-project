@@ -1,6 +1,6 @@
 from fastapi import APIRouter
 
-catalog_router = APIRouter(tags=["Catalog"])
+books_router = APIRouter(tags=["Books"])
 
 # Routes to implement:
 #

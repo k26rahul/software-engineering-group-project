@@ -4,12 +4,12 @@ from typing import TYPE_CHECKING
 from sqlmodel import Field, Relationship, SQLModel
 
 if TYPE_CHECKING:
-  from models.circulation import Fine, Transaction
-  from models.community import Review
   from models.notification import Notification
-  from models.payment import Payment
+  from models.payment import Fine, Payment
   from models.purchase_request import PurchaseRequest, PurchaseRequestVote
   from models.reservation import Reservation
+  from models.review import Review
+  from models.transaction import Transaction
 
 from models.base import CreatedAtMixin, IDMixin, UpdatedAtMixin
 from models.enums import MemberApprovalStatus, MembershipType, UserRole

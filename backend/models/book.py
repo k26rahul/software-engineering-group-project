@@ -4,11 +4,11 @@ from typing import TYPE_CHECKING
 from sqlmodel import Field, Relationship, Session, SQLModel, select
 
 if TYPE_CHECKING:
-  from models.circulation import Transaction
-  from models.community import Review
   from models.reading_list import ReadingList
   from models.reservation import Reservation
+  from models.review import Review
   from models.subscription import Magazine
+  from models.transaction import Transaction
 
 from models.base import CreatedAtMixin, IDMixin, UpdatedAtMixin
 from models.enums import CopyStatus, ReviewStatus
@@ -53,7 +53,7 @@ class Book(BookBase, IDMixin, CreatedAtMixin, UpdatedAtMixin, table=True):
 
   def average_rating(self, session: Session) -> float:
     """Mean rating from approved reviews."""
-    from models.community import Review
+    from models.review import Review
 
     statement = select(Review).where(
       Review.book_id == self.id, Review.status == ReviewStatus.APPROVED

@@ -4,7 +4,7 @@ from typing import TYPE_CHECKING
 from sqlmodel import Field, Relationship, SQLModel
 
 if TYPE_CHECKING:
-  from models.catalog import Book
+  from models.book import Book
   from models.user import User
 
 from models.base import CreatedAtMixin, IDMixin

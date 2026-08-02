@@ -4,8 +4,8 @@ from typing import TYPE_CHECKING
 from sqlmodel import Field, Relationship, SQLModel
 
 if TYPE_CHECKING:
+  from models.book import Book
   from models.budget import Vendor
-  from models.catalog import Book
 
 from models.base import CreatedAtMixin, IDMixin
 from models.enums import SubscriptionFrequency, SubscriptionType

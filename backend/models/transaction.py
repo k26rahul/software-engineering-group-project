@@ -4,11 +4,11 @@ from typing import TYPE_CHECKING
 from sqlmodel import Field, Relationship, SQLModel
 
 if TYPE_CHECKING:
-  from models.catalog import BookCopy
-  from models.payment import Payment
+  from models.book import BookCopy
+  from models.payment import Fine
   from models.user import User
 
-from models.base import CreatedAtMixin, IDMixin
+from models.base import IDMixin
 from models.enums import ReturnCondition
 
 # ── Models ────────────────────────────────────────────────────────────────────
@@ -47,28 +47,6 @@ class Transaction(IDMixin, table=True):
     return 0
 
 
-class Fine(IDMixin, CreatedAtMixin, table=True):
-  """Represents a fine levied on a transaction for late return, damage, or loss."""
-
-  transaction_id: int = Field(
-    foreign_key="transaction.id",
-    unique=True,
-    description="ID of the transaction this fine belongs to.",
-  )
-  member_id: int = Field(foreign_key="user.id", description="ID of the member who owes the fine.")
-  amount: float = Field(description="Fine amount in currency.")
-  reason: ReturnCondition = Field(
-    description="Reason for the fine. Valid values are only DAMAGED or LOST."
-  )
-  is_paid: bool = Field(default=False, description="Whether the fine has been paid.")
-
-  transaction: "Transaction" = Relationship(back_populates="fine")
-  member: "User" = Relationship(back_populates="fines")
-  payment: "Payment" = Relationship(
-    sa_relationship_kwargs={"uselist": False}, back_populates="fine"
-  )
-
-
 # ── Schemas ───────────────────────────────────────────────────────────────────
 
 
@@ -92,11 +70,3 @@ class TransactionResponse(SQLModel):
   return_date: date | None
   return_condition: ReturnCondition | None
   is_overdue: bool
-
-
-class FineResponse(SQLModel):
-  id: int
-  transaction_id: int
-  amount: float
-  reason: ReturnCondition
-  is_paid: bool

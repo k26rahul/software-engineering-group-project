@@ -1,6 +1,6 @@
 from fastapi import APIRouter
 
-requests_router = APIRouter(tags=["Purchase Requests"])
+purchase_requests_router = APIRouter(tags=["Purchase Requests"])
 
 # Routes to implement:
 #
