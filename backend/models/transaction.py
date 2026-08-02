@@ -1,7 +1,7 @@
 from datetime import date
 from typing import TYPE_CHECKING
 
-from sqlmodel import Field, Relationship, SQLModel
+from sqlmodel import Field, Relationship
 
 if TYPE_CHECKING:
   from models.book import BookCopy
@@ -45,28 +45,3 @@ class Transaction(IDMixin, table=True):
     if self.is_overdue():
       return (date.today() - self.due_date).days
     return 0
-
-
-# ── Schemas ───────────────────────────────────────────────────────────────────
-
-
-class IssueBookRequest(SQLModel):
-  member_id: int
-  book_copy_id: int
-  due_date: date
-
-
-class ReturnBookRequest(SQLModel):
-  transaction_id: int
-  condition: ReturnCondition
-
-
-class TransactionResponse(SQLModel):
-  id: int
-  member_id: int
-  book_copy_id: int
-  issue_date: date
-  due_date: date
-  return_date: date | None
-  return_condition: ReturnCondition | None
-  is_overdue: bool

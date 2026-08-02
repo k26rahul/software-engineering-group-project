@@ -1,7 +1,7 @@
 from datetime import datetime
 from typing import TYPE_CHECKING
 
-from sqlmodel import Field, Relationship, SQLModel
+from sqlmodel import Field, Relationship
 
 if TYPE_CHECKING:
   from models.book import Book
@@ -32,18 +32,3 @@ class Reservation(IDMixin, CreatedAtMixin, table=True):
 
   member: "User" = Relationship(back_populates="reservations")
   book: "Book" = Relationship(back_populates="reservations")
-
-
-# ── Schemas ───────────────────────────────────────────────────────────────────
-
-
-class CreateReservationRequest(SQLModel):
-  book_id: int
-
-
-class ReservationResponse(SQLModel):
-  id: int
-  book_id: int
-  status: ReservationStatus
-  created_at: datetime
-  notified_at: datetime | None

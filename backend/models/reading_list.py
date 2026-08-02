@@ -1,7 +1,6 @@
-from datetime import datetime
 from typing import TYPE_CHECKING
 
-from sqlmodel import Field, Relationship, SQLModel
+from sqlmodel import Field, Relationship
 
 if TYPE_CHECKING:
   from models.book import Book
@@ -25,27 +24,3 @@ class ReadingList(IDMixin, CreatedAtMixin, table=True):
   description: str | None = Field(default=None, description="Description of the reading list.")
 
   books: list["Book"] = Relationship(back_populates="reading_lists", link_model=ReadingListBook)
-
-
-# ── Schemas ───────────────────────────────────────────────────────────────────
-
-
-class CreateReadingListRequest(SQLModel):
-  title: str
-  description: str | None = None
-  book_ids: list[int] = []
-
-
-class UpdateReadingListRequest(SQLModel):
-  title: str | None = None
-  description: str | None = None
-  add_book_ids: list[int] = []
-  remove_book_ids: list[int] = []
-
-
-class ReadingListResponse(SQLModel):
-  id: int
-  title: str
-  description: str | None
-  book_ids: list[int]
-  created_at: datetime

@@ -1,7 +1,6 @@
-from datetime import datetime
 from typing import TYPE_CHECKING
 
-from sqlmodel import Field, Relationship, SQLModel
+from sqlmodel import Field, Relationship
 
 if TYPE_CHECKING:
   from models.user import User
@@ -23,14 +22,3 @@ class Notification(IDMixin, CreatedAtMixin, table=True):
   is_read: bool = Field(default=False, description="Whether the user has read the notification.")
 
   recipient: "User" = Relationship(back_populates="notifications")
-
-
-# ── Schemas ───────────────────────────────────────────────────────────────────
-
-
-class NotificationResponse(SQLModel):
-  id: int
-  type: NotificationType
-  message: str
-  is_read: bool
-  created_at: datetime

@@ -1,4 +1,3 @@
-from datetime import datetime
 from typing import TYPE_CHECKING
 
 from sqlmodel import Field, Relationship, Session, SQLModel, select
@@ -75,51 +74,3 @@ class BookCopy(IDMixin, table=True):
 
   book: "Book" = Relationship(back_populates="copies")
   transactions: list["Transaction"] = Relationship(back_populates="book_copy")
-
-
-# ── Schemas ───────────────────────────────────────────────────────────────────
-
-
-class AddBookRequest(BookBase):
-  pass
-
-
-class UpdateBookRequest(SQLModel):
-  title: str | None = None
-  author: str | None = None
-  isbn: str | None = None
-  category: str | None = None
-  price: float | None = None
-  description: str | None = None
-
-
-class ISBNLookupRequest(SQLModel):
-  isbn: str
-
-
-class UpdateCopyStatusRequest(SQLModel):
-  status: CopyStatus
-
-
-class BookSummaryResponse(SQLModel):
-  id: int
-  title: str
-  author: str
-  isbn: str | None
-  category: str
-  price: float
-  available_copies: int
-
-
-class BookDetailResponse(BookSummaryResponse):
-  description: str | None
-  average_rating: float
-  created_at: datetime
-
-
-class BookRecommendationResponse(SQLModel):
-  book_id: int
-  title: str
-  author: str
-  category: str
-  reason: str

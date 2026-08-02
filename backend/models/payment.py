@@ -1,7 +1,6 @@
-from datetime import datetime
 from typing import TYPE_CHECKING
 
-from sqlmodel import Field, Relationship, SQLModel
+from sqlmodel import Field, Relationship
 
 if TYPE_CHECKING:
   from models.transaction import Transaction
@@ -49,28 +48,3 @@ class Payment(IDMixin, CreatedAtMixin, table=True):
 
   member: "User" = Relationship(back_populates="payments")
   fine: "Fine" = Relationship(back_populates="payment")
-
-
-# ── Schemas ───────────────────────────────────────────────────────────────────
-
-
-class ProcessPaymentRequest(SQLModel):
-  type: PaymentType
-  amount: float
-  fine_id: int | None = None
-
-
-class PaymentResponse(SQLModel):
-  id: int
-  amount: float
-  type: PaymentType
-  fine_id: int | None
-  created_at: datetime
-
-
-class FineResponse(SQLModel):
-  id: int
-  transaction_id: int
-  amount: float
-  reason: ReturnCondition
-  is_paid: bool
