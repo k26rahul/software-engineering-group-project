@@ -9,6 +9,7 @@ from core.database import create_db_and_tables, engine
 from core.seeding import seed_default_users
 from routers.auth import auth_router
 from routers.health import router as health_router
+from routers.transactions import transactions_router
 
 
 @asynccontextmanager
@@ -35,6 +36,7 @@ def create_app() -> FastAPI:
   )
   app.include_router(health_router)
   app.include_router(auth_router)
+  app.include_router(transactions_router)
   return app
 
 
