@@ -11,6 +11,7 @@ from routers.auth import auth_router
 from routers.books import books_router
 from routers.health import router as health_router
 from routers.members import members_router
+from routers.transactions import transactions_router
 
 
 @asynccontextmanager
@@ -39,6 +40,7 @@ def create_app() -> FastAPI:
   app.include_router(auth_router)
   app.include_router(books_router)
   app.include_router(members_router)
+  app.include_router(transactions_router)
   return app
 
 
