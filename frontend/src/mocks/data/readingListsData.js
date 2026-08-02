@@ -4,15 +4,15 @@ export const readingLists = [
     id: 501,
     title: "Must-Read Tech Classics",
     description: "Essential reading for every software engineer.",
-    books: [
-      { id: 401, title: "Refactoring" },
-      { id: 403, title: "Mythical Man-Month" },
-    ],
+    book_ids: [401, 403],
+    created_at: "2026-05-01T10:00:00Z",
   },
   {
     id: 502,
     title: "Getting Started with Python & FastAPI",
     description: "Curated lists for learning modern Python backend development.",
-    books: [{ id: 404, title: "Fluent Python" }],
+    book_ids: [404],
+    created_at: "2026-06-01T10:00:00Z",
   },
 ];
+

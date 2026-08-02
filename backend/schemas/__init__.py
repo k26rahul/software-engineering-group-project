@@ -49,9 +49,9 @@ from schemas.subscription import (
   UpdateSubscriptionRequest,
 )
 from schemas.transaction import (
-  BorrowingHistoryItemResponse,
   IssueBookRequest,
   ReturnBookRequest,
+  TransactionHistoryItemResponse,
   TransactionResponse,
 )
 from schemas.user import (
@@ -70,7 +70,7 @@ __all__ = [
   "UserProfileResponse",
   "MemberSummaryResponse",
   "MemberDetailResponse",
-  "BorrowingHistoryItemResponse",
+  "TransactionHistoryItemResponse",
   "AddBookRequest",
   "UpdateBookRequest",
   "ISBNLookupRequest",

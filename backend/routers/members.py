@@ -27,4 +27,4 @@ members_router = APIRouter(tags=["Members"])
 #
 # GET  /members/{id}/history
 #   Description: Retrieves the borrowing history for a specific member.
-#   Response: list[BorrowingHistoryItemResponse]
+#   Response: list[TransactionHistoryItemResponse]

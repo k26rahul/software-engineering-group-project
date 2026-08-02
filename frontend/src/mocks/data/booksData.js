@@ -189,3 +189,27 @@ export const mockLookupDB = {
     description: "Unearthing the Excellence in JavaScript",
   },
 };
+
+// Pre-projected list for GET /books - matches BookSummaryResponse (non-archived only)
+export const bookSummaryList = [
+  { id: 1, title: "Clean Code", author: "Robert C. Martin", isbn: "9780132350884", category: "Technology", price: 499.0, available_copies: 2 },
+  { id: 2, title: "The Great Gatsby", author: "F. Scott Fitzgerald", isbn: "9780743273565", category: "Fiction", price: 299.99, available_copies: 1 },
+  { id: 3, title: "A Brief History of Time", author: "Stephen Hawking", isbn: "9780553380163", category: "Science", price: 399.5, available_copies: 3 },
+  { id: 4, title: "1984", author: "George Orwell", isbn: "9780451524935", category: "Fiction", price: 199.0, available_copies: 0 },
+  { id: 5, title: "Sapiens: A Brief History of Humankind", author: "Yuval Noah Harari", isbn: "9780062316097", category: "History", price: 550.0, available_copies: 2 },
+  { id: 6, title: "Steve Jobs", author: "Walter Isaacson", isbn: "9781451648539", category: "Biography", price: 600.0, available_copies: 1 },
+  { id: 7, title: "Design Patterns", author: "Erich Gamma, Richard Helm, Ralph Johnson, John Vlissides", isbn: "9780201633610", category: "Technology", price: 750.0, available_copies: 4 },
+  { id: 8, title: "To Kill a Mockingbird", author: "Harper Lee", isbn: "9780060935467", category: "Fiction", price: 250.0, available_copies: 0 },
+  { id: 9, title: "The Selfish Gene", author: "Richard Dawkins", isbn: "9780198788607", category: "Science", price: 450.0, available_copies: 2 },
+  // Book id:10 is archived (is_archived: true) and excluded from this list
+];
+
+// Static response for POST /reservations - matches ReservationResponse
+export const mockReservation = {
+  id: 1,
+  book_id: 1,
+  status: "WAITING",
+  created_at: "2026-08-01T10:00:00Z",
+  notified_at: null,
+};
+

@@ -1,65 +1,50 @@
 import { http, HttpResponse } from "msw";
-import { users, generateNewMockUser } from "@/mocks/data/usersData";
+import { users, mockPendingMemberTokenResponse } from "@/mocks/data/usersData";
 import { baseURL } from "@/lib/api";
-import { addMemberToDirectory } from "./membersHandlers";
 
 export const authHandlers = [
+  // POST /auth/login - Response: auth/TokenResponse
+  // Kept credential lookup so different roles can be tested by logging in with the correct email.
   http.post(`${baseURL}/auth/login`, async ({ request }) => {
     const { email, password } = await request.json();
     const user = users[email];
 
     if (user && user.password === password) {
       return HttpResponse.json({
-        user: user,
         access_token: `mock-jwt-token-${email}`,
+        user,
       });
     }
 
     return new HttpResponse(JSON.stringify({ detail: "Invalid email or password" }), {
       status: 401,
-      headers: {
-        "Content-Type": "application/json",
-      },
+      headers: { "Content-Type": "application/json" },
     });
   }),
 
-  http.post(`${baseURL}/auth/register`, async ({ request }) => {
-    const { email, name, phone, membership_type } = await request.json();
-
-    if (users[email]) {
-      return new HttpResponse(JSON.stringify({ detail: "Email already registered." }), {
-        status: 409,
-        headers: {
-          "Content-Type": "application/json",
-        },
-      });
-    }
-
-    const newUser = generateNewMockUser(email, name, phone, membership_type);
-
-    // Persist into the users map so GET /auth/me can resolve this token after a refresh.
-    users[email] = { ...newUser, password: "irrelevant" };
-
-    // Add to the librarian's member directory so it shows up immediately.
-    addMemberToDirectory(newUser);
-
-    return HttpResponse.json(
-      {
-        user: newUser,
-        access_token: `mock-jwt-token-${email}`,
-      },
-      { status: 201 }
-    );
+  // POST /auth/register - Response: auth/TokenResponse (201 Created)
+  http.post(`${baseURL}/auth/register`, () => {
+    return HttpResponse.json(mockPendingMemberTokenResponse, { status: 201 });
   }),
 
+  // POST /auth/logout - Response: None (204 No Content)
+  http.post(`${baseURL}/auth/logout`, () => {
+    return new HttpResponse(null, { status: 204 });
+  }),
+
+  // POST /auth/change-password - Response: None (204 No Content)
+  http.post(`${baseURL}/auth/change-password`, () => {
+    return new HttpResponse(null, { status: 204 });
+  }),
+
+  // GET /auth/me - Response: user/UserProfileResponse
+  // Resolves the token back to a user so page refreshes restore the session correctly.
   http.get(`${baseURL}/auth/me`, async ({ request }) => {
     const authHeader = request.headers.get("Authorization");
     if (!authHeader || !authHeader.startsWith("Bearer ")) {
       return new HttpResponse(JSON.stringify({ detail: "Not authenticated" }), {
         status: 401,
-        headers: {
-          "Content-Type": "application/json",
-        },
+        headers: { "Content-Type": "application/json" },
       });
     }
 
@@ -74,9 +59,7 @@ export const authHandlers = [
 
     return new HttpResponse(JSON.stringify({ detail: "Invalid token" }), {
       status: 401,
-      headers: {
-        "Content-Type": "application/json",
-      },
+      headers: { "Content-Type": "application/json" },
     });
   }),
 ];

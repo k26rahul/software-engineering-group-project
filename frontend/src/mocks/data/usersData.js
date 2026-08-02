@@ -35,21 +35,31 @@ export const users = {
     is_active: true,
     created_at: "2026-01-01T09:00:00Z",
   },
+  // Static pending user that the register flow resolves to via GET /auth/me
+  "pending@example.com": {
+    id: 999,
+    email: "pending@example.com",
+    name: "New Member",
+    role: "MEMBER",
+    password: "irrelevant",
+    phone: null,
+    membership_type: "ON_CAMPUS",
+    approval_status: "PENDING",
+    is_active: false,
+    created_at: "2026-08-01T10:00:00Z",
+    membership_start_date: null,
+    max_issue_limit: 5,
+  },
 };
 
-export const generateNewMockUser = (email, name, phone, membership_type) => ({
-  id: 999,
-  email,
-  name,
-  phone: phone || null,
-  role: "MEMBER",
-  membership_type,
-  approval_status: "PENDING",
-  is_active: false,
-  created_at: new Date().toISOString(),
-});
+// Static TokenResponse returned by POST /auth/register
+export const mockPendingMemberTokenResponse = {
+  access_token: "mock-jwt-token-pending@example.com",
+  user: users["pending@example.com"],
+};
 
 export const membersList = [
+
   {
     id: 1,
     name: "Vaishnavi",

@@ -27,7 +27,7 @@ class TransactionResponse(SQLModel):
   is_overdue: bool
 
 
-class BorrowingHistoryItemResponse(SQLModel):
+class TransactionHistoryItemResponse(SQLModel):
   transaction_id: int
   book_title: str
   issue_date: date
