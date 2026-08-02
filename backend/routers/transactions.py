@@ -1,4 +1,4 @@
-"""Circulation & Transactions API router handling book issuing, returns, overdue tracking, and active member issues."""
+"""Circulation & Transactions API router for issuing, returns, and overdue tracking."""
 
 from fastapi import APIRouter, status
 

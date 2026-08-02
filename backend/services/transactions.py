@@ -20,7 +20,9 @@ class TransactionsService:
   def issue_book(session: Session, request: IssueBookRequest) -> TransactionResponse:
     """Issue a physical book copy to an active member."""
     member = session.get(User, request.member_id)
-    if not member or not member.is_active or member.approval_status != MemberApprovalStatus.APPROVED:
+    if (
+      not member or not member.is_active or member.approval_status != MemberApprovalStatus.APPROVED
+    ):
       raise HTTPException(
         status_code=status.HTTP_400_BAD_REQUEST,
         detail="Member must be active and approved to issue books.",
@@ -35,9 +37,10 @@ class TransactionsService:
 
     active_issues = session.exec(
       select(Transaction).where(
-        Transaction.member_id == member.id, Transaction.return_date == None
+        Transaction.member_id == member.id, Transaction.return_date.is_(None)
       )
     ).all()
+
     if len(active_issues) >= member.max_issue_limit:
       raise HTTPException(
         status_code=status.HTTP_400_BAD_REQUEST,
@@ -109,11 +112,12 @@ class TransactionsService:
       fine_amount += 50.0  # $50 lost book replacement fee
 
     if fine_amount > 0:
+      overdue_days = max(0, (today - transaction.due_date).days)
       fine = Fine(
         transaction_id=transaction.id,
         member_id=transaction.member_id,
         amount=fine_amount,
-        reason=f"Return condition: {request.condition.value}, overdue days: {max(0, (today - transaction.due_date).days)}",
+        reason=f"Return condition: {request.condition.value}, overdue days: {overdue_days}",
       )
       session.add(fine)
 
@@ -157,7 +161,7 @@ class TransactionsService:
     """Retrieve all currently overdue borrowing transactions."""
     today = date.today()
     transactions = session.exec(
-      select(Transaction).where(Transaction.return_date == None, Transaction.due_date < today)
+      select(Transaction).where(Transaction.return_date.is_(None), Transaction.due_date < today)
     ).all()
 
     return [
@@ -179,7 +183,7 @@ class TransactionsService:
     """Retrieve active issued books for a specific member."""
     transactions = session.exec(
       select(Transaction).where(
-        Transaction.member_id == member_id, Transaction.return_date == None
+        Transaction.member_id == member_id, Transaction.return_date.is_(None)
       )
     ).all()
 
