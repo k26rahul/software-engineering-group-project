@@ -292,7 +292,7 @@ function MemberDashboardHome() {
                     </div>
                     <div className="border-border mt-4 flex items-center justify-between border-t pt-3">
                       <span className="text-muted-foreground text-xs font-medium">
-                        {list.books.length} Books
+                        {list.book_ids?.length ?? list.books?.length ?? 0} Books
                       </span>
                       <Button asChild variant="link" size="sm" className="h-auto p-0">
                         <Link to="/member/catalog" className="text-primary text-xs font-semibold">
