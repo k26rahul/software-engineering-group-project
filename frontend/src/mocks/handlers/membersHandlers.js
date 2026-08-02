@@ -6,9 +6,6 @@ import {
   currentIssues,
   payments,
   recommendations,
-  readingLists,
-  getMemberApprovalMockResponse,
-  getMemberRejectionMockResponse,
 } from "@/mocks/data/membersData";
 
 // Mutable in-memory member directory seeded from static mock data.
@@ -56,7 +53,7 @@ export const membersHandlers = [
       member.approval_status = "APPROVED";
       member.is_active = true;
     }
-    return HttpResponse.json(getMemberApprovalMockResponse(id));
+    return new HttpResponse(null, { status: 204 });
   }),
 
   http.patch(`${baseURL}/members/:id/reject`, ({ params }) => {
@@ -66,7 +63,7 @@ export const membersHandlers = [
       member.approval_status = "REJECTED";
       member.is_active = false;
     }
-    return HttpResponse.json(getMemberRejectionMockResponse(id));
+    return new HttpResponse(null, { status: 204 });
   }),
 
   // GET /members/{id}
@@ -134,35 +131,22 @@ export const membersHandlers = [
   }),
 
   // GET /members/{id}/history
-  http.get(`${baseURL}/members/:id/history`, async ({ params }) => {
-    const userId = parseInt(params.id);
-    const history = borrowingHistory[userId] || [];
-    return HttpResponse.json(history);
+  http.get(`${baseURL}/members/:id/history`, async () => {
+    return HttpResponse.json(borrowingHistory);
   }),
 
   // GET /members/{id}/current-issues
-  http.get(`${baseURL}/members/:id/current-issues`, async ({ params }) => {
-    const userId = parseInt(params.id);
-    const issues = currentIssues[userId] || [];
-    return HttpResponse.json(issues);
+  http.get(`${baseURL}/members/:id/current-issues`, async () => {
+    return HttpResponse.json(currentIssues);
   }),
 
   // GET /members/{id}/payments
-  http.get(`${baseURL}/members/:id/payments`, async ({ params }) => {
-    const userId = parseInt(params.id);
-    const userPayments = payments[userId] || [];
-    return HttpResponse.json(userPayments);
+  http.get(`${baseURL}/members/:id/payments`, async () => {
+    return HttpResponse.json(payments);
   }),
 
   // GET /members/{id}/recommendations
-  http.get(`${baseURL}/members/:id/recommendations`, async ({ params }) => {
-    const userId = parseInt(params.id);
-    const recs = recommendations[userId] || [];
-    return HttpResponse.json(recs);
-  }),
-
-  // GET /reading-lists
-  http.get(`${baseURL}/reading-lists`, async () => {
-    return HttpResponse.json(readingLists);
+  http.get(`${baseURL}/members/:id/recommendations`, async () => {
+    return HttpResponse.json(recommendations);
   }),
 ];
