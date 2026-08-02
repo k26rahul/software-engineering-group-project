@@ -109,13 +109,7 @@ If **Frontend** or **Both** was selected in Step 1, run each command separately 
 
 ## Step 4 - Final Summary & Report
 
-After running all steps for the selected scope:
-
-1. Perform a final verification run:
-   - **Backend**: `uv run ruff format --check .`; `uv run ruff check .`; `uv run pytest`
-   - **Frontend**: `node "C:\Program Files\nodejs\node_modules\npm\bin\npm-cli.js" run validate`
-
-2. Summarize the outcome in a clean markdown table showing the status of each check:
+After running all steps for the selected scope, summarize the outcome in a clean markdown table showing the status of each check:
 
 | Target | Step | Initial Status | Auto-Fix / Repair Applied | Final Status |
 | :--- | :--- | :--- | :--- | :--- |
