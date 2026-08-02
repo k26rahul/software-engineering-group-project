@@ -90,7 +90,7 @@ def test_update_book_and_copy_status(client: TestClient, librarian_user_token: s
 
   copy_update = client.patch(
     f"/books/{book['id']}/copies/1",
-    json={"status": "MAINTENANCE"},
+    json={"status": "DAMAGED"},
     headers=headers,
   )
   assert copy_update.status_code == 200
