@@ -20,7 +20,9 @@ books_router = APIRouter(tags=["Books"])
   "/books",
   response_model=list[BookSummaryResponse],
   summary="List catalog books",
-  description="Retrieves a list of all books in the catalog, optionally filtered by search query or category.",
+  description=(
+    "Retrieves a list of all books in the catalog, optionally filtered by search query or category."
+  ),
 )
 def list_books(
   session: SessionDep,
@@ -35,7 +37,9 @@ def list_books(
   response_model=BookDetailResponse,
   status_code=status.HTTP_201_CREATED,
   summary="Add a new book",
-  description="Librarian-only. Adds a new book to the library catalog with initial physical copies.",
+  description=(
+    "Librarian-only. Adds a new book to the library catalog with initial physical copies."
+  ),
 )
 def create_book(
   request: AddBookRequest,
@@ -63,7 +67,9 @@ def isbn_lookup(
   "/books/{id}",
   response_model=BookDetailResponse,
   summary="Get book details",
-  description="Retrieves detailed information about a specific book including copy availability and ratings.",
+  description=(
+    "Retrieves detailed information about a specific book including copy availability and ratings."
+  ),
 )
 def get_book(
   id: int,
@@ -91,7 +97,9 @@ def update_book(
   "/books/{id}/copies/{copy_id}",
   response_model=BookDetailResponse,
   summary="Update book copy status",
-  description="Librarian-only. Updates the physical copy status (e.g. AVAILABLE, ISSUED, DAMAGED, LOST).",
+  description=(
+    "Librarian-only. Updates physical copy status (e.g. AVAILABLE, ISSUED, DAMAGED, LOST)."
+  ),
 )
 def update_copy_status(
   id: int,
