@@ -24,7 +24,7 @@ class DashboardService:
     total_books = len(session.exec(select(Book)).all())
 
     active_issues_list = session.exec(
-      select(Transaction).where(Transaction.return_date == None)
+      select(Transaction).where(Transaction.return_date.is_(None))
     ).all()
     active_issues = len(active_issues_list)
 
@@ -32,9 +32,7 @@ class DashboardService:
     overdue_issues = len(overdue_issues_list)
 
     pending_approvals = len(
-      session.exec(
-        select(User).where(User.approval_status == MemberApprovalStatus.PENDING)
-      ).all()
+      session.exec(select(User).where(User.approval_status == MemberApprovalStatus.PENDING)).all()
     )
 
     alerts = []

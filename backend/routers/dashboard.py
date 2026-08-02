@@ -13,7 +13,9 @@ dashboard_router = APIRouter(tags=["Dashboard"])
   "/dashboard/librarian",
   response_model=LibrarianDashboardResponse,
   summary="Get librarian dashboard",
-  description="Librarian-only. Retrieves aggregated metrics, pending member approvals, and overdue alerts.",
+  description=(
+    "Librarian-only. Retrieves aggregated metrics, pending member approvals, and overdue alerts."
+  ),
 )
 def get_librarian_dashboard(
   session: SessionDep,
@@ -26,7 +28,9 @@ def get_librarian_dashboard(
   "/dashboard/management",
   response_model=ManagementDashboardResponse,
   summary="Get campus management dashboard",
-  description="Management-only. Retrieves aggregated campus management analytics, circulation metrics, and budget stats.",
+  description=(
+    "Management-only. Retrieves campus management analytics, circulation metrics, and budget stats."
+  ),
 )
 def get_management_dashboard(
   session: SessionDep,

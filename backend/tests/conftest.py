@@ -148,4 +148,3 @@ def management_user_token_fixture(client: TestClient, management_user: User) -> 
     json={"email": management_user.email, "password": "password123"},
   )
   return response.json()["access_token"]
-
