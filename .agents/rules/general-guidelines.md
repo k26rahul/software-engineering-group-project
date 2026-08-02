@@ -12,3 +12,4 @@ description: General project guidelines and restrictions.
 
 ## Restrictions
 - **DO NOT** read any PDF files anywhere in the project. Reading PDFs wastes tokens unnecessarily.
+- **DO NOT** run any formatting, linting, or testing unless explicitly asked.
