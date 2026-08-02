@@ -102,7 +102,7 @@ export default function CatalogPage() {
                 onChange={(e) => setSearch(e.target.value)}
               />
             </div>
-            <div className="w-[180px]">
+            <div className="w-45">
               <Select value={category} onValueChange={setCategory}>
                 <SelectTrigger>
                   <SelectValue placeholder="Category" />
@@ -138,22 +138,22 @@ export default function CatalogPage() {
                     // eslint-disable-next-line @eslint-react/no-array-index-key
                     <TableRow key={i}>
                       <TableCell>
-                        <Skeleton className="h-4 w-[200px]" />
+                        <Skeleton className="h-4 w-50" />
                       </TableCell>
                       <TableCell>
-                        <Skeleton className="h-4 w-[150px]" />
+                        <Skeleton className="h-4 w-37.5" />
                       </TableCell>
                       <TableCell className="hidden md:table-cell">
-                        <Skeleton className="h-4 w-[100px]" />
+                        <Skeleton className="h-4 w-25" />
                       </TableCell>
                       <TableCell className="hidden lg:table-cell">
-                        <Skeleton className="h-4 w-[120px]" />
+                        <Skeleton className="h-4 w-30" />
                       </TableCell>
                       <TableCell>
-                        <Skeleton className="h-4 w-[50px]" />
+                        <Skeleton className="h-4 w-12.5" />
                       </TableCell>
                       <TableCell className="hidden sm:table-cell">
-                        <Skeleton className="h-4 w-[80px]" />
+                        <Skeleton className="h-4 w-20" />
                       </TableCell>
                       <TableCell className="text-right">
                         <Skeleton className="ml-auto h-8 w-8 rounded-md" />
