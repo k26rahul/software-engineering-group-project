@@ -1,4 +1,3 @@
-
 // Mock response for GET /members/:id/history
 export const borrowingHistory = [
   {
@@ -72,5 +71,3 @@ export const recommendations = [
     availability: 1,
   },
 ];
-
-
