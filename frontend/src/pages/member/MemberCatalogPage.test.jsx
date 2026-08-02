@@ -50,7 +50,6 @@ describe("MemberCatalogPage Component", () => {
     expect(searchInput).toHaveValue("Gatsby");
   });
 
-
   it("opens book details dialog when clicking Details button", async () => {
     const user = userEvent.setup();
     render(

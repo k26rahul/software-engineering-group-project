@@ -88,7 +88,6 @@ describe("RegisterPage Component", () => {
     expect(localStorage.getItem(ACCESS_TOKEN_KEY)).toBe("mock-jwt-token-pending@example.com");
   });
 
-
   it("displays error message when registration API returns error", async () => {
     // Mock handler to simulate email already registered
     server.use(
