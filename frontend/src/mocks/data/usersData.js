@@ -59,7 +59,6 @@ export const mockPendingMemberTokenResponse = {
 };
 
 export const membersList = [
-
   {
     id: 1,
     name: "Vaishnavi",

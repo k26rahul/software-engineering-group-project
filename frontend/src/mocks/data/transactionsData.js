@@ -122,4 +122,3 @@ export const budgetSummary = {
   total_income: 150.0,
   entries: budgetEntries,
 };
-

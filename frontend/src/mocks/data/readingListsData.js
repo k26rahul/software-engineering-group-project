@@ -15,4 +15,3 @@ export const readingLists = [
     created_at: "2026-06-01T10:00:00Z",
   },
 ];
-
