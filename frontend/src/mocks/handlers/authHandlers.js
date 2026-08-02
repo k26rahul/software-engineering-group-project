@@ -1,5 +1,5 @@
 import { http, HttpResponse } from "msw";
-import { users, generateNewMockUser } from "@/mocks/data";
+import { users, generateNewMockUser } from "@/mocks/data/usersData";
 import { baseURL } from "@/lib/api";
 import { addMemberToDirectory } from "./memberHandlers";
 

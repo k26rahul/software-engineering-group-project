@@ -1,8 +1,7 @@
 import { http, HttpResponse } from "msw";
 import { baseURL } from "@/lib/api";
+import { users, membersList } from "@/mocks/data/usersData";
 import {
-  users,
-  membersList,
   borrowingHistory,
   currentIssues,
   payments,
@@ -10,7 +9,7 @@ import {
   readingLists,
   getMemberApprovalMockResponse,
   getMemberRejectionMockResponse,
-} from "@/mocks/data";
+} from "@/mocks/data/membersData";
 
 // Mutable in-memory member directory seeded from static mock data.
 // Exported so authHandlers can push newly-registered users into it.

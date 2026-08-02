@@ -43,7 +43,7 @@ import {
 import { Skeleton } from "@/components/ui/skeleton";
 import { toast } from "sonner";
 import useCatalogStore from "@/store/catalogStore";
-import { categories } from "@/mocks/data/books";
+import { categories } from "@/mocks/data/booksData";
 
 // Category badge color theme mapping
 const CATEGORY_STYLES = {

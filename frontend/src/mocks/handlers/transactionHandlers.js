@@ -1,9 +1,9 @@
 import { http, HttpResponse } from "msw";
 import { baseURL } from "@/lib/api";
-import { activeTransactions, budgetEntries } from "@/mocks/data";
-import { membersList } from "@/mocks/data/users";
-import { books as mockBooks } from "@/mocks/data";
-import { librarianDashboardMockData } from "@/mocks/data/dashboardData";
+import { activeTransactions, budgetEntries } from "@/mocks/data/transactionsData";
+import { membersList } from "@/mocks/data/usersData";
+import { books as mockBooks } from "@/mocks/data/booksData";
+import { librarianDashboardMockData } from "@/mocks/data/dashboardsData";
 
 // Mutable in-memory copies
 let transactionsDB = structuredClone(activeTransactions);

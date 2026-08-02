@@ -1,5 +1,5 @@
 import { http, HttpResponse } from "msw";
-import { books as mockBooks, mockLookupDB } from "@/mocks/data";
+import { books as mockBooks, mockLookupDB } from "@/mocks/data/booksData";
 import { baseURL } from "@/lib/api";
 
 // Keep a mutable in-memory copy

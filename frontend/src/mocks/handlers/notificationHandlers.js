@@ -1,6 +1,6 @@
 import { http, HttpResponse } from "msw";
 import { baseURL } from "@/lib/api";
-import { mockNotifications } from "../data/notificationData";
+import { mockNotifications } from "../data/notificationsData";
 
 export const notificationHandlers = [
   http.get(`${baseURL}/notifications`, () => {

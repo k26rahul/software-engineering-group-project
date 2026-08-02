@@ -21,7 +21,7 @@ import {
 } from "@/components/ui/select";
 import { toast } from "sonner";
 import useCatalogStore from "@/store/catalogStore";
-import { categories } from "@/mocks/data/books";
+import { categories } from "@/mocks/data/booksData";
 
 export default function AddBookPage() {
   const navigate = useNavigate();
