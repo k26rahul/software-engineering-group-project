@@ -120,4 +120,3 @@ def librarian_user_token_fixture(client: TestClient, librarian_user: User) -> st
     json={"email": librarian_user.email, "password": "password123"},
   )
   return response.json()["access_token"]
-

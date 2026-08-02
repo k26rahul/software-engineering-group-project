@@ -1,7 +1,5 @@
 """Service layer for Reservations & Waitlist Queue domain."""
 
-from datetime import datetime
-
 from fastapi import HTTPException, status
 from sqlmodel import Session, select
 
@@ -58,7 +56,9 @@ class ReservationsService:
     )
 
   @staticmethod
-  def cancel_reservation(session: Session, reservation_id: int, member_id: int | None = None) -> None:
+  def cancel_reservation(
+    session: Session, reservation_id: int, member_id: int | None = None
+  ) -> None:
     """Cancel an active reservation for a member."""
     reservation = session.get(Reservation, reservation_id)
     if not reservation:

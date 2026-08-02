@@ -1,4 +1,4 @@
-"""Reservations & Waitlist Queue API router handling reservation creation, cancellation, alerts, and member queues."""
+"""Reservations & Waitlist Queue API router for reservation creation, cancellation, and queues."""
 
 from fastapi import APIRouter, Response, status
 
