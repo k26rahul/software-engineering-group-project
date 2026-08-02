@@ -3,11 +3,11 @@ import userEvent from "@testing-library/user-event";
 import { MemoryRouter, Route, Routes } from "react-router-dom";
 import { describe, it, expect, beforeEach } from "vitest";
 import BookCopiesPage from "./BookCopiesPage";
-import useCatalogStore from "@/store/catalogStore";
+import useBookStore from "@/store/bookStore";
 
 describe("BookCopiesPage Component", () => {
   beforeEach(() => {
-    useCatalogStore.setState({
+    useBookStore.setState({
       books: [],
       selectedBook: null,
       isLoading: false,
@@ -56,7 +56,7 @@ describe("BookCopiesPage Component", () => {
     // We can assume a success toast appears or copy count increases
     await waitFor(() => {
       // The store's selectedBook should be updated with the new copy
-      const state = useCatalogStore.getState();
+      const state = useBookStore.getState();
       expect(state.selectedBook.copies.length).toBeGreaterThan(3); // Mock starts with 3
     });
   });

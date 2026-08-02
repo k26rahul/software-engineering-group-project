@@ -42,8 +42,8 @@ import {
 } from "@/components/ui/dialog";
 import { Skeleton } from "@/components/ui/skeleton";
 import { toast } from "sonner";
-import useCatalogStore from "@/store/catalogStore";
-import { categories } from "@/mocks/data/books";
+import useBookStore from "@/store/bookStore";
+import { categories } from "@/mocks/data/booksData";
 
 // Category badge color theme mapping
 const CATEGORY_STYLES = {
@@ -59,7 +59,7 @@ const CATEGORY_STYLES = {
 };
 
 export default function MemberCatalogPage() {
-  const { books, fetchBooks, reserveBook, isLoading } = useCatalogStore();
+  const { books, fetchBooks, reserveBook, isLoading } = useBookStore();
 
   const [search, setSearch] = useState("");
   const [category, setCategory] = useState("all");

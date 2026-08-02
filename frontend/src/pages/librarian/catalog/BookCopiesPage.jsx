@@ -20,7 +20,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { toast } from "sonner";
-import useCatalogStore from "@/store/catalogStore";
+import useBookStore from "@/store/bookStore";
 
 const statusColors = {
   AVAILABLE: "secondary",
@@ -32,7 +32,7 @@ const statusColors = {
 export default function BookCopiesPage() {
   const { id } = useParams();
   const navigate = useNavigate();
-  const { fetchBook, updateCopyStatus, addCopy, selectedBook, isLoading } = useCatalogStore();
+  const { fetchBook, updateCopyStatus, addCopy, selectedBook, isLoading } = useBookStore();
   const [isFetching, setIsFetching] = useState(true);
 
   useEffect(() => {
@@ -133,7 +133,7 @@ export default function BookCopiesPage() {
               <Table>
                 <TableHeader>
                   <TableRow>
-                    <TableHead className="w-[100px]">Copy #</TableHead>
+                    <TableHead className="w-25">Copy #</TableHead>
                     <TableHead>System ID</TableHead>
                     <TableHead>Current Status</TableHead>
                     <TableHead className="text-right">Action</TableHead>
@@ -162,7 +162,7 @@ export default function BookCopiesPage() {
                             onValueChange={(val) => handleStatusChange(copy.id, val)}
                             disabled={isLoading}
                           >
-                            <SelectTrigger className="ml-auto h-8 w-[140px]">
+                            <SelectTrigger className="ml-auto h-8 w-35">
                               <SelectValue placeholder="Update status" />
                             </SelectTrigger>
                             <SelectContent>

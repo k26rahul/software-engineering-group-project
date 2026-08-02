@@ -1,6 +1,6 @@
 from fastapi import APIRouter
 
-circulation_router = APIRouter(tags=["Circulation"])
+transactions_router = APIRouter(tags=["Transactions"])
 
 # Routes to implement:
 #

@@ -20,12 +20,12 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { toast } from "sonner";
-import useCatalogStore from "@/store/catalogStore";
-import { categories } from "@/mocks/data/books";
+import useBookStore from "@/store/bookStore";
+import { categories } from "@/mocks/data/booksData";
 
 export default function AddBookPage() {
   const navigate = useNavigate();
-  const { addBook, lookupISBN, isLoading } = useCatalogStore();
+  const { addBook, lookupISBN, isLoading } = useBookStore();
   const [isbnLookup, setIsbnLookup] = useState("");
   const [isLookingUp, setIsLookingUp] = useState(false);
 
@@ -214,7 +214,7 @@ export default function AddBookPage() {
               <textarea
                 id="description"
                 name="description"
-                className="border-input placeholder:text-muted-foreground focus-visible:ring-ring flex min-h-[80px] w-full rounded-md border bg-transparent px-3 py-2 text-sm shadow-sm focus-visible:ring-1 focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-50"
+                className="border-input placeholder:text-muted-foreground focus-visible:ring-ring flex min-h-20 w-full rounded-md border bg-transparent px-3 py-2 text-sm shadow-sm focus-visible:ring-1 focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-50"
                 value={formData.description}
                 onChange={handleChange}
                 rows={4}

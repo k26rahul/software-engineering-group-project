@@ -1,7 +1,7 @@
 import { create } from "zustand";
 import api from "@/lib/api";
 
-const useCatalogStore = create((set) => ({
+const useBookStore = create((set) => ({
   books: [],
   selectedBook: null,
   isLoading: false,
@@ -169,4 +169,4 @@ const useCatalogStore = create((set) => ({
   },
 }));
 
-export default useCatalogStore;
+export default useBookStore;

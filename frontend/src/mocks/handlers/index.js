@@ -1,17 +1,19 @@
 import { authHandlers } from "./authHandlers";
 import { dashboardHandlers } from "./dashboardHandlers";
-import { notificationHandlers } from "./notificationHandlers";
-import { memberHandlers } from "./memberHandlers";
-import { catalogHandlers } from "./catalogHandlers";
-import { transactionHandlers } from "./transactionHandlers";
+import { notificationsHandlers } from "./notificationsHandlers";
+import { membersHandlers } from "./membersHandlers";
+import { booksHandlers } from "./booksHandlers";
+import { transactionsHandlers } from "./transactionsHandlers";
 import { reportsHandlers } from "./reportsHandlers";
+import { readingListsHandlers } from "./readingListsHandlers";
 
 export const handlers = [
   ...authHandlers,
   ...dashboardHandlers,
-  ...notificationHandlers,
-  ...memberHandlers,
-  ...catalogHandlers,
-  ...transactionHandlers,
+  ...notificationsHandlers,
+  ...membersHandlers,
+  ...booksHandlers,
+  ...transactionsHandlers,
   ...reportsHandlers,
+  ...readingListsHandlers,
 ];

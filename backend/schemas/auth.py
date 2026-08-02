@@ -1,9 +1,7 @@
 from sqlmodel import SQLModel
 
 from models.enums import MembershipType
-from models.user import UserProfileResponse
-
-# ── Schemas ───────────────────────────────────────────────────────────────────
+from schemas.user import UserProfileResponse
 
 
 class LoginRequest(SQLModel):

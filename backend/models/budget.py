@@ -1,7 +1,7 @@
 from datetime import date
 from typing import TYPE_CHECKING
 
-from sqlmodel import Field, Relationship, SQLModel
+from sqlmodel import Field, Relationship
 
 if TYPE_CHECKING:
   from models.subscription import Subscription
@@ -43,43 +43,3 @@ class BookPurchaseEntry(IDMixin, table=True):
   def total_cost(self) -> float:
     """Total cost of the purchase entry."""
     return self.copies * self.price_per_copy
-
-
-# ── Schemas ───────────────────────────────────────────────────────────────────
-
-
-class RecordPurchaseRequest(SQLModel):
-  title: str
-  copies: int
-  price_per_copy: float
-  vendor_id: int | None = None
-  category: str | None = None
-  purchase_date: date
-
-
-class BudgetSummaryResponse(SQLModel):
-  month: int
-  year: int
-  total_spent: float
-  purchase_count: int
-
-
-class ExpenseItemResponse(SQLModel):
-  title: str
-  category: str | None
-  copies: int
-  price_per_copy: float
-  total_cost: float
-  purchase_date: date
-
-
-class UsageReportResponse(SQLModel):
-  active_members: int
-  books_issued: int
-  popular_categories: list[str]
-
-
-class ExpenseReportResponse(SQLModel):
-  month: int
-  year: int
-  items: list[ExpenseItemResponse]

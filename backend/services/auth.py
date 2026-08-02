@@ -7,14 +7,15 @@ from core.auth import (
   token_blocklist,
   verify_password,
 )
-from models.auth import (
+from models.enums import MemberApprovalStatus, UserRole
+from models.user import User
+from schemas.auth import (
   ChangePasswordRequest,
   LoginRequest,
   RegisterRequest,
   TokenResponse,
 )
-from models.enums import MemberApprovalStatus, UserRole
-from models.user import User, UserProfileResponse
+from schemas.user import UserProfileResponse
 
 
 def login(body: LoginRequest, session: Session) -> TokenResponse:

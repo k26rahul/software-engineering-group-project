@@ -1,10 +1,9 @@
-from datetime import datetime
 from typing import TYPE_CHECKING
 
-from sqlmodel import Field, Relationship, SQLModel
+from sqlmodel import Field, Relationship
 
 if TYPE_CHECKING:
-  from models.catalog import Book
+  from models.book import Book
   from models.user import User
 
 from models.base import CreatedAtMixin, IDMixin, UpdatedAtMixin
@@ -28,20 +27,3 @@ class Review(IDMixin, CreatedAtMixin, UpdatedAtMixin, table=True):
 
   member: "User" = Relationship(back_populates="reviews")
   book: "Book" = Relationship(back_populates="reviews")
-
-
-# ── Schemas ───────────────────────────────────────────────────────────────────
-
-
-class SubmitReviewRequest(SQLModel):
-  rating: int
-  text: str
-
-
-class ReviewResponse(SQLModel):
-  id: int
-  member_id: int
-  rating: int
-  text: str
-  status: ReviewStatus
-  created_at: datetime

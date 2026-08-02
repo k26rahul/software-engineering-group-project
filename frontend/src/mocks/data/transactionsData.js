@@ -113,3 +113,12 @@ export const budgetEntries = [
     type: "EXPENSE",
   },
 ];
+
+// Static response for GET /budget - matches the shape the frontend store expects
+export const budgetSummary = {
+  budget_limit: 10000.0,
+  budget_spent: 6750.0,
+  total_expenses: 6900.0,
+  total_income: 150.0,
+  entries: budgetEntries,
+};

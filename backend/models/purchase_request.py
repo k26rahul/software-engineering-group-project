@@ -1,7 +1,7 @@
 from datetime import datetime
 from typing import TYPE_CHECKING
 
-from sqlmodel import Field, Relationship, SQLModel, UniqueConstraint
+from sqlmodel import Field, Relationship, UniqueConstraint
 
 if TYPE_CHECKING:
   from models.user import User
@@ -44,22 +44,3 @@ class PurchaseRequestVote(IDMixin, CreatedAtMixin, table=True):
 
   request: "PurchaseRequest" = Relationship(back_populates="votes")
   member: "User" = Relationship(back_populates="purchase_request_votes")
-
-
-# ── Schemas ───────────────────────────────────────────────────────────────────
-
-
-class CreatePurchaseRequestRequest(SQLModel):
-  title: str
-  author: str | None = None
-  description: str | None = None
-
-
-class PurchaseRequestResponse(SQLModel):
-  id: int
-  title: str
-  author: str | None
-  description: str | None
-  upvote_count: int
-  status: RequestStatus
-  created_at: datetime

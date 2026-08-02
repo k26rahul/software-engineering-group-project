@@ -1,13 +1,13 @@
 from fastapi import APIRouter
 
 from core.dependencies import CurrentUserDep, SessionDep, TokenDep
-from models.auth import (
+from schemas.auth import (
   ChangePasswordRequest,
   LoginRequest,
   RegisterRequest,
   TokenResponse,
 )
-from models.user import UserProfileResponse
+from schemas.user import UserProfileResponse
 from services import auth as auth_service
 
 auth_router = APIRouter(tags=["Authentication"])

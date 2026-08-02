@@ -1,15 +1,15 @@
-from datetime import date, datetime
+from datetime import date
 from typing import TYPE_CHECKING
 
 from sqlmodel import Field, Relationship, SQLModel
 
 if TYPE_CHECKING:
-  from models.circulation import Fine, Transaction
-  from models.community import Review
   from models.notification import Notification
-  from models.payment import Payment
+  from models.payment import Fine, Payment
   from models.purchase_request import PurchaseRequest, PurchaseRequestVote
   from models.reservation import Reservation
+  from models.review import Review
+  from models.transaction import Transaction
 
 from models.base import CreatedAtMixin, IDMixin, UpdatedAtMixin
 from models.enums import MemberApprovalStatus, MembershipType, UserRole
@@ -68,48 +68,3 @@ class User(UserBase, IDMixin, CreatedAtMixin, UpdatedAtMixin, table=True):
         year=self.membership_start_date.year + 1, month=2, day=28
       )
     return date.today() > due_date
-
-
-# ── Schemas ───────────────────────────────────────────────────────────────────
-
-
-class UpdateProfileRequest(SQLModel):
-  name: str | None = None
-  phone: str | None = None
-
-
-class UserProfileResponse(SQLModel):
-  id: int
-  email: str
-  name: str
-  phone: str | None
-  role: UserRole
-  membership_type: MembershipType | None
-  approval_status: MemberApprovalStatus
-  is_active: bool
-  created_at: datetime
-
-
-class MemberSummaryResponse(SQLModel):
-  id: int
-  name: str
-  email: str
-  role: UserRole
-  membership_type: MembershipType | None
-  approval_status: MemberApprovalStatus
-  is_active: bool
-
-
-class MemberDetailResponse(MemberSummaryResponse):
-  created_at: datetime
-  membership_start_date: date | None
-  max_issue_limit: int
-
-
-class BorrowingHistoryItemResponse(SQLModel):
-  transaction_id: int
-  book_title: str
-  issue_date: date
-  due_date: date
-  return_date: date | None
-  is_overdue: bool

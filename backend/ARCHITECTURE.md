@@ -61,22 +61,27 @@ Cross-cutting infrastructure. Imported freely by routers, services, and tests.
 
 **Rule:** All route protection must use one of these dependency types. Never manually check `user.role` inside a router.
 
----
+### `schemas/`
+
+All HTTP request and response DTO schemas live here, organized by domain module (e.g. `schemas/auth.py`, `schemas/user.py`, `schemas/book.py`).
+
+**Rules:**
+- All schemas use plain `SQLModel` without `table=True`.
+- Reusable schemas are imported across routers and services.
 
 ### `models/`
 
-All SQLModel definitions live here. Each file groups logically related domain models together.
+All SQLModel database table definitions live here. Each file groups logically related domain entities together.
 
-Each model file follows this pattern: a shared `EntityBase` class for common fields, a `Entity(EntityBase, IDMixin, ..., table=True)` DB table class, and plain `SQLModel` schema classes for request/response bodies.
+Each model file defines DB table classes (`table=True`) and shared base/mixin classes.
 
 **Rules:**
-- DB table classes use `table=True`. Schema classes never use `table=True`.
+- DB table classes use `table=True`.
 - Base classes (`IDMixin`, `CreatedAtMixin`, `UpdatedAtMixin` from `base.py`) are composed via multiple inheritance.
 - Enums are defined in `enums.py` as `str, enum.Enum` types.
 - Model methods are permitted only when the logic is self-contained, trivial, and requires only the model instance itself (e.g., `is_overdue()`, `available_copies()`). Methods must not encode business rules about when or whether an operation is allowed.
 - `models/__init__.py` exports all table classes so SQLModel discovers them for schema creation.
 
----
 
 ### `routers/`
 
