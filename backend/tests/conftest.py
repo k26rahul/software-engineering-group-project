@@ -110,3 +110,14 @@ def normal_user_token_fixture(client: TestClient, normal_user: User) -> str:
     json={"email": normal_user.email, "password": "password123"},
   )
   return response.json()["access_token"]
+
+
+@pytest.fixture(name="librarian_user_token")
+def librarian_user_token_fixture(client: TestClient, librarian_user: User) -> str:
+  """Retrieves a valid JWT access token for the librarian user."""
+  response = client.post(
+    "/auth/login",
+    json={"email": librarian_user.email, "password": "password123"},
+  )
+  return response.json()["access_token"]
+
