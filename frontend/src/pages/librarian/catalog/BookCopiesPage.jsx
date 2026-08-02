@@ -20,7 +20,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { toast } from "sonner";
-import useCatalogStore from "@/store/catalogStore";
+import useBookStore from "@/store/bookStore";
 
 const statusColors = {
   AVAILABLE: "secondary",
@@ -32,7 +32,7 @@ const statusColors = {
 export default function BookCopiesPage() {
   const { id } = useParams();
   const navigate = useNavigate();
-  const { fetchBook, updateCopyStatus, addCopy, selectedBook, isLoading } = useCatalogStore();
+  const { fetchBook, updateCopyStatus, addCopy, selectedBook, isLoading } = useBookStore();
   const [isFetching, setIsFetching] = useState(true);
 
   useEffect(() => {

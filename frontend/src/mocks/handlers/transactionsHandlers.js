@@ -10,7 +10,7 @@ let transactionsDB = structuredClone(activeTransactions);
 let budgetDB = structuredClone(budgetEntries);
 let nextTransactionId = 2000;
 
-export const transactionHandlers = [
+export const transactionsHandlers = [
   // GET /transactions/active - all currently issued books
   http.get(`${baseURL}/transactions/active`, ({ request }) => {
     const url = new URL(request.url);

@@ -2,7 +2,7 @@ import { http, HttpResponse } from "msw";
 import { baseURL } from "@/lib/api";
 import { mockNotifications } from "../data/notificationsData";
 
-export const notificationHandlers = [
+export const notificationsHandlers = [
   http.get(`${baseURL}/notifications`, () => {
     return HttpResponse.json(mockNotifications);
   }),

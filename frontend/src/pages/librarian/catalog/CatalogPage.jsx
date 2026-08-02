@@ -41,11 +41,11 @@ import {
 } from "@/components/ui/select";
 import { Skeleton } from "@/components/ui/skeleton";
 import { toast } from "sonner";
-import useCatalogStore from "@/store/catalogStore";
+import useBookStore from "@/store/bookStore";
 import { categories } from "@/mocks/data/booksData";
 
 export default function CatalogPage() {
-  const { books, fetchBooks, deleteBook, isLoading } = useCatalogStore();
+  const { books, fetchBooks, deleteBook, isLoading } = useBookStore();
   const [search, setSearch] = useState("");
   const [category, setCategory] = useState("all");
   const [bookToDelete, setBookToDelete] = useState(null);

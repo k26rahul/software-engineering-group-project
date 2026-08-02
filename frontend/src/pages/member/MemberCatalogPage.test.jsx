@@ -3,11 +3,11 @@ import userEvent from "@testing-library/user-event";
 import { MemoryRouter } from "react-router-dom";
 import { describe, it, expect, beforeEach } from "vitest";
 import MemberCatalogPage from "./MemberCatalogPage";
-import useCatalogStore from "@/store/catalogStore";
+import useBookStore from "@/store/bookStore";
 
 describe("MemberCatalogPage Component", () => {
   beforeEach(() => {
-    useCatalogStore.setState({
+    useBookStore.setState({
       books: [],
       selectedBook: null,
       isLoading: false,

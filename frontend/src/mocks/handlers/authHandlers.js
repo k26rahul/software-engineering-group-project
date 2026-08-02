@@ -1,7 +1,7 @@
 import { http, HttpResponse } from "msw";
 import { users, generateNewMockUser } from "@/mocks/data/usersData";
 import { baseURL } from "@/lib/api";
-import { addMemberToDirectory } from "./memberHandlers";
+import { addMemberToDirectory } from "./membersHandlers";
 
 export const authHandlers = [
   http.post(`${baseURL}/auth/login`, async ({ request }) => {

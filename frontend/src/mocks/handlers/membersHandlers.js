@@ -27,7 +27,7 @@ const findUserById = (id) => {
   return Object.values(users).find((user) => user.id === id);
 };
 
-export const memberHandlers = [
+export const membersHandlers = [
   // GET /members - list all members with optional search and status filter
   http.get(`${baseURL}/members`, ({ request }) => {
     const url = new URL(request.url);

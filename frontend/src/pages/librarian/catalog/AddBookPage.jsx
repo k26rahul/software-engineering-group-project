@@ -20,12 +20,12 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { toast } from "sonner";
-import useCatalogStore from "@/store/catalogStore";
+import useBookStore from "@/store/bookStore";
 import { categories } from "@/mocks/data/booksData";
 
 export default function AddBookPage() {
   const navigate = useNavigate();
-  const { addBook, lookupISBN, isLoading } = useCatalogStore();
+  const { addBook, lookupISBN, isLoading } = useBookStore();
   const [isbnLookup, setIsbnLookup] = useState("");
   const [isLookingUp, setIsLookingUp] = useState(false);
 

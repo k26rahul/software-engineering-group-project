@@ -6,7 +6,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Badge } from "@/components/ui/badge";
 import { Skeleton } from "@/components/ui/skeleton";
 import { toast } from "sonner";
-import useCatalogStore from "@/store/catalogStore";
+import useBookStore from "@/store/bookStore";
 import useMemberStore from "@/store/memberStore";
 import useTransactionStore from "@/store/transactionStore";
 
@@ -39,7 +39,7 @@ function StepDivider() {
 }
 
 export default function IssueBookPage() {
-  const { books, fetchBooks, isLoading: booksLoading } = useCatalogStore();
+  const { books, fetchBooks, isLoading: booksLoading } = useBookStore();
   const { members, membersLoading, fetchMembers } = useMemberStore();
   const { issueBook, isLoading: issuing } = useTransactionStore();
 

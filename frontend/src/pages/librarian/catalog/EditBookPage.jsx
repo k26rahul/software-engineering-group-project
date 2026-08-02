@@ -13,13 +13,13 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { toast } from "sonner";
-import useCatalogStore from "@/store/catalogStore";
+import useBookStore from "@/store/bookStore";
 import { categories } from "@/mocks/data/booksData";
 
 export default function EditBookPage() {
   const { id } = useParams();
   const navigate = useNavigate();
-  const { fetchBook, updateBook, isLoading } = useCatalogStore();
+  const { fetchBook, updateBook, isLoading } = useBookStore();
 
   const [formData, setFormData] = useState({
     title: "",

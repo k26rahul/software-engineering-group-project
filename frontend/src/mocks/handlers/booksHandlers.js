@@ -7,7 +7,7 @@ let booksDB = structuredClone(mockBooks); //deep clone to avoid mutating the ori
 let nextId = Math.max(0, ...booksDB.map((b) => b.id)) + 1;
 let nextCopyId = Math.max(0, ...booksDB.flatMap((b) => b.copies.map((c) => c.id))) + 1;
 
-export const catalogHandlers = [
+export const booksHandlers = [
   http.get(`${baseURL}/books`, ({ request }) => {
     const url = new URL(request.url);
     const search = url.searchParams.get("search")?.toLowerCase() || "";
