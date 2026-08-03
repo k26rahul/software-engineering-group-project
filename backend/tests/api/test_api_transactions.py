@@ -61,3 +61,38 @@ def test_get_overdue_transactions(client: TestClient, librarian_user_token: str)
   response = client.get("/transactions/overdue", headers=headers)
   assert response.status_code == 200
   assert isinstance(response.json(), list)
+
+
+def test_issue_limit_exceeded(
+  client: TestClient,
+  db_session: Session,
+  librarian_user_token: str,
+  normal_user: User,
+):
+  """Verify that issuing a book fails if the member exceeds their max issue limit."""
+  # Set max issue limit to 0 to simulate the limit being reached
+  normal_user.max_issue_limit = 0
+  db_session.add(normal_user)
+  db_session.commit()
+
+  book = Book(title="Limit Test Book", author="Author", category="Fiction", price=10.0)
+  db_session.add(book)
+  db_session.commit()
+  db_session.refresh(book)
+
+  copy = BookCopy(book_id=book.id, copy_number=1)
+  db_session.add(copy)
+  db_session.commit()
+  db_session.refresh(copy)
+
+  headers = {"Authorization": f"Bearer {librarian_user_token}"}
+  due_date = (date.today() + timedelta(days=14)).isoformat()
+
+  # Attempt to issue book should fail due to limit
+  issue_resp = client.post(
+    "/transactions/issue",
+    json={"member_id": normal_user.id, "book_copy_id": copy.id, "due_date": due_date},
+    headers=headers,
+  )
+  assert issue_resp.status_code == 409
+  assert "maximum borrowing limit" in issue_resp.json()["detail"]

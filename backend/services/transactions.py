@@ -43,7 +43,7 @@ class TransactionsService:
 
     if len(active_issues) >= member.max_issue_limit:
       raise HTTPException(
-        status_code=status.HTTP_400_BAD_REQUEST,
+        status_code=status.HTTP_409_CONFLICT,
         detail=f"Member has reached maximum borrowing limit of {member.max_issue_limit} books.",
       )
 
