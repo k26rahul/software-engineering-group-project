@@ -1,0 +1,1743 @@
+openapi: 3.1.0
+info:
+  title: Library Management System API
+  version: 0.1.0
+paths:
+  /health:
+    get:
+      tags:
+      - health
+      summary: Health Check
+      description: 'Returns a simple liveness check response.
+
+
+        ### User Story Mapping
+
+        - INFRA-1.0: System health and liveness status check for uptime monitoring.'
+      operationId: health_check_health_get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+      x-user-story-ids:
+      - INFRA-1.0
+  /auth/login:
+    post:
+      tags:
+      - Authentication
+      summary: Login
+      description: 'Authenticates a user and returns an access token.
+
+
+        ### User Story Mapping
+
+        - US-1.1: As a Librarian, I want to securely log in to the administrative
+        dashboard, so that I can manage library operations without unauthorized access.
+
+        - US-2.1: As a Member, I want to self-register and securely log in to access
+        digital services and manage my account.'
+      operationId: login_auth_login_post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LoginRequest'
+        required: true
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TokenResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      x-user-story-ids:
+      - US-1.1
+      - US-2.1
+  /auth/register:
+    post:
+      tags:
+      - Authentication
+      summary: Register
+      description: 'Registers a new member account with pending approval and logs
+        them in.
+
+
+        ### User Story Mapping
+
+        - US-2.1: As a Member, I want to self-register and securely log in to access
+        digital services and manage my account.'
+      operationId: register_auth_register_post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RegisterRequest'
+        required: true
+      responses:
+        '201':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TokenResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      x-user-story-ids:
+      - US-2.1
+  /auth/logout:
+    post:
+      tags:
+      - Authentication
+      summary: Logout
+      description: 'Logs out the user by invalidating the active token.
+
+
+        ### User Story Mapping
+
+        - US-1.1: As a Librarian, I want to securely log in to the administrative
+        dashboard, so that I can manage library operations without unauthorized access.
+
+        - US-2.1: As a Member, I want to self-register and securely log in to access
+        digital services and manage my account.'
+      operationId: logout_auth_logout_post
+      responses:
+        '204':
+          description: Successful Response
+      security:
+      - OAuth2PasswordBearer: []
+      x-user-story-ids:
+      - US-1.1
+      - US-2.1
+  /auth/change-password:
+    post:
+      tags:
+      - Authentication
+      summary: Change Password
+      description: 'Changes the password of the currently authenticated user.
+
+
+        ### User Story Mapping
+
+        - US-2.1: As a Member, I want to self-register and securely log in to access
+        digital services and manage my account.'
+      operationId: change_password_auth_change_password_post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ChangePasswordRequest'
+        required: true
+      responses:
+        '204':
+          description: Successful Response
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      security:
+      - OAuth2PasswordBearer: []
+      x-user-story-ids:
+      - US-2.1
+  /auth/me:
+    get:
+      tags:
+      - Authentication
+      summary: Get Current User
+      description: 'Retrieves the profile of the currently logged-in user.
+
+
+        ### User Story Mapping
+
+        - US-1.1: As a Librarian, I want to securely log in to the administrative
+        dashboard, so that I can manage library operations without unauthorized access.
+
+        - US-2.1: As a Member, I want to self-register and securely log in to access
+        digital services and manage my account.'
+      operationId: get_current_user_auth_me_get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserProfileResponse'
+      security:
+      - OAuth2PasswordBearer: []
+      x-user-story-ids:
+      - US-1.1
+      - US-2.1
+  /books:
+    get:
+      tags:
+      - Books
+      summary: List catalog books
+      description: 'Retrieves a list of all books in the catalog, optionally filtered
+        by search query or category.
+
+
+        ### User Story Mapping
+
+        - US-2.2: As a Member, I want to search the digital catalog using filters
+        and view real-time book copy availability.
+
+        - US-1.3: As a Librarian, I want to manage the book catalog (add/edit books,
+        ISBN lookup, and physical copy statuses).'
+      operationId: list_books_books_get
+      parameters:
+      - name: query
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: Search term for title, author, or ISBN
+          title: Query
+        description: Search term for title, author, or ISBN
+      - name: category
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: Filter by genre or category
+          title: Category
+        description: Filter by genre or category
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/BookSummaryResponse'
+                title: Response List Books Books Get
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      x-user-story-ids:
+      - US-2.2
+      - US-1.3
+    post:
+      tags:
+      - Books
+      summary: Add a new book
+      description: 'Librarian-only. Adds a new book to the library catalog with initial
+        physical copies.
+
+
+        ### User Story Mapping
+
+        - US-1.3: As a Librarian, I want to manage the book catalog (add/edit books,
+        ISBN lookup, and physical copy statuses).'
+      operationId: create_book_books_post
+      security:
+      - OAuth2PasswordBearer: []
+      parameters:
+      - name: copies
+        in: query
+        required: false
+        schema:
+          type: integer
+          minimum: 1
+          description: Number of initial physical copies
+          default: 1
+          title: Copies
+        description: Number of initial physical copies
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AddBookRequest'
+      responses:
+        '201':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BookDetailResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      x-user-story-ids:
+      - US-1.3
+  /books/isbn-lookup:
+    post:
+      tags:
+      - Books
+      summary: Lookup book by ISBN
+      description: 'Fetches book metadata from external ISBN database to auto-fill
+        entry fields.
+
+
+        ### User Story Mapping
+
+        - US-1.3: As a Librarian, I want to manage the book catalog (add/edit books,
+        ISBN lookup, and physical copy statuses).'
+      operationId: isbn_lookup_books_isbn_lookup_post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ISBNLookupRequest'
+        required: true
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AddBookRequest'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      x-user-story-ids:
+      - US-1.3
+  /books/{id}:
+    get:
+      tags:
+      - Books
+      summary: Get book details
+      description: 'Retrieves detailed information about a specific book including
+        copy availability and ratings.
+
+
+        ### User Story Mapping
+
+        - US-2.2: As a Member, I want to search the digital catalog using filters
+        and view real-time book copy availability.'
+      operationId: get_book_books__id__get
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: integer
+          title: Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BookDetailResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      x-user-story-ids:
+      - US-2.2
+    patch:
+      tags:
+      - Books
+      summary: Update book metadata
+      description: 'Librarian-only. Updates metadata fields for an existing book.
+
+
+        ### User Story Mapping
+
+        - US-1.3: As a Librarian, I want to manage the book catalog (add/edit books,
+        ISBN lookup, and physical copy statuses).'
+      operationId: update_book_books__id__patch
+      security:
+      - OAuth2PasswordBearer: []
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: integer
+          title: Id
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateBookRequest'
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BookDetailResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      x-user-story-ids:
+      - US-1.3
+  /books/{id}/copies/{copy_id}:
+    patch:
+      tags:
+      - Books
+      summary: Update book copy status
+      description: 'Librarian-only. Updates physical copy status (e.g. AVAILABLE,
+        ISSUED, DAMAGED, LOST).
+
+
+        ### User Story Mapping
+
+        - US-1.3: As a Librarian, I want to manage the book catalog (add/edit books,
+        ISBN lookup, and physical copy statuses).'
+      operationId: update_copy_status_books__id__copies__copy_id__patch
+      security:
+      - OAuth2PasswordBearer: []
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: integer
+          title: Id
+      - name: copy_id
+        in: path
+        required: true
+        schema:
+          type: integer
+          title: Copy Id
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateCopyStatusRequest'
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BookDetailResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      x-user-story-ids:
+      - US-1.3
+  /members:
+    get:
+      tags:
+      - Members
+      summary: List all members
+      description: 'Librarian-only. Retrieves a list of members filtered by approval
+        status or role.
+
+
+        ### User Story Mapping
+
+        - US-1.2: As a Librarian, I want to review and manage digital member registrations,
+        profile details, and borrowing histories.'
+      operationId: list_members_members_get
+      security:
+      - OAuth2PasswordBearer: []
+      parameters:
+      - name: approval_status
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - $ref: '#/components/schemas/MemberApprovalStatus'
+          - type: 'null'
+          description: Filter by member approval status
+          title: Approval Status
+        description: Filter by member approval status
+      - name: role
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - $ref: '#/components/schemas/UserRole'
+          - type: 'null'
+          description: Filter by user role
+          title: Role
+        description: Filter by user role
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/MemberSummaryResponse'
+                title: Response List Members Members Get
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      x-user-story-ids:
+      - US-1.2
+  /members/{id}:
+    get:
+      tags:
+      - Members
+      summary: Get member details
+      description: 'Retrieves the profile details of a specific member.
+
+
+        ### User Story Mapping
+
+        - US-1.2: As a Librarian, I want to review and manage digital member registrations,
+        profile details, and borrowing histories.'
+      operationId: get_member_members__id__get
+      security:
+      - OAuth2PasswordBearer: []
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: integer
+          title: Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MemberDetailResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      x-user-story-ids:
+      - US-1.2
+  /members/{id}/approve:
+    patch:
+      tags:
+      - Members
+      summary: Approve member registration
+      description: 'Librarian-only. Approves a pending member registration and activates
+        their account.
+
+
+        ### User Story Mapping
+
+        - US-1.2: As a Librarian, I want to review and manage digital member registrations,
+        profile details, and borrowing histories.
+
+        - US-2.1: As a Member, I want to self-register and securely log in to access
+        digital services and manage my account.'
+      operationId: approve_member_members__id__approve_patch
+      security:
+      - OAuth2PasswordBearer: []
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: integer
+          title: Id
+      responses:
+        '204':
+          description: Successful Response
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      x-user-story-ids:
+      - US-1.2
+      - US-2.1
+  /members/{id}/reject:
+    patch:
+      tags:
+      - Members
+      summary: Reject member registration
+      description: 'Librarian-only. Rejects a pending member registration.
+
+
+        ### User Story Mapping
+
+        - US-1.2: As a Librarian, I want to review and manage digital member registrations,
+        profile details, and borrowing histories.'
+      operationId: reject_member_members__id__reject_patch
+      security:
+      - OAuth2PasswordBearer: []
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: integer
+          title: Id
+      responses:
+        '204':
+          description: Successful Response
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      x-user-story-ids:
+      - US-1.2
+  /members/{id}/profile:
+    patch:
+      tags:
+      - Members
+      summary: Update member profile
+      description: 'Updates a specific member''s profile details.
+
+
+        ### User Story Mapping
+
+        - US-1.2: As a Librarian, I want to review and manage digital member registrations,
+        profile details, and borrowing histories.'
+      operationId: update_profile_members__id__profile_patch
+      security:
+      - OAuth2PasswordBearer: []
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: integer
+          title: Id
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateProfileRequest'
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MemberDetailResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      x-user-story-ids:
+      - US-1.2
+  /members/{id}/history:
+    get:
+      tags:
+      - Members
+      summary: Get member borrowing history
+      description: 'Retrieves the borrowing history for a specific member.
+
+
+        ### User Story Mapping
+
+        - US-1.2: As a Librarian, I want to review and manage digital member registrations,
+        profile details, and borrowing histories.'
+      operationId: get_member_history_members__id__history_get
+      security:
+      - OAuth2PasswordBearer: []
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: integer
+          title: Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/TransactionHistoryItemResponse'
+                title: Response Get Member History Members  Id  History Get
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      x-user-story-ids:
+      - US-1.2
+  /transactions/issue:
+    post:
+      tags:
+      - Transactions
+      summary: Issue a book
+      description: 'Librarian-only. Issues an available book copy to an active member
+        with a due date.
+
+
+        ### User Story Mapping
+
+        - US-1.4: As a Librarian, I want to digitally issue and return books, track
+        overdue loans, and auto-calculate condition fines.
+
+        - US-2.3: As a Member, I want to view my active borrowing dashboard with exact
+        return deadlines and current issues.'
+      operationId: issue_book_transactions_issue_post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/IssueBookRequest'
+        required: true
+      responses:
+        '201':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TransactionResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      security:
+      - OAuth2PasswordBearer: []
+      x-user-story-ids:
+      - US-1.4
+      - US-2.3
+  /transactions/return:
+    post:
+      tags:
+      - Transactions
+      summary: Return a book
+      description: 'Librarian-only. Processes book return and calculates fines if
+        overdue or damaged.
+
+
+        ### User Story Mapping
+
+        - US-1.4: As a Librarian, I want to digitally issue and return books, track
+        overdue loans, and auto-calculate condition fines.'
+      operationId: return_book_transactions_return_post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ReturnBookRequest'
+        required: true
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TransactionResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      security:
+      - OAuth2PasswordBearer: []
+      x-user-story-ids:
+      - US-1.4
+  /transactions/overdue:
+    get:
+      tags:
+      - Transactions
+      summary: Get overdue transactions
+      description: 'Librarian-only. Retrieves a list of all currently overdue transactions.
+
+
+        ### User Story Mapping
+
+        - US-1.4: As a Librarian, I want to digitally issue and return books, track
+        overdue loans, and auto-calculate condition fines.'
+      operationId: get_overdue_transactions_transactions_overdue_get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                items:
+                  $ref: '#/components/schemas/TransactionResponse'
+                type: array
+                title: Response Get Overdue Transactions Transactions Overdue Get
+      security:
+      - OAuth2PasswordBearer: []
+      x-user-story-ids:
+      - US-1.4
+  /transactions/{id}:
+    get:
+      tags:
+      - Transactions
+      summary: Get transaction details
+      description: 'Retrieves details of a specific borrowing transaction.
+
+
+        ### User Story Mapping
+
+        - US-1.4: As a Librarian, I want to digitally issue and return books, track
+        overdue loans, and auto-calculate condition fines.'
+      operationId: get_transaction_transactions__id__get
+      security:
+      - OAuth2PasswordBearer: []
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: integer
+          title: Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TransactionResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      x-user-story-ids:
+      - US-1.4
+  /members/{id}/current-issues:
+    get:
+      tags:
+      - Transactions
+      summary: Get member current issues
+      description: 'Retrieves a list of all books currently issued to a specific member.
+
+
+        ### User Story Mapping
+
+        - US-2.3: As a Member, I want to view my active borrowing dashboard with exact
+        return deadlines and current issues.'
+      operationId: get_member_current_issues_members__id__current_issues_get
+      security:
+      - OAuth2PasswordBearer: []
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: integer
+          title: Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/TransactionResponse'
+                title: Response Get Member Current Issues Members  Id  Current Issues
+                  Get
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      x-user-story-ids:
+      - US-2.3
+  /reservations:
+    post:
+      tags:
+      - Reservations
+      summary: Create reservation
+      description: 'Places a member in the waitlist queue for an unavailable book.
+
+
+        ### User Story Mapping
+
+        - US-2.4: As a Member, I want to place and cancel waitlist reservations on
+        out-of-stock books.'
+      operationId: create_reservation_reservations_post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateReservationRequest'
+        required: true
+      responses:
+        '201':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ReservationResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      security:
+      - OAuth2PasswordBearer: []
+      x-user-story-ids:
+      - US-2.4
+  /reservations/{id}:
+    delete:
+      tags:
+      - Reservations
+      summary: Cancel reservation
+      description: 'Cancels an active reservation for a member.
+
+
+        ### User Story Mapping
+
+        - US-2.4: As a Member, I want to place and cancel waitlist reservations on
+        out-of-stock books.'
+      operationId: cancel_reservation_reservations__id__delete
+      security:
+      - OAuth2PasswordBearer: []
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: integer
+          title: Id
+      responses:
+        '204':
+          description: Successful Response
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      x-user-story-ids:
+      - US-2.4
+  /reservations/alerts:
+    get:
+      tags:
+      - Reservations
+      summary: Get reservation alerts
+      description: 'Librarian-only. Retrieves reservations that have become available
+        for fulfillment.
+
+
+        ### User Story Mapping
+
+        - US-1.5: As a Librarian, I want the system to alert me when a returned book
+        has an active waitlist reservation.'
+      operationId: get_reservation_alerts_reservations_alerts_get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                items:
+                  $ref: '#/components/schemas/ReservationResponse'
+                type: array
+                title: Response Get Reservation Alerts Reservations Alerts Get
+      security:
+      - OAuth2PasswordBearer: []
+      x-user-story-ids:
+      - US-1.5
+  /members/{id}/reservations:
+    get:
+      tags:
+      - Reservations
+      summary: Get member reservations
+      description: 'Retrieves all active reservations for a specific member.
+
+
+        ### User Story Mapping
+
+        - US-2.4: As a Member, I want to place and cancel waitlist reservations on
+        out-of-stock books.'
+      operationId: get_member_reservations_members__id__reservations_get
+      security:
+      - OAuth2PasswordBearer: []
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: integer
+          title: Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ReservationResponse'
+                title: Response Get Member Reservations Members  Id  Reservations
+                  Get
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      x-user-story-ids:
+      - US-2.4
+  /dashboard/librarian:
+    get:
+      tags:
+      - Dashboard
+      summary: Get librarian dashboard
+      description: 'Librarian-only. Retrieves aggregated metrics, pending member approvals,
+        and overdue alerts.
+
+
+        ### User Story Mapping
+
+        - US-1.1: As a Librarian, I want to securely log in to the administrative
+        dashboard, so that I can manage library operations without unauthorized access.
+
+        - US-1.2: As a Librarian, I want to review and manage digital member registrations,
+        profile details, and borrowing histories.
+
+        - US-1.4: As a Librarian, I want to digitally issue and return books, track
+        overdue loans, and auto-calculate condition fines.'
+      operationId: get_librarian_dashboard_dashboard_librarian_get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LibrarianDashboardResponse'
+      security:
+      - OAuth2PasswordBearer: []
+      x-user-story-ids:
+      - US-1.1
+      - US-1.2
+      - US-1.4
+  /dashboard/management:
+    get:
+      tags:
+      - Dashboard
+      summary: Get campus management dashboard
+      description: 'Management-only. Retrieves campus management analytics, circulation
+        metrics, and budget stats.
+
+
+        ### User Story Mapping
+
+        - US-3.1: As Campus Management, I want to view high-level reports on library
+        usage and circulation analytics.'
+      operationId: get_management_dashboard_dashboard_management_get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ManagementDashboardResponse'
+      security:
+      - OAuth2PasswordBearer: []
+      x-user-story-ids:
+      - US-3.1
+components:
+  schemas:
+    AddBookRequest:
+      properties:
+        title:
+          type: string
+          title: Title
+          description: Title of the book.
+        author:
+          type: string
+          title: Author
+          description: Author of the book.
+        isbn:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Isbn
+          description: International Standard Book Number.
+        category:
+          type: string
+          title: Category
+          description: Category or genre of the book.
+        price:
+          type: number
+          title: Price
+          description: Price of the book.
+        description:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Description
+          description: Summary or description of the book.
+      type: object
+      required:
+      - title
+      - author
+      - category
+      - price
+      title: AddBookRequest
+    BookDetailResponse:
+      properties:
+        id:
+          type: integer
+          title: Id
+        title:
+          type: string
+          title: Title
+        author:
+          type: string
+          title: Author
+        isbn:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Isbn
+        category:
+          type: string
+          title: Category
+        price:
+          type: number
+          title: Price
+        available_copies:
+          type: integer
+          title: Available Copies
+        description:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Description
+        average_rating:
+          type: number
+          title: Average Rating
+        created_at:
+          type: string
+          format: date-time
+          title: Created At
+      type: object
+      required:
+      - id
+      - title
+      - author
+      - isbn
+      - category
+      - price
+      - available_copies
+      - description
+      - average_rating
+      - created_at
+      title: BookDetailResponse
+    BookSummaryResponse:
+      properties:
+        id:
+          type: integer
+          title: Id
+        title:
+          type: string
+          title: Title
+        author:
+          type: string
+          title: Author
+        isbn:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Isbn
+        category:
+          type: string
+          title: Category
+        price:
+          type: number
+          title: Price
+        available_copies:
+          type: integer
+          title: Available Copies
+      type: object
+      required:
+      - id
+      - title
+      - author
+      - isbn
+      - category
+      - price
+      - available_copies
+      title: BookSummaryResponse
+    ChangePasswordRequest:
+      properties:
+        current_password:
+          type: string
+          title: Current Password
+        new_password:
+          type: string
+          title: New Password
+      type: object
+      required:
+      - current_password
+      - new_password
+      title: ChangePasswordRequest
+    CopyStatus:
+      type: string
+      enum:
+      - AVAILABLE
+      - ISSUED
+      - LOST
+      - DAMAGED
+      title: CopyStatus
+      description: Physical availability states of a book copy.
+    CreateReservationRequest:
+      properties:
+        book_id:
+          type: integer
+          title: Book Id
+      type: object
+      required:
+      - book_id
+      title: CreateReservationRequest
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
+    ISBNLookupRequest:
+      properties:
+        isbn:
+          type: string
+          title: Isbn
+      type: object
+      required:
+      - isbn
+      title: ISBNLookupRequest
+    IssueBookRequest:
+      properties:
+        member_id:
+          type: integer
+          title: Member Id
+        book_copy_id:
+          type: integer
+          title: Book Copy Id
+        due_date:
+          type: string
+          format: date
+          title: Due Date
+      type: object
+      required:
+      - member_id
+      - book_copy_id
+      - due_date
+      title: IssueBookRequest
+    LibrarianDashboardResponse:
+      properties:
+        total_books:
+          type: integer
+          title: Total Books
+        active_issues:
+          type: integer
+          title: Active Issues
+        overdue_issues:
+          type: integer
+          title: Overdue Issues
+        pending_approvals:
+          type: integer
+          title: Pending Approvals
+        recent_alerts:
+          items:
+            type: string
+          type: array
+          title: Recent Alerts
+      type: object
+      required:
+      - total_books
+      - active_issues
+      - overdue_issues
+      - pending_approvals
+      - recent_alerts
+      title: LibrarianDashboardResponse
+    LoginRequest:
+      properties:
+        email:
+          type: string
+          title: Email
+        password:
+          type: string
+          title: Password
+      type: object
+      required:
+      - email
+      - password
+      title: LoginRequest
+    ManagementDashboardResponse:
+      properties:
+        total_members:
+          type: integer
+          title: Total Members
+        total_catalog_items:
+          type: integer
+          title: Total Catalog Items
+        total_circulation_count:
+          type: integer
+          title: Total Circulation Count
+        active_subscriptions_count:
+          type: integer
+          title: Active Subscriptions Count
+        total_budget_allocated:
+          type: number
+          title: Total Budget Allocated
+        total_budget_spent:
+          type: number
+          title: Total Budget Spent
+      type: object
+      required:
+      - total_members
+      - total_catalog_items
+      - total_circulation_count
+      - active_subscriptions_count
+      - total_budget_allocated
+      - total_budget_spent
+      title: ManagementDashboardResponse
+    MemberApprovalStatus:
+      type: string
+      enum:
+      - PENDING
+      - APPROVED
+      - REJECTED
+      title: MemberApprovalStatus
+      description: Approval lifecycle states for member registration.
+    MemberDetailResponse:
+      properties:
+        id:
+          type: integer
+          title: Id
+        name:
+          type: string
+          title: Name
+        email:
+          type: string
+          title: Email
+        role:
+          $ref: '#/components/schemas/UserRole'
+        membership_type:
+          anyOf:
+          - $ref: '#/components/schemas/MembershipType'
+          - type: 'null'
+        approval_status:
+          $ref: '#/components/schemas/MemberApprovalStatus'
+        is_active:
+          type: boolean
+          title: Is Active
+        created_at:
+          type: string
+          format: date-time
+          title: Created At
+        membership_start_date:
+          anyOf:
+          - type: string
+            format: date
+          - type: 'null'
+          title: Membership Start Date
+        max_issue_limit:
+          type: integer
+          title: Max Issue Limit
+      type: object
+      required:
+      - id
+      - name
+      - email
+      - role
+      - membership_type
+      - approval_status
+      - is_active
+      - created_at
+      - membership_start_date
+      - max_issue_limit
+      title: MemberDetailResponse
+    MemberSummaryResponse:
+      properties:
+        id:
+          type: integer
+          title: Id
+        name:
+          type: string
+          title: Name
+        email:
+          type: string
+          title: Email
+        role:
+          $ref: '#/components/schemas/UserRole'
+        membership_type:
+          anyOf:
+          - $ref: '#/components/schemas/MembershipType'
+          - type: 'null'
+        approval_status:
+          $ref: '#/components/schemas/MemberApprovalStatus'
+        is_active:
+          type: boolean
+          title: Is Active
+      type: object
+      required:
+      - id
+      - name
+      - email
+      - role
+      - membership_type
+      - approval_status
+      - is_active
+      title: MemberSummaryResponse
+    MembershipType:
+      type: string
+      enum:
+      - ON_CAMPUS
+      - OFF_CAMPUS
+      title: MembershipType
+      description: Membership categories based on campus residency.
+    RegisterRequest:
+      properties:
+        email:
+          type: string
+          title: Email
+        password:
+          type: string
+          title: Password
+        name:
+          type: string
+          title: Name
+        phone:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Phone
+        membership_type:
+          $ref: '#/components/schemas/MembershipType'
+      type: object
+      required:
+      - email
+      - password
+      - name
+      - membership_type
+      title: RegisterRequest
+    ReservationResponse:
+      properties:
+        id:
+          type: integer
+          title: Id
+        book_id:
+          type: integer
+          title: Book Id
+        status:
+          $ref: '#/components/schemas/ReservationStatus'
+        created_at:
+          type: string
+          format: date-time
+          title: Created At
+        notified_at:
+          anyOf:
+          - type: string
+            format: date-time
+          - type: 'null'
+          title: Notified At
+      type: object
+      required:
+      - id
+      - book_id
+      - status
+      - created_at
+      - notified_at
+      title: ReservationResponse
+    ReservationStatus:
+      type: string
+      enum:
+      - WAITING
+      - NOTIFIED
+      - FULFILLED
+      - CANCELLED
+      title: ReservationStatus
+      description: Lifecycle states of a book reservation request.
+    ReturnBookRequest:
+      properties:
+        transaction_id:
+          type: integer
+          title: Transaction Id
+        condition:
+          $ref: '#/components/schemas/ReturnCondition'
+      type: object
+      required:
+      - transaction_id
+      - condition
+      title: ReturnBookRequest
+    ReturnCondition:
+      type: string
+      enum:
+      - GOOD
+      - DAMAGED
+      - LOST
+      title: ReturnCondition
+      description: Condition of a book copy at the time of return.
+    TokenResponse:
+      properties:
+        access_token:
+          type: string
+          title: Access Token
+        token_type:
+          type: string
+          title: Token Type
+          default: bearer
+        user:
+          $ref: '#/components/schemas/UserProfileResponse'
+      type: object
+      required:
+      - access_token
+      - user
+      title: TokenResponse
+    TransactionHistoryItemResponse:
+      properties:
+        transaction_id:
+          type: integer
+          title: Transaction Id
+        book_title:
+          type: string
+          title: Book Title
+        issue_date:
+          type: string
+          format: date
+          title: Issue Date
+        due_date:
+          type: string
+          format: date
+          title: Due Date
+        return_date:
+          anyOf:
+          - type: string
+            format: date
+          - type: 'null'
+          title: Return Date
+        is_overdue:
+          type: boolean
+          title: Is Overdue
+      type: object
+      required:
+      - transaction_id
+      - book_title
+      - issue_date
+      - due_date
+      - is_overdue
+      title: TransactionHistoryItemResponse
+    TransactionResponse:
+      properties:
+        id:
+          type: integer
+          title: Id
+        member_id:
+          type: integer
+          title: Member Id
+        book_copy_id:
+          type: integer
+          title: Book Copy Id
+        issue_date:
+          type: string
+          format: date
+          title: Issue Date
+        due_date:
+          type: string
+          format: date
+          title: Due Date
+        return_date:
+          anyOf:
+          - type: string
+            format: date
+          - type: 'null'
+          title: Return Date
+        return_condition:
+          anyOf:
+          - $ref: '#/components/schemas/ReturnCondition'
+          - type: 'null'
+        is_overdue:
+          type: boolean
+          title: Is Overdue
+      type: object
+      required:
+      - id
+      - member_id
+      - book_copy_id
+      - issue_date
+      - due_date
+      - return_date
+      - return_condition
+      - is_overdue
+      title: TransactionResponse
+    UpdateBookRequest:
+      properties:
+        title:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Title
+        author:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Author
+        isbn:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Isbn
+        category:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Category
+        price:
+          anyOf:
+          - type: number
+          - type: 'null'
+          title: Price
+        description:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Description
+      type: object
+      title: UpdateBookRequest
+    UpdateCopyStatusRequest:
+      properties:
+        status:
+          $ref: '#/components/schemas/CopyStatus'
+      type: object
+      required:
+      - status
+      title: UpdateCopyStatusRequest
+    UpdateProfileRequest:
+      properties:
+        name:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Name
+        phone:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Phone
+      type: object
+      title: UpdateProfileRequest
+    UserProfileResponse:
+      properties:
+        id:
+          type: integer
+          title: Id
+        email:
+          type: string
+          title: Email
+        name:
+          type: string
+          title: Name
+        phone:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Phone
+        role:
+          $ref: '#/components/schemas/UserRole'
+        membership_type:
+          anyOf:
+          - $ref: '#/components/schemas/MembershipType'
+          - type: 'null'
+        approval_status:
+          $ref: '#/components/schemas/MemberApprovalStatus'
+        is_active:
+          type: boolean
+          title: Is Active
+        created_at:
+          type: string
+          format: date-time
+          title: Created At
+      type: object
+      required:
+      - id
+      - email
+      - name
+      - phone
+      - role
+      - membership_type
+      - approval_status
+      - is_active
+      - created_at
+      title: UserProfileResponse
+    UserRole:
+      type: string
+      enum:
+      - LIBRARIAN
+      - MEMBER
+      - CAMPUS_MANAGEMENT
+      title: UserRole
+      description: Roles assigned to users in the system.
+    ValidationError:
+      properties:
+        loc:
+          items:
+            anyOf:
+            - type: string
+            - type: integer
+          type: array
+          title: Location
+        msg:
+          type: string
+          title: Message
+        type:
+          type: string
+          title: Error Type
+        input:
+          title: Input
+        ctx:
+          type: object
+          title: Context
+      type: object
+      required:
+      - loc
+      - msg
+      - type
+      title: ValidationError
+  securitySchemes:
+    OAuth2PasswordBearer:
+      type: oauth2
+      flows:
+        password:
+          scopes: {}
+          tokenUrl: /auth/login
