@@ -1,5 +1,21 @@
 # Milestone 3 Deliverables Report
 
+## Table of Contents
+- [1. Implemented APIs](#1-implemented-apis)
+  - [Authentication](#authentication)
+  - [Book Catalog](#book-catalog)
+  - [Member Management](#member-management)
+  - [Circulation / Transactions](#circulation--transactions)
+  - [Reservations](#reservations)
+  - [Dashboard & System](#dashboard--system)
+- [2. Complete Test Suite Record](#2-complete-test-suite-record)
+  - [API Tests](#api-tests)
+  - [Core Tests](#core-tests)
+- [3. Detailed Test Case Demonstrations](#3-detailed-test-case-demonstrations)
+  - [Test Execution Proof](#test-execution-proof)
+- [4. User Feedback](#4-user-feedback)
+- [5. Plan for Next Sprint (Sprint 2)](#5-plan-for-next-sprint-sprint-2)
+
 ## 1. Implemented APIs
 
 ### Authentication
