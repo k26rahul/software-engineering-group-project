@@ -190,9 +190,9 @@ The following 10 detailed cases are selected as representative examples to demon
 ### Test Execution Proof
 Below are representative screenshots from the VS Code integrated test explorer demonstrating our test execution process. The first screenshot shows two test cases failing (when bugs are introduced), and the second shows all tests passing successfully after the code is corrected.
 
-![Failing Test Screenshot](../test_failure.png)
+![Failing Test Screenshot](https://raw.githubusercontent.com/k26rahul/software-testing/main/test_failure.png)
 
-![Passing Test Screenshot](../test_success.png)
+![Passing Test Screenshot](https://raw.githubusercontent.com/k26rahul/software-testing/main/test_success.png)
 
 **Test Case 1: Successful Member Registration**
 1. **API endpoint being tested:** `POST /auth/register`
