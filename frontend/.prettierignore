@@ -1,2 +1,4 @@
 public/mockServiceWorker.js
 src/components/ui
+
+*.md
