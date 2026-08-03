@@ -15,6 +15,14 @@ from services.books import BooksService
 
 books_router = APIRouter(tags=["Books"])
 
+# Shared response sets for common error patterns.
+_AUTH_ERRORS = {401: {"description": "Invalid, expired, or revoked token."}}
+_LIBRARIAN_ERRORS = {
+  **_AUTH_ERRORS,
+  403: {"description": "Insufficient permissions. Librarian role required."},
+}
+_NOT_FOUND = {404: {"description": "Requested resource not found."}}
+
 
 @books_router.get(
   "/books",
@@ -40,6 +48,10 @@ def list_books(
   description=(
     "Librarian-only. Adds a new book to the library catalog with initial physical copies."
   ),
+  responses={
+    **_LIBRARIAN_ERRORS,
+    400: {"description": "A book with the provided ISBN already exists."},
+  },
 )
 def create_book(
   request: AddBookRequest,
@@ -70,6 +82,7 @@ def isbn_lookup(
   description=(
     "Retrieves detailed information about a specific book including copy availability and ratings."
   ),
+  responses={**_NOT_FOUND},
 )
 def get_book(
   id: int,
@@ -83,6 +96,10 @@ def get_book(
   response_model=BookDetailResponse,
   summary="Update book metadata",
   description="Librarian-only. Updates metadata fields for an existing book.",
+  responses={
+    **_LIBRARIAN_ERRORS,
+    **_NOT_FOUND,
+  },
 )
 def update_book(
   id: int,
@@ -100,6 +117,10 @@ def update_book(
   description=(
     "Librarian-only. Updates physical copy status (e.g. AVAILABLE, ISSUED, DAMAGED, LOST)."
   ),
+  responses={
+    **_LIBRARIAN_ERRORS,
+    **_NOT_FOUND,
+  },
 )
 def update_copy_status(
   id: int,

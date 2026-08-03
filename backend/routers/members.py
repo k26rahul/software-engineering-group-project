@@ -10,12 +10,21 @@ from services.members import MembersService
 
 members_router = APIRouter(tags=["Members"])
 
+# Shared response sets for common error patterns.
+_AUTH_ERRORS = {401: {"description": "Invalid, expired, or revoked token."}}
+_LIBRARIAN_ERRORS = {
+  **_AUTH_ERRORS,
+  403: {"description": "Insufficient permissions. Librarian role required."},
+}
+_NOT_FOUND = {404: {"description": "Member not found."}}
+
 
 @members_router.get(
   "/members",
   response_model=list[MemberSummaryResponse],
   summary="List all members",
   description="Librarian-only. Retrieves a list of members filtered by approval status or role.",
+  responses={**_LIBRARIAN_ERRORS},
 )
 def list_members(
   session: SessionDep,
@@ -33,6 +42,10 @@ def list_members(
   response_model=MemberDetailResponse,
   summary="Get member details",
   description="Retrieves the profile details of a specific member.",
+  responses={
+    **_AUTH_ERRORS,
+    **_NOT_FOUND,
+  },
 )
 def get_member(
   id: int,
@@ -47,6 +60,10 @@ def get_member(
   status_code=status.HTTP_204_NO_CONTENT,
   summary="Approve member registration",
   description="Librarian-only. Approves a pending member registration and activates their account.",
+  responses={
+    **_LIBRARIAN_ERRORS,
+    **_NOT_FOUND,
+  },
 )
 def approve_member(
   id: int,
@@ -62,6 +79,10 @@ def approve_member(
   status_code=status.HTTP_204_NO_CONTENT,
   summary="Reject member registration",
   description="Librarian-only. Rejects a pending member registration.",
+  responses={
+    **_LIBRARIAN_ERRORS,
+    **_NOT_FOUND,
+  },
 )
 def reject_member(
   id: int,
@@ -77,6 +98,10 @@ def reject_member(
   response_model=MemberDetailResponse,
   summary="Update member profile",
   description="Updates a specific member's profile details.",
+  responses={
+    **_AUTH_ERRORS,
+    **_NOT_FOUND,
+  },
 )
 def update_profile(
   id: int,
@@ -92,6 +117,10 @@ def update_profile(
   response_model=list[TransactionHistoryItemResponse],
   summary="Get member borrowing history",
   description="Retrieves the borrowing history for a specific member.",
+  responses={
+    **_AUTH_ERRORS,
+    **_NOT_FOUND,
+  },
 )
 def get_member_history(
   id: int,

@@ -8,6 +8,9 @@ from services.dashboard import DashboardService
 
 dashboard_router = APIRouter(tags=["Dashboard"])
 
+# Shared response sets for common error patterns.
+_AUTH_ERRORS = {401: {"description": "Invalid, expired, or revoked token."}}
+
 
 @dashboard_router.get(
   "/dashboard/librarian",
@@ -16,6 +19,10 @@ dashboard_router = APIRouter(tags=["Dashboard"])
   description=(
     "Librarian-only. Retrieves aggregated metrics, pending member approvals, and overdue alerts."
   ),
+  responses={
+    **_AUTH_ERRORS,
+    403: {"description": "Insufficient permissions. Librarian role required."},
+  },
 )
 def get_librarian_dashboard(
   session: SessionDep,
@@ -31,6 +38,10 @@ def get_librarian_dashboard(
   description=(
     "Management-only. Retrieves campus management analytics, circulation metrics, and budget stats."
   ),
+  responses={
+    **_AUTH_ERRORS,
+    403: {"description": "Insufficient permissions. Campus Management role required."},
+  },
 )
 def get_management_dashboard(
   session: SessionDep,
