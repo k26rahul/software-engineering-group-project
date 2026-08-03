@@ -16,6 +16,8 @@
 - [4. User Feedback](#4-user-feedback)
 - [5. Plan for Next Sprint (Sprint 2)](#5-plan-for-next-sprint-sprint-2)
 
+<div class="page-break"></div>
+
 ## 1. Implemented APIs
 
 ### Authentication
@@ -148,6 +150,8 @@
 
 ---
 
+<div class="page-break"></div>
+
 ## 2. Complete Test Suite Record
 
 Below is an exhaustive record of all 41 test cases developed to assure the quality of the backend APIs and core business logic. All tests currently maintain a passing status.
@@ -198,6 +202,8 @@ Below is an exhaustive record of all 41 test cases developed to assure the quali
 * **`tests/core/test_core_dependencies.py::test_require_role_inactive`** - Verifies role requirement check raises a 403 Forbidden when the user is inactive. *(Status: Passing)*
 
 ---
+
+<div class="page-break"></div>
 
 ## 3. Detailed Test Case Demonstrations
 
@@ -304,6 +310,8 @@ During the demonstration of the Sprint 1 features, we collected the following fe
   * *"The administrative dashboard provides immediate visibility into the library's active circulation and user base, which is very helpful for tracking engagement."*
 
 ---
+
+<div class="page-break"></div>
 
 ## 5. Plan for Next Sprint (Sprint 2)
 
