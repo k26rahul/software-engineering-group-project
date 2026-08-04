@@ -6,6 +6,7 @@
     "vitest.explorer",
     "ms-playwright.playwright",
     "bradlc.vscode-tailwindcss",
-    "stivo.tailwind-fold"
+    "stivo.tailwind-fold",
+    "yy0931.vscode-sqlite3-editor"
   ]
 }

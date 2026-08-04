@@ -1,4 +1,7 @@
-from fastapi import APIRouter
+from typing import Annotated
+
+from fastapi import APIRouter, Depends
+from fastapi.security import OAuth2PasswordRequestForm
 
 from core.dependencies import CurrentUserDep, SessionDep, TokenDep
 from schemas.auth import (
@@ -25,6 +28,21 @@ _AUTH_INPUT_ERRORS = {400: {"description": "Invalid input in request body."}}
 def login(body: LoginRequest, session: SessionDep) -> TokenResponse:
   """Authenticates a user and returns an access token."""
   return auth_service.login(body, session)
+
+
+@auth_router.post(
+  "/auth/swagger-login",
+  response_model=TokenResponse,
+  include_in_schema=False,
+)
+def swagger_login(
+  form_data: Annotated[OAuth2PasswordRequestForm, Depends()],
+  session: SessionDep,
+) -> TokenResponse:
+  """Endpoint exclusively for Swagger UI authentication."""
+  # Treat the OAuth2 'username' as our 'email'
+  login_data = LoginRequest(email=form_data.username, password=form_data.password)
+  return auth_service.login(login_data, session)
 
 
 @auth_router.post(

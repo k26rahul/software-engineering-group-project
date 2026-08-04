@@ -9,6 +9,7 @@ dependencies = [
     "pwdlib[bcrypt]>=0.3.0",
     "pydantic-settings>=2.14.2",
     "python-jose[cryptography]>=3.5.0",
+    "python-multipart>=0.0.32",
     "sqlmodel>=0.0.39",
     "uvicorn[standard]>=0.50.0",
 ]
