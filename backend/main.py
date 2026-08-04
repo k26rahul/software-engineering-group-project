@@ -6,7 +6,16 @@ from sqlmodel import Session
 
 from core.config import settings
 from core.database import create_db_and_tables, engine
-from core.seeding import seed_default_users
+from core.seeding import (
+  seed_books,
+  seed_default_users,
+  seed_members,
+  seed_purchase_requests,
+  seed_reservations,
+  seed_reviews,
+  seed_subscriptions,
+  seed_transactions,
+)
 from routers.auth import auth_router
 from routers.books import books_router
 from routers.dashboard import dashboard_router
@@ -21,6 +30,13 @@ async def lifespan(app: FastAPI):
   create_db_and_tables()
   with Session(engine) as session:
     seed_default_users(session)
+    seed_members(session)
+    seed_books(session)
+    seed_transactions(session)
+    seed_reservations(session)
+    seed_reviews(session)
+    seed_purchase_requests(session)
+    seed_subscriptions(session)
   yield
 
 

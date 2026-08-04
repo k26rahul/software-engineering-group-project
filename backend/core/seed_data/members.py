@@ -1,0 +1,60 @@
+# Seed data for additional Member users.
+# The librarian, member, and management users are seeded separately in seed_default_users().
+# These are extra members used to populate the members list.
+
+MEMBERS = [
+  {
+    "name": "Arjun Sharma",
+    "email": "arjun.sharma@example.com",
+    "phone": "9876543210",
+    "membership_type": "ON_CAMPUS",
+    "approval_status": "APPROVED",
+    "is_active": True,
+    "max_issue_limit": 3,
+  },
+  {
+    "name": "Priya Nair",
+    "email": "priya.nair@example.com",
+    "phone": "9123456780",
+    "membership_type": "OFF_CAMPUS",
+    "approval_status": "APPROVED",
+    "is_active": True,
+    "max_issue_limit": 2,
+  },
+  {
+    "name": "Rohan Mehta",
+    "email": "rohan.mehta@example.com",
+    "phone": "9988776655",
+    "membership_type": "ON_CAMPUS",
+    "approval_status": "PENDING",
+    "is_active": False,
+    "max_issue_limit": 3,
+  },
+  {
+    "name": "Sneha Reddy",
+    "email": "sneha.reddy@example.com",
+    "phone": "9001122334",
+    "membership_type": "ON_CAMPUS",
+    "approval_status": "APPROVED",
+    "is_active": True,
+    "max_issue_limit": 3,
+  },
+  {
+    "name": "Kiran Patel",
+    "email": "kiran.patel@example.com",
+    "phone": "9876001234",
+    "membership_type": "OFF_CAMPUS",
+    "approval_status": "APPROVED",
+    "is_active": True,
+    "max_issue_limit": 2,
+  },
+  {
+    "name": "Meera Iyer",
+    "email": "meera.iyer@example.com",
+    "phone": None,
+    "membership_type": "ON_CAMPUS",
+    "approval_status": "REJECTED",
+    "is_active": False,
+    "max_issue_limit": 0,
+  },
+]

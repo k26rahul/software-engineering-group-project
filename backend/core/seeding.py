@@ -1,7 +1,33 @@
+from datetime import date
+
 from sqlmodel import Session, select
 
 from core.auth import hash_password
-from models.enums import MemberApprovalStatus, MembershipType, UserRole
+from core.seed_data.books import BOOKS
+from core.seed_data.members import MEMBERS
+from core.seed_data.purchase_requests import PURCHASE_REQUESTS
+from core.seed_data.reservations import RESERVATIONS
+from core.seed_data.reviews import REVIEWS
+from core.seed_data.subscriptions import SUBSCRIPTIONS
+from core.seed_data.transactions import TRANSACTIONS
+from models.book import Book, BookCopy
+from models.enums import (
+  CopyStatus,
+  MemberApprovalStatus,
+  MembershipType,
+  RequestStatus,
+  ReservationStatus,
+  ReturnCondition,
+  ReviewStatus,
+  SubscriptionFrequency,
+  SubscriptionType,
+  UserRole,
+)
+from models.purchase_request import PurchaseRequest
+from models.reservation import Reservation
+from models.review import Review
+from models.subscription import Newspaper, Subscription
+from models.transaction import Transaction
 from models.user import User
 
 
@@ -44,5 +70,187 @@ def seed_default_users(session: Session) -> None:
 
   for user in users_to_seed:
     session.add(user)
+
+  session.commit()
+
+
+def seed_members(session: Session) -> None:
+  """Seeds additional member accounts."""
+  if session.exec(select(User).where(User.email == MEMBERS[0]["email"])).first() is not None:
+    return
+
+  for data in MEMBERS:
+    user = User(
+      name=data["name"],
+      email=data["email"],
+      phone=data["phone"],
+      password_hash=hash_password("password123"),
+      role=UserRole.MEMBER,
+      membership_type=MembershipType(data["membership_type"]),
+      approval_status=MemberApprovalStatus(data["approval_status"]),
+      is_active=data["is_active"],
+      max_issue_limit=data["max_issue_limit"],
+      membership_start_date=date(2025, 9, 1) if data["is_active"] else None,
+    )
+    session.add(user)
+
+  session.commit()
+
+
+def seed_books(session: Session) -> None:
+  """Seeds books and their physical copies."""
+  if session.exec(select(Book)).first() is not None:
+    return
+
+  for data in BOOKS:
+    book = Book(
+      title=data["title"],
+      author=data["author"],
+      isbn=data["isbn"],
+      category=data["category"],
+      price=data["price"],
+      description=data["description"],
+    )
+    session.add(book)
+    session.flush()  # assigns book.id before creating copies
+
+    for i, copy_status in enumerate(data["copies"], start=1):
+      copy = BookCopy(
+        book_id=book.id,
+        copy_number=i,
+        status=CopyStatus(copy_status),
+      )
+      session.add(copy)
+
+  session.commit()
+
+
+def seed_transactions(session: Session) -> None:
+  """Seeds borrowing transactions for existing members and book copies."""
+  if session.exec(select(Transaction)).first() is not None:
+    return
+
+  for data in TRANSACTIONS:
+    member = session.exec(select(User).where(User.email == data["member_email"])).first()
+    book = session.exec(select(Book).where(Book.isbn == data["book_isbn"])).first()
+    if member is None or book is None:
+      continue
+
+    copy = session.exec(
+      select(BookCopy).where(
+        BookCopy.book_id == book.id,
+        BookCopy.copy_number == data["copy_number"],
+      )
+    ).first()
+    if copy is None:
+      continue
+
+    transaction = Transaction(
+      member_id=member.id,
+      book_copy_id=copy.id,
+      issue_date=data["issue_date"],
+      due_date=data["due_date"],
+      return_date=data["return_date"],
+      return_condition=ReturnCondition(data["return_condition"]) if data["return_condition"] else None,
+    )
+    session.add(transaction)
+
+  session.commit()
+
+
+def seed_reservations(session: Session) -> None:
+  """Seeds waitlist reservations for books."""
+  if session.exec(select(Reservation)).first() is not None:
+    return
+
+  for data in RESERVATIONS:
+    member = session.exec(select(User).where(User.email == data["member_email"])).first()
+    book = session.exec(select(Book).where(Book.isbn == data["book_isbn"])).first()
+    if member is None or book is None:
+      continue
+
+    reservation = Reservation(
+      member_id=member.id,
+      book_id=book.id,
+      status=ReservationStatus(data["status"]),
+      notified_at=data["notified_at"],
+      fulfilled_at=data["fulfilled_at"],
+    )
+    session.add(reservation)
+
+  session.commit()
+
+
+def seed_reviews(session: Session) -> None:
+  """Seeds book reviews by members."""
+  if session.exec(select(Review)).first() is not None:
+    return
+
+  for data in REVIEWS:
+    member = session.exec(select(User).where(User.email == data["member_email"])).first()
+    book = session.exec(select(Book).where(Book.isbn == data["book_isbn"])).first()
+    if member is None or book is None:
+      continue
+
+    review = Review(
+      member_id=member.id,
+      book_id=book.id,
+      rating=data["rating"],
+      text=data["text"],
+      status=ReviewStatus(data["status"]),
+    )
+    session.add(review)
+
+  session.commit()
+
+
+def seed_purchase_requests(session: Session) -> None:
+  """Seeds member purchase requests for new books."""
+  if session.exec(select(PurchaseRequest)).first() is not None:
+    return
+
+  for data in PURCHASE_REQUESTS:
+    member = session.exec(select(User).where(User.email == data["member_email"])).first()
+    if member is None:
+      continue
+
+    request = PurchaseRequest(
+      member_id=member.id,
+      title=data["title"],
+      author=data.get("author"),
+      description=data.get("description"),
+      upvote_count=data["upvote_count"],
+      status=RequestStatus(data["status"]),
+    )
+    session.add(request)
+
+  session.commit()
+
+
+def seed_subscriptions(session: Session) -> None:
+  """Seeds newspaper and magazine subscriptions."""
+  if session.exec(select(Subscription)).first() is not None:
+    return
+
+  for data in SUBSCRIPTIONS:
+    subscription = Subscription(
+      type=SubscriptionType(data["type"]),
+      copies=data["copies"],
+      price_per_copy=data["price_per_copy"],
+      frequency=SubscriptionFrequency(data["frequency"]),
+      is_active=data["is_active"],
+    )
+    session.add(subscription)
+    session.flush()
+
+    if data["type"] == "NEWSPAPER" and "newspaper" in data:
+      newspaper_data = data["newspaper"]
+      newspaper = Newspaper(
+        title=newspaper_data["title"],
+        language=newspaper_data["language"],
+        publisher=newspaper_data["publisher"],
+        subscription_id=subscription.id,
+      )
+      session.add(newspaper)
 
   session.commit()
