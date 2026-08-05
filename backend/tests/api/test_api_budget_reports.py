@@ -1,14 +1,14 @@
 """Tests for Budget and Reports API endpoints."""
 
 from datetime import date
+
 from fastapi.testclient import TestClient
 from sqlmodel import Session
 
-from models.budget import BookPurchaseEntry
-from models.user import User
-from models.transaction import Transaction
 from models.book import Book, BookCopy
-from models.enums import UserRole, MemberApprovalStatus
+from models.budget import BookPurchaseEntry
+from models.transaction import Transaction
+from models.user import User
 
 
 def test_get_budget_summary(client: TestClient, db_session: Session, librarian_user_token: str):
@@ -25,7 +25,7 @@ def test_get_budget_summary(client: TestClient, db_session: Session, librarian_u
 
   headers = {"Authorization": f"Bearer {librarian_user_token}"}
   response = client.get("/budget", headers=headers)
-  
+
   assert response.status_code == 200
   data = response.json()
   assert data["total_spent"] >= 100.0
@@ -42,7 +42,7 @@ def test_record_expense(client: TestClient, librarian_user_token: str):
     "category": "Technology",
     "purchase_date": date.today().isoformat(),
   }
-  
+
   response = client.post("/budget/expenses", json=payload, headers=headers)
   assert response.status_code == 200
   data = response.json()
@@ -60,7 +60,7 @@ def test_record_expense_unauthorized(client: TestClient, normal_user_token: str)
     "category": "Technology",
     "purchase_date": date.today().isoformat(),
   }
-  
+
   response = client.post("/budget/expenses", json=payload, headers=headers)
   assert response.status_code == 403
 
@@ -72,23 +72,23 @@ def test_get_usage_report(
   book = Book(title="Report Test", author="Author", category="Science", price=10.0)
   db_session.add(book)
   db_session.commit()
-  
+
   copy = BookCopy(book_id=book.id, copy_number=1)
   db_session.add(copy)
   db_session.commit()
-  
+
   tx = Transaction(
     member_id=normal_user.id,
     book_copy_id=copy.id,
     issue_date=date(2026, 1, 1),
-    due_date=date(2026, 1, 15)
+    due_date=date(2026, 1, 15),
   )
   db_session.add(tx)
   db_session.commit()
 
   headers = {"Authorization": f"Bearer {librarian_user_token}"}
   response = client.get("/reports/usage", headers=headers)
-  
+
   assert response.status_code == 200
   data = response.json()
   assert data["active_members"] >= 1
@@ -110,7 +110,7 @@ def test_get_expense_report(client: TestClient, db_session: Session, librarian_u
 
   headers = {"Authorization": f"Bearer {librarian_user_token}"}
   response = client.get("/reports/expense", headers=headers)
-  
+
   assert response.status_code == 200
   data = response.json()
   assert data["month"] == date.today().month
@@ -122,7 +122,7 @@ def test_download_report(client: TestClient, librarian_user_token: str):
   """Verify dummy download endpoint."""
   headers = {"Authorization": f"Bearer {librarian_user_token}"}
   response = client.get("/reports/download/usage", headers=headers)
-  
+
   assert response.status_code == 200
   data = response.json()
   assert data["status"] == "success"

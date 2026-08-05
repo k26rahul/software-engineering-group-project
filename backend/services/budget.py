@@ -1,7 +1,8 @@
 """Service layer for Budget API."""
 
 from datetime import date
-from sqlmodel import Session, select, func
+
+from sqlmodel import Session, func, select
 
 from models.budget import BookPurchaseEntry
 from schemas.budget import BudgetSummaryResponse, ExpenseItemResponse, RecordPurchaseRequest
@@ -19,7 +20,7 @@ class BudgetService:
 
     statement = select(BookPurchaseEntry).where(
       func.extract("month", BookPurchaseEntry.purchase_date) == month,
-      func.extract("year", BookPurchaseEntry.purchase_date) == year
+      func.extract("year", BookPurchaseEntry.purchase_date) == year,
     )
     entries = session.exec(statement).all()
 
@@ -34,9 +35,7 @@ class BudgetService:
     )
 
   @staticmethod
-  def record_expense(
-    session: Session, request: RecordPurchaseRequest
-  ) -> ExpenseItemResponse:
+  def record_expense(session: Session, request: RecordPurchaseRequest) -> ExpenseItemResponse:
     """Record a manual book purchase expense."""
     entry = BookPurchaseEntry(
       title=request.title,

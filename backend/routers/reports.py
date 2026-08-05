@@ -6,6 +6,7 @@ from services.reports import ReportsService
 
 reports_router = APIRouter(tags=["Reports"])
 
+
 @reports_router.get(
   "/reports/usage",
   response_model=UsageReportResponse,
@@ -16,6 +17,7 @@ def get_usage_report(
   session: SessionDep,
 ) -> UsageReportResponse:
   return ReportsService.get_usage_report(session)
+
 
 @reports_router.get(
   "/reports/expense",
@@ -28,6 +30,7 @@ def get_expense_report(
 ) -> ExpenseReportResponse:
   return ReportsService.get_expense_report(session)
 
+
 @reports_router.get(
   "/reports/download/{type}",
   summary="Download report",
@@ -39,5 +42,5 @@ def download_report(
   return {
     "status": "success",
     "message": f"Report format '{type}' generated successfully.",
-    "download_url": f"/exports/report_{type}.csv"
+    "download_url": f"/exports/report_{type}.csv",
   }
