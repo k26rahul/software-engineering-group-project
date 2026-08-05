@@ -45,7 +45,7 @@ def test_get_pending_fines(
   db_session.commit()
 
   headers = {"Authorization": f"Bearer {normal_user_token}"}
-  response = client.get(f"/members/{normal_user.id}/fines", headers=headers)
+  response = client.get("/payments/fines", headers=headers)
 
   assert response.status_code == 200
   data = response.json()
@@ -121,7 +121,7 @@ def test_get_payment_history(
   payload = {"type": PaymentType.MEMBERSHIP_FEE.value, "amount": 100.0}
   client.post("/payments/membership-renewal", json=payload, headers=headers)
 
-  response = client.get(f"/members/{normal_user.id}/payments", headers=headers)
+  response = client.get("/payments/history", headers=headers)
   assert response.status_code == 200
   data = response.json()
   assert len(data) >= 1

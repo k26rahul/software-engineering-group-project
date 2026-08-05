@@ -8,31 +8,29 @@ payments_router = APIRouter(tags=["Payments"])
 
 
 @payments_router.get(
-  "/members/{id}/fines",
+  "/payments/fines",
   response_model=list[FineResponse],
   summary="Get pending fines",
   description="Retrieve pending (unpaid) fines for a member.",
 )
 def get_pending_fines(
-  id: int,
   session: SessionDep,
-  _: CurrentUserDep,
+  current_user: CurrentUserDep,
 ) -> list[FineResponse]:
-  return PaymentsService.get_pending_fines(session, id)
+  return PaymentsService.get_pending_fines(session, current_user.id)
 
 
 @payments_router.get(
-  "/members/{id}/payments",
+  "/payments/history",
   response_model=list[PaymentResponse],
   summary="Get payment history",
   description="Retrieves the complete payment history for a specific member.",
 )
 def get_payment_history(
-  id: int,
   session: SessionDep,
-  _: CurrentUserDep,
+  current_user: CurrentUserDep,
 ) -> list[PaymentResponse]:
-  return PaymentsService.get_payment_history(session, id)
+  return PaymentsService.get_payment_history(session, current_user.id)
 
 
 @payments_router.post(
