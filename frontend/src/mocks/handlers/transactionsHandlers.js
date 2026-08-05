@@ -23,8 +23,8 @@ export const transactionsHandlers = [
     return HttpResponse.json(budgetSummary);
   }),
 
-  // POST /budget/entries - Response: budget/ExpenseItemResponse (201 Created)
-  http.post(`${baseURL}/budget/entries`, () => {
+  // POST /budget/expenses - Response: budget/ExpenseItemResponse (201 Created)
+  http.post(`${baseURL}/budget/expenses`, () => {
     return HttpResponse.json(budgetEntries[0], { status: 201 });
   }),
 ];

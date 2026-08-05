@@ -66,7 +66,7 @@ const useTransactionStore = create((set) => ({
   },
 
   addBudgetEntry: async (entryData) => {
-    const response = await api.post("/budget/entries", entryData);
+    const response = await api.post("/budget/expenses", entryData);
     set((state) => ({
       budget: state.budget
         ? {
