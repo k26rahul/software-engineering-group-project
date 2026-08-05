@@ -1,10 +1,11 @@
-from fastapi import APIRouter, Depends
+from fastapi import APIRouter
 
 from core.dependencies import CurrentUserDep, SessionDep
 from schemas.payment import FineResponse, PaymentResponse, ProcessPaymentRequest
 from services.payments import PaymentsService
 
 payments_router = APIRouter(tags=["Payments"])
+
 
 @payments_router.get(
   "/members/{id}/fines",
@@ -19,6 +20,7 @@ def get_pending_fines(
 ) -> list[FineResponse]:
   return PaymentsService.get_pending_fines(session, id)
 
+
 @payments_router.get(
   "/members/{id}/payments",
   response_model=list[PaymentResponse],
@@ -31,6 +33,7 @@ def get_payment_history(
   _: CurrentUserDep,
 ) -> list[PaymentResponse]:
   return PaymentsService.get_payment_history(session, id)
+
 
 @payments_router.post(
   "/payments/fines/{fine_id}",
@@ -45,6 +48,7 @@ def pay_fine(
   current_user: CurrentUserDep,
 ) -> PaymentResponse:
   return PaymentsService.pay_fine(session, current_user, fine_id, request)
+
 
 @payments_router.post(
   "/payments/membership-renewal",

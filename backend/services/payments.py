@@ -22,7 +22,7 @@ class PaymentsService:
         detail=f"Member with ID {member_id} not found.",
       )
 
-    statement = select(Fine).where(Fine.member_id == member_id, Fine.is_paid == False)
+    statement = select(Fine).where(Fine.member_id == member_id, Fine.is_paid == False)  # noqa: E712
     fines = session.exec(statement).all()
 
     return [
