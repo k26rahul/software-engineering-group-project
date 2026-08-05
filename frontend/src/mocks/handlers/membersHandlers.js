@@ -46,8 +46,8 @@ export const membersHandlers = [
     return HttpResponse.json(currentIssues);
   }),
 
-  // GET /members/{id}/payments - Response: list[payment/PaymentResponse]
-  http.get(`${baseURL}/members/:id/payments`, () => {
+  // GET /payments/history - Response: list[payment/PaymentResponse]
+  http.get(`${baseURL}/payments/history`, () => {
     return HttpResponse.json(payments);
   }),
 

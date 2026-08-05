@@ -72,7 +72,7 @@ const useMemberStore = create((set) => ({
       const [profileRes, issuesRes, paymentsRes, recsRes, listsRes] = await Promise.all([
         api.get(`/members/${memberId}`),
         api.get(`/members/${memberId}/current-issues`),
-        api.get(`/members/${memberId}/payments`),
+        api.get(`/payments/history`),
         api.get(`/members/${memberId}/recommendations`),
         api.get("/reading-lists"),
       ]);
