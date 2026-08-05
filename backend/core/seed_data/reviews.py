@@ -6,7 +6,8 @@ REVIEWS = [
     "member_email": "arjun.sharma@example.com",
     "book_isbn": "9780132350884",  # Clean Code
     "rating": 5,
-    "text": "An absolute must-read for every software developer. Transformed how I think about code quality.",
+    "text": "An absolute must-read for every software developer. "
+    "Transformed how I think about code quality.",
     "status": "APPROVED",
   },
   {

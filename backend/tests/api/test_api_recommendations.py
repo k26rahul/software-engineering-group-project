@@ -5,13 +5,11 @@ from fastapi.testclient import TestClient
 from models.user import User
 
 
-def test_get_recommendations_success(
-  client: TestClient, normal_user_token: str, normal_user: User
-):
+def test_get_recommendations_success(client: TestClient, normal_user_token: str, normal_user: User):
   """Verify getting book recommendations for an authenticated user."""
   headers = {"Authorization": f"Bearer {normal_user_token}"}
   response = client.get(f"/members/{normal_user.id}/recommendations", headers=headers)
-  
+
   assert response.status_code == 200
   data = response.json()
   assert isinstance(data, list)

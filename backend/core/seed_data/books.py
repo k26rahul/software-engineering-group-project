@@ -8,7 +8,8 @@ BOOKS = [
     "isbn": "9780132350884",
     "category": "Technology",
     "price": 499.0,
-    "description": "A handbook of agile software craftsmanship that teaches you how to write clean, maintainable code.",
+    "description": "A handbook of agile software craftsmanship that teaches you "
+    "how to write clean, maintainable code.",
     "copies": ["AVAILABLE", "AVAILABLE", "ISSUED"],
   },
   {
