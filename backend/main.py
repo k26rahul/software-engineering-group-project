@@ -18,11 +18,13 @@ from core.seeding import (
 )
 from routers.auth import auth_router
 from routers.books import books_router
+from routers.budget import budget_router
 from routers.dashboard import dashboard_router
 from routers.health import router as health_router
 from routers.members import members_router
 from routers.payments import payments_router
 from routers.recommendations import recommendations_router
+from routers.reports import reports_router
 from routers.reservations import reservations_router
 from routers.transactions import transactions_router
 
@@ -59,11 +61,13 @@ def create_app() -> FastAPI:
   app.include_router(health_router)
   app.include_router(auth_router)
   app.include_router(books_router)
+  app.include_router(budget_router)
   app.include_router(members_router)
   app.include_router(payments_router)
   app.include_router(transactions_router)
   app.include_router(reservations_router)
   app.include_router(recommendations_router)
+  app.include_router(reports_router)
   app.include_router(dashboard_router)
   return app
 
