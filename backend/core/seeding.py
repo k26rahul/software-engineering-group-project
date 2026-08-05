@@ -151,7 +151,9 @@ def seed_transactions(session: Session) -> None:
       issue_date=data["issue_date"],
       due_date=data["due_date"],
       return_date=data["return_date"],
-      return_condition=ReturnCondition(data["return_condition"]) if data["return_condition"] else None,
+      return_condition=ReturnCondition(data["return_condition"])
+      if data["return_condition"]
+      else None,
     )
     session.add(transaction)
 
