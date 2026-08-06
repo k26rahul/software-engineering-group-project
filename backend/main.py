@@ -27,6 +27,7 @@ from routers.recommendations import recommendations_router
 from routers.reports import reports_router
 from routers.reservations import reservations_router
 from routers.transactions import transactions_router
+from routers.purchase_requests import purchase_requests_router
 
 
 @asynccontextmanager
@@ -69,6 +70,7 @@ def create_app() -> FastAPI:
   app.include_router(recommendations_router)
   app.include_router(reports_router)
   app.include_router(dashboard_router)
+  app.include_router(purchase_requests_router)
   return app
 
 
