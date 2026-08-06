@@ -23,6 +23,7 @@ from routers.dashboard import dashboard_router
 from routers.health import router as health_router
 from routers.members import members_router
 from routers.payments import payments_router
+from routers.purchase_requests import purchase_requests_router
 from routers.recommendations import recommendations_router
 from routers.reports import reports_router
 from routers.reservations import reservations_router
@@ -69,6 +70,7 @@ def create_app() -> FastAPI:
   app.include_router(recommendations_router)
   app.include_router(reports_router)
   app.include_router(dashboard_router)
+  app.include_router(purchase_requests_router)
   return app
 
 
