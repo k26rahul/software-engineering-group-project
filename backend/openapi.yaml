@@ -6,7 +6,7 @@ paths:
   /health:
     get:
       tags:
-      - health
+      - Health
       summary: Health Check
       description: 'Returns a simple liveness check response.
 
@@ -479,6 +479,64 @@ paths:
                 $ref: '#/components/schemas/HTTPValidationError'
       x-user-story-ids:
       - US-1.3
+  /budget:
+    get:
+      tags:
+      - Budget
+      summary: Get budget summary
+      description: 'Retrieve current budget utilization vs monthly limit.
+
+
+        ### User Story Mapping
+
+        - US-1.8: As a Librarian, I want to enter book purchases and track the monthly
+        budget allowance.'
+      operationId: get_budget_summary_budget_get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BudgetSummaryResponse'
+      x-user-story-ids:
+      - US-1.8
+  /budget/expenses:
+    post:
+      tags:
+      - Budget
+      summary: Record an expense
+      description: 'Manually log a new expense (Librarian-only).
+
+
+        ### User Story Mapping
+
+        - US-1.8: As a Librarian, I want to enter book purchases and track the monthly
+        budget allowance.'
+      operationId: record_expense_budget_expenses_post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RecordPurchaseRequest'
+        required: true
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ExpenseItemResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      security:
+      - OAuth2PasswordBearer: []
+      x-user-story-ids:
+      - US-1.8
   /members:
     get:
       tags:
@@ -753,6 +811,139 @@ paths:
                 $ref: '#/components/schemas/HTTPValidationError'
       x-user-story-ids:
       - US-1.2
+  /payments/fines:
+    get:
+      tags:
+      - Payments
+      summary: Get pending fines
+      description: 'Retrieve pending (unpaid) fines for a member.
+
+
+        ### User Story Mapping
+
+        - US-2.7: As a Member, I want to pay membership renewal fees or outstanding
+        fines and view payment history.'
+      operationId: get_pending_fines_payments_fines_get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                items:
+                  $ref: '#/components/schemas/FineResponse'
+                type: array
+                title: Response Get Pending Fines Payments Fines Get
+      security:
+      - OAuth2PasswordBearer: []
+      x-user-story-ids:
+      - US-2.7
+  /payments/history:
+    get:
+      tags:
+      - Payments
+      summary: Get payment history
+      description: 'Retrieves the complete payment history for a specific member.
+
+
+        ### User Story Mapping
+
+        - US-2.7: As a Member, I want to pay membership renewal fees or outstanding
+        fines and view payment history.'
+      operationId: get_payment_history_payments_history_get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                items:
+                  $ref: '#/components/schemas/PaymentResponse'
+                type: array
+                title: Response Get Payment History Payments History Get
+      security:
+      - OAuth2PasswordBearer: []
+      x-user-story-ids:
+      - US-2.7
+  /payments/fines/{fine_id}:
+    post:
+      tags:
+      - Payments
+      summary: Process fine payment
+      description: 'Processes payment for a specific fine.
+
+
+        ### User Story Mapping
+
+        - US-2.7: As a Member, I want to pay membership renewal fees or outstanding
+        fines and view payment history.'
+      operationId: pay_fine_payments_fines__fine_id__post
+      security:
+      - OAuth2PasswordBearer: []
+      parameters:
+      - name: fine_id
+        in: path
+        required: true
+        schema:
+          type: integer
+          title: Fine Id
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ProcessPaymentRequest'
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaymentResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      x-user-story-ids:
+      - US-2.7
+  /payments/membership-renewal:
+    post:
+      tags:
+      - Payments
+      summary: Process membership renewal payment
+      description: 'Processes annual membership renewal fee payment.
+
+
+        ### User Story Mapping
+
+        - US-2.7: As a Member, I want to pay membership renewal fees or outstanding
+        fines and view payment history.'
+      operationId: pay_membership_renewal_payments_membership_renewal_post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ProcessPaymentRequest'
+        required: true
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaymentResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      security:
+      - OAuth2PasswordBearer: []
+      x-user-story-ids:
+      - US-2.7
   /transactions/issue:
     post:
       tags:
@@ -1120,6 +1311,133 @@ paths:
                 $ref: '#/components/schemas/HTTPValidationError'
       x-user-story-ids:
       - US-2.4
+  /members/{id}/recommendations:
+    get:
+      tags:
+      - Recommendations
+      summary: Get book recommendations
+      description: 'Generates personalized book recommendations for a member based
+        on their reading history.
+
+
+        ### User Story Mapping
+
+        - US-2.8: As a Member, I want to see personalized book recommendations.'
+      operationId: get_recommendations_members__id__recommendations_get
+      security:
+      - OAuth2PasswordBearer: []
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: integer
+          title: Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/BookRecommendationResponse'
+                title: Response Get Recommendations Members  Id  Recommendations Get
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      x-user-story-ids:
+      - US-2.8
+  /reports/usage:
+    get:
+      tags:
+      - Reports
+      summary: Get usage report
+      description: 'Aggregates usage metrics such as active members and popular categories.
+
+
+        ### User Story Mapping
+
+        - US-3.1: As Campus Management, I want to view high-level reports on library
+        usage and circulation analytics.'
+      operationId: get_usage_report_reports_usage_get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UsageReportResponse'
+      x-user-story-ids:
+      - US-3.1
+  /reports/expense:
+    get:
+      tags:
+      - Reports
+      summary: Get expense report
+      description: 'Retrieves the formatted expense report data for a given month.
+
+
+        ### User Story Mapping
+
+        - US-3.2: As Campus Management, I want to view month-end itemized expense
+        reports for budget oversight.'
+      operationId: get_expense_report_reports_expense_get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ExpenseReportResponse'
+      x-user-story-ids:
+      - US-3.2
+  /reports/download/{type}:
+    get:
+      tags:
+      - Reports
+      summary: Download report
+      description: 'Downloads the specified report in a requested format.
+
+
+        ### User Story Mapping
+
+        - US-3.1: As Campus Management, I want to view high-level reports on library
+        usage and circulation analytics.
+
+        - US-3.2: As Campus Management, I want to view month-end itemized expense
+        reports for budget oversight.'
+      operationId: download_report_reports_download__type__get
+      parameters:
+      - name: type
+        in: path
+        required: true
+        schema:
+          type: string
+          description: Report type, e.g., 'usage' or 'expense'
+          title: Type
+        description: Report type, e.g., 'usage' or 'expense'
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+                title: Response Download Report Reports Download  Type  Get
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      x-user-story-ids:
+      - US-3.1
+      - US-3.2
   /dashboard/librarian:
     get:
       tags:
@@ -1186,6 +1504,681 @@ paths:
       - OAuth2PasswordBearer: []
       x-user-story-ids:
       - US-3.1
+  /purchase-requests:
+    get:
+      tags:
+      - Purchase Requests
+      summary: Get Purchase Requests
+      description: 'Returns all purchase requests ranked by upvote count descending.
+
+
+        ### User Story Mapping
+
+        - US-1.6: As a Librarian, I want to view a ranked list of new book purchase
+        requests and mark them as purchased.
+
+        - US-2.5: As a Member, I want to submit and upvote book purchase requests.'
+      operationId: get_purchase_requests_purchase_requests_get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                items:
+                  $ref: '#/components/schemas/PurchaseRequestResponse'
+                type: array
+                title: Response Get Purchase Requests Purchase Requests Get
+      x-user-story-ids:
+      - US-1.6
+      - US-2.5
+    post:
+      tags:
+      - Purchase Requests
+      summary: Create Purchase Request
+      description: 'Submits a new purchase request on behalf of a member.
+
+
+        ### User Story Mapping
+
+        - US-2.5: As a Member, I want to submit and upvote book purchase requests.'
+      operationId: create_purchase_request_purchase_requests_post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreatePurchaseRequestRequest'
+        required: true
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PurchaseRequestResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      security:
+      - OAuth2PasswordBearer: []
+      x-user-story-ids:
+      - US-2.5
+  /purchase-requests/{id}/upvote:
+    post:
+      tags:
+      - Purchase Requests
+      summary: Upvote Purchase Request
+      description: 'Adds an upvote from a member to a purchase request, rejecting
+        duplicate votes.
+
+
+        ### User Story Mapping
+
+        - US-2.5: As a Member, I want to submit and upvote book purchase requests.'
+      operationId: upvote_purchase_request_purchase_requests__id__upvote_post
+      security:
+      - OAuth2PasswordBearer: []
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: integer
+          title: Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PurchaseRequestResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      x-user-story-ids:
+      - US-2.5
+  /purchase-requests/{id}/status:
+    patch:
+      tags:
+      - Purchase Requests
+      summary: Mark Purchase Request Purchased
+      description: 'Librarian-only. Marks a purchase request as purchased.
+
+
+        ### User Story Mapping
+
+        - US-1.6: As a Librarian, I want to view a ranked list of new book purchase
+        requests and mark them as purchased.'
+      operationId: mark_purchase_request_purchased_purchase_requests__id__status_patch
+      security:
+      - OAuth2PasswordBearer: []
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: integer
+          title: Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PurchaseRequestResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      x-user-story-ids:
+      - US-1.6
+  /books/{id}/reviews:
+    post:
+      tags:
+      - Reviews
+      summary: Submit Review
+      description: 'Submits a new review for a book from a member.
+
+
+        ### User Story Mapping
+
+        - US-2.6: As a Member, I want to submit and read book reviews.'
+      operationId: submit_review_books__id__reviews_post
+      security:
+      - OAuth2PasswordBearer: []
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: integer
+          title: Id
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SubmitReviewRequest'
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ReviewResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      x-user-story-ids:
+      - US-2.6
+    get:
+      tags:
+      - Reviews
+      summary: Get Book Reviews
+      description: 'Retrieves all approved reviews for a specific book.
+
+
+        ### User Story Mapping
+
+        - US-2.6: As a Member, I want to submit and read book reviews.'
+      operationId: get_book_reviews_books__id__reviews_get
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: integer
+          title: Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ReviewResponse'
+                title: Response Get Book Reviews Books  Id  Reviews Get
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      x-user-story-ids:
+      - US-2.6
+  /books/reviews/{review_id}:
+    delete:
+      tags:
+      - Reviews
+      summary: Delete Review
+      description: 'Delete a review (Moderation/Self).
+
+
+        ### User Story Mapping
+
+        - US-1.9: As a Librarian, I want to create reading lists and moderate book
+        reviews.
+
+        - US-2.6: As a Member, I want to submit and read book reviews.'
+      operationId: delete_review_books_reviews__review_id__delete
+      security:
+      - OAuth2PasswordBearer: []
+      parameters:
+      - name: review_id
+        in: path
+        required: true
+        schema:
+          type: integer
+          title: Review Id
+      responses:
+        '204':
+          description: Successful Response
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      x-user-story-ids:
+      - US-1.9
+      - US-2.6
+  /reviews/{id}/moderate:
+    patch:
+      tags:
+      - Reviews
+      summary: Moderate Review
+      description: 'Librarian-only. Approves or rejects a pending book review.
+
+
+        ### User Story Mapping
+
+        - US-1.9: As a Librarian, I want to create reading lists and moderate book
+        reviews.'
+      operationId: moderate_review_reviews__id__moderate_patch
+      security:
+      - OAuth2PasswordBearer: []
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: integer
+          title: Id
+      - name: status
+        in: query
+        required: true
+        schema:
+          $ref: '#/components/schemas/ReviewStatus'
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ReviewResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      x-user-story-ids:
+      - US-1.9
+  /reading-lists:
+    get:
+      tags:
+      - Reading Lists
+      summary: Get Reading Lists
+      description: 'Retrieves a list of all reading lists.
+
+
+        ### User Story Mapping
+
+        - US-1.9: As a Librarian, I want to create reading lists and moderate book
+        reviews.'
+      operationId: get_reading_lists_reading_lists_get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                items:
+                  $ref: '#/components/schemas/ReadingListResponse'
+                type: array
+                title: Response Get Reading Lists Reading Lists Get
+      x-user-story-ids:
+      - US-1.9
+    post:
+      tags:
+      - Reading Lists
+      summary: Create Reading List
+      description: 'Creates a new reading list (Librarian-only).
+
+
+        ### User Story Mapping
+
+        - US-1.9: As a Librarian, I want to create reading lists and moderate book
+        reviews.'
+      operationId: create_reading_list_reading_lists_post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateReadingListRequest'
+        required: true
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ReadingListResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      security:
+      - OAuth2PasswordBearer: []
+      x-user-story-ids:
+      - US-1.9
+  /reading-lists/{id}:
+    get:
+      tags:
+      - Reading Lists
+      summary: Get Reading List
+      description: 'Retrieves the details and associated books for a specific reading
+        list.
+
+
+        ### User Story Mapping
+
+        - US-1.9: As a Librarian, I want to create reading lists and moderate book
+        reviews.'
+      operationId: get_reading_list_reading_lists__id__get
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: integer
+          title: Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ReadingListResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      x-user-story-ids:
+      - US-1.9
+    patch:
+      tags:
+      - Reading Lists
+      summary: Update Reading List
+      description: 'Updates an existing reading list or adds/removes books from it.
+
+
+        ### User Story Mapping
+
+        - US-1.9: As a Librarian, I want to create reading lists and moderate book
+        reviews.'
+      operationId: update_reading_list_reading_lists__id__patch
+      security:
+      - OAuth2PasswordBearer: []
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: integer
+          title: Id
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateReadingListRequest'
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ReadingListResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      x-user-story-ids:
+      - US-1.9
+    delete:
+      tags:
+      - Reading Lists
+      summary: Delete Reading List
+      description: 'Deletes a specific reading list.
+
+
+        ### User Story Mapping
+
+        - US-1.9: As a Librarian, I want to create reading lists and moderate book
+        reviews.'
+      operationId: delete_reading_list_reading_lists__id__delete
+      security:
+      - OAuth2PasswordBearer: []
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: integer
+          title: Id
+      responses:
+        '204':
+          description: Successful Response
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      x-user-story-ids:
+      - US-1.9
+  /reading-lists/{id}/books:
+    post:
+      tags:
+      - Reading Lists
+      summary: Add Book To Reading List
+      description: 'Add a book to a reading list.
+
+
+        ### User Story Mapping
+
+        - US-1.9: As a Librarian, I want to create reading lists and moderate book
+        reviews.'
+      operationId: add_book_to_reading_list_reading_lists__id__books_post
+      security:
+      - OAuth2PasswordBearer: []
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: integer
+          title: Id
+      - name: book_id
+        in: query
+        required: true
+        schema:
+          type: integer
+          title: Book Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ReadingListResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      x-user-story-ids:
+      - US-1.9
+  /reading-lists/{id}/books/{book_id}:
+    delete:
+      tags:
+      - Reading Lists
+      summary: Remove Book From Reading List
+      description: 'Remove a book from a reading list.
+
+
+        ### User Story Mapping
+
+        - US-1.9: As a Librarian, I want to create reading lists and moderate book
+        reviews.'
+      operationId: remove_book_from_reading_list_reading_lists__id__books__book_id__delete
+      security:
+      - OAuth2PasswordBearer: []
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: integer
+          title: Id
+      - name: book_id
+        in: path
+        required: true
+        schema:
+          type: integer
+          title: Book Id
+      responses:
+        '204':
+          description: Successful Response
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      x-user-story-ids:
+      - US-1.9
+  /subscriptions:
+    get:
+      tags:
+      - Subscriptions
+      summary: Get Subscriptions
+      description: 'Retrieves all recurring subscriptions.
+
+
+        ### User Story Mapping
+
+        - US-1.7: As a Librarian, I want to manage newspaper or magazine subscriptions.'
+      operationId: get_subscriptions_subscriptions_get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                items:
+                  $ref: '#/components/schemas/SubscriptionResponse'
+                type: array
+                title: Response Get Subscriptions Subscriptions Get
+      x-user-story-ids:
+      - US-1.7
+    post:
+      tags:
+      - Subscriptions
+      summary: Create Subscription
+      description: 'Adds a new recurring subscription for a newspaper or magazine.
+
+
+        ### User Story Mapping
+
+        - US-1.7: As a Librarian, I want to manage newspaper or magazine subscriptions.'
+      operationId: create_subscription_subscriptions_post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateSubscriptionRequest'
+        required: true
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SubscriptionResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      security:
+      - OAuth2PasswordBearer: []
+      x-user-story-ids:
+      - US-1.7
+  /subscriptions/{id}:
+    patch:
+      tags:
+      - Subscriptions
+      summary: Update Subscription
+      description: 'Updates details of an existing subscription.
+
+
+        ### User Story Mapping
+
+        - US-1.7: As a Librarian, I want to manage newspaper or magazine subscriptions.'
+      operationId: update_subscription_subscriptions__id__patch
+      security:
+      - OAuth2PasswordBearer: []
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: integer
+          title: Id
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateSubscriptionRequest'
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SubscriptionResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      x-user-story-ids:
+      - US-1.7
+    delete:
+      tags:
+      - Subscriptions
+      summary: Delete Subscription
+      description: 'Cancels an active subscription.
+
+
+        ### User Story Mapping
+
+        - US-1.7: As a Librarian, I want to manage newspaper or magazine subscriptions.'
+      operationId: delete_subscription_subscriptions__id__delete
+      security:
+      - OAuth2PasswordBearer: []
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: integer
+          title: Id
+      responses:
+        '204':
+          description: Successful Response
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      x-user-story-ids:
+      - US-1.7
 components:
   schemas:
     AddBookRequest:
@@ -1275,6 +2268,43 @@ components:
       - average_rating
       - created_at
       title: BookDetailResponse
+    BookRecommendationResponse:
+      properties:
+        id:
+          anyOf:
+          - type: integer
+          - type: 'null'
+          title: Id
+        book_id:
+          anyOf:
+          - type: integer
+          - type: 'null'
+          title: Book Id
+        title:
+          type: string
+          title: Title
+        author:
+          type: string
+          title: Author
+        category:
+          type: string
+          title: Category
+        availability:
+          anyOf:
+          - type: integer
+          - type: 'null'
+          title: Availability
+        reason:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Reason
+      type: object
+      required:
+      - title
+      - author
+      - category
+      title: BookRecommendationResponse
     BookSummaryResponse:
       properties:
         id:
@@ -1310,6 +2340,27 @@ components:
       - price
       - available_copies
       title: BookSummaryResponse
+    BudgetSummaryResponse:
+      properties:
+        month:
+          type: integer
+          title: Month
+        year:
+          type: integer
+          title: Year
+        total_spent:
+          type: number
+          title: Total Spent
+        purchase_count:
+          type: integer
+          title: Purchase Count
+      type: object
+      required:
+      - month
+      - year
+      - total_spent
+      - purchase_count
+      title: BudgetSummaryResponse
     ChangePasswordRequest:
       properties:
         current_password:
@@ -1332,6 +2383,45 @@ components:
       - DAMAGED
       title: CopyStatus
       description: Physical availability states of a book copy.
+    CreatePurchaseRequestRequest:
+      properties:
+        title:
+          type: string
+          title: Title
+        author:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Author
+        description:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Description
+      type: object
+      required:
+      - title
+      title: CreatePurchaseRequestRequest
+    CreateReadingListRequest:
+      properties:
+        title:
+          type: string
+          title: Title
+        description:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Description
+        book_ids:
+          items:
+            type: integer
+          type: array
+          title: Book Ids
+          default: []
+      type: object
+      required:
+      - title
+      title: CreateReadingListRequest
     CreateReservationRequest:
       properties:
         book_id:
@@ -1341,6 +2431,105 @@ components:
       required:
       - book_id
       title: CreateReservationRequest
+    CreateSubscriptionRequest:
+      properties:
+        type:
+          $ref: '#/components/schemas/SubscriptionType'
+        copies:
+          type: integer
+          title: Copies
+        price_per_copy:
+          type: number
+          title: Price Per Copy
+        frequency:
+          $ref: '#/components/schemas/SubscriptionFrequency'
+        vendor_id:
+          anyOf:
+          - type: integer
+          - type: 'null'
+          title: Vendor Id
+      type: object
+      required:
+      - type
+      - copies
+      - price_per_copy
+      - frequency
+      title: CreateSubscriptionRequest
+    ExpenseItemResponse:
+      properties:
+        title:
+          type: string
+          title: Title
+        category:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Category
+        copies:
+          type: integer
+          title: Copies
+        price_per_copy:
+          type: number
+          title: Price Per Copy
+        total_cost:
+          type: number
+          title: Total Cost
+        purchase_date:
+          type: string
+          format: date
+          title: Purchase Date
+      type: object
+      required:
+      - title
+      - category
+      - copies
+      - price_per_copy
+      - total_cost
+      - purchase_date
+      title: ExpenseItemResponse
+    ExpenseReportResponse:
+      properties:
+        month:
+          type: integer
+          title: Month
+        year:
+          type: integer
+          title: Year
+        items:
+          items:
+            $ref: '#/components/schemas/ExpenseItemResponse'
+          type: array
+          title: Items
+      type: object
+      required:
+      - month
+      - year
+      - items
+      title: ExpenseReportResponse
+    FineResponse:
+      properties:
+        id:
+          type: integer
+          title: Id
+        transaction_id:
+          type: integer
+          title: Transaction Id
+        amount:
+          type: number
+          title: Amount
+        reason:
+          $ref: '#/components/schemas/ReturnCondition'
+        is_paid:
+          type: boolean
+          title: Is Paid
+      type: object
+      required:
+      - id
+      - transaction_id
+      - amount
+      - reason
+      - is_paid
+      title: FineResponse
     HTTPValidationError:
       properties:
         detail:
@@ -1541,6 +2730,160 @@ components:
       - OFF_CAMPUS
       title: MembershipType
       description: Membership categories based on campus residency.
+    PaymentResponse:
+      properties:
+        id:
+          type: integer
+          title: Id
+        amount:
+          type: number
+          title: Amount
+        type:
+          $ref: '#/components/schemas/PaymentType'
+        fine_id:
+          anyOf:
+          - type: integer
+          - type: 'null'
+          title: Fine Id
+        status:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Status
+        created_at:
+          type: string
+          format: date-time
+          title: Created At
+      type: object
+      required:
+      - id
+      - amount
+      - type
+      - created_at
+      title: PaymentResponse
+    PaymentType:
+      type: string
+      enum:
+      - MEMBERSHIP_FEE
+      - FINE_PAYMENT
+      title: PaymentType
+      description: Types of payments processed in the system.
+    ProcessPaymentRequest:
+      properties:
+        type:
+          $ref: '#/components/schemas/PaymentType'
+        amount:
+          type: number
+          title: Amount
+        fine_id:
+          anyOf:
+          - type: integer
+          - type: 'null'
+          title: Fine Id
+      type: object
+      required:
+      - type
+      - amount
+      title: ProcessPaymentRequest
+    PurchaseRequestResponse:
+      properties:
+        id:
+          type: integer
+          title: Id
+        title:
+          type: string
+          title: Title
+        author:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Author
+        description:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Description
+        upvote_count:
+          type: integer
+          title: Upvote Count
+        status:
+          $ref: '#/components/schemas/RequestStatus'
+        created_at:
+          type: string
+          format: date-time
+          title: Created At
+      type: object
+      required:
+      - id
+      - title
+      - author
+      - description
+      - upvote_count
+      - status
+      - created_at
+      title: PurchaseRequestResponse
+    ReadingListResponse:
+      properties:
+        id:
+          type: integer
+          title: Id
+        title:
+          type: string
+          title: Title
+        description:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Description
+        book_ids:
+          items:
+            type: integer
+          type: array
+          title: Book Ids
+        created_at:
+          type: string
+          format: date-time
+          title: Created At
+      type: object
+      required:
+      - id
+      - title
+      - description
+      - book_ids
+      - created_at
+      title: ReadingListResponse
+    RecordPurchaseRequest:
+      properties:
+        title:
+          type: string
+          title: Title
+        copies:
+          type: integer
+          title: Copies
+        price_per_copy:
+          type: number
+          title: Price Per Copy
+        vendor_id:
+          anyOf:
+          - type: integer
+          - type: 'null'
+          title: Vendor Id
+        category:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Category
+        purchase_date:
+          type: string
+          format: date
+          title: Purchase Date
+      type: object
+      required:
+      - title
+      - copies
+      - price_per_copy
+      - purchase_date
+      title: RecordPurchaseRequest
     RegisterRequest:
       properties:
         email:
@@ -1566,6 +2909,13 @@ components:
       - name
       - membership_type
       title: RegisterRequest
+    RequestStatus:
+      type: string
+      enum:
+      - PENDING
+      - PURCHASED
+      title: RequestStatus
+      description: Processing states for a book purchase request.
     ReservationResponse:
       properties:
         id:
@@ -1623,6 +2973,104 @@ components:
       - LOST
       title: ReturnCondition
       description: Condition of a book copy at the time of return.
+    ReviewResponse:
+      properties:
+        id:
+          type: integer
+          title: Id
+        member_id:
+          type: integer
+          title: Member Id
+        rating:
+          type: integer
+          title: Rating
+        text:
+          type: string
+          title: Text
+        status:
+          $ref: '#/components/schemas/ReviewStatus'
+        created_at:
+          type: string
+          format: date-time
+          title: Created At
+      type: object
+      required:
+      - id
+      - member_id
+      - rating
+      - text
+      - status
+      - created_at
+      title: ReviewResponse
+    ReviewStatus:
+      type: string
+      enum:
+      - PENDING
+      - APPROVED
+      - REJECTED
+      title: ReviewStatus
+      description: Moderation states for a member-submitted review.
+    SubmitReviewRequest:
+      properties:
+        rating:
+          type: integer
+          title: Rating
+        text:
+          type: string
+          title: Text
+      type: object
+      required:
+      - rating
+      - text
+      title: SubmitReviewRequest
+    SubscriptionFrequency:
+      type: string
+      enum:
+      - DAILY
+      - WEEKLY
+      - BIWEEKLY
+      - MONTHLY
+      title: SubscriptionFrequency
+      description: Delivery frequency options for a periodical subscription.
+    SubscriptionResponse:
+      properties:
+        id:
+          type: integer
+          title: Id
+        type:
+          $ref: '#/components/schemas/SubscriptionType'
+        copies:
+          type: integer
+          title: Copies
+        price_per_copy:
+          type: number
+          title: Price Per Copy
+        frequency:
+          $ref: '#/components/schemas/SubscriptionFrequency'
+        is_active:
+          type: boolean
+          title: Is Active
+        created_at:
+          type: string
+          format: date-time
+          title: Created At
+      type: object
+      required:
+      - id
+      - type
+      - copies
+      - price_per_copy
+      - frequency
+      - is_active
+      - created_at
+      title: SubscriptionResponse
+    SubscriptionType:
+      type: string
+      enum:
+      - NEWSPAPER
+      - MAGAZINE
+      title: SubscriptionType
+      description: Categories of periodical subscriptions.
     TokenResponse:
       properties:
         access_token:
@@ -1771,6 +3219,74 @@ components:
           title: Phone
       type: object
       title: UpdateProfileRequest
+    UpdateReadingListRequest:
+      properties:
+        title:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Title
+        description:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Description
+        add_book_ids:
+          items:
+            type: integer
+          type: array
+          title: Add Book Ids
+          default: []
+        remove_book_ids:
+          items:
+            type: integer
+          type: array
+          title: Remove Book Ids
+          default: []
+      type: object
+      title: UpdateReadingListRequest
+    UpdateSubscriptionRequest:
+      properties:
+        copies:
+          anyOf:
+          - type: integer
+          - type: 'null'
+          title: Copies
+        price_per_copy:
+          anyOf:
+          - type: number
+          - type: 'null'
+          title: Price Per Copy
+        frequency:
+          anyOf:
+          - $ref: '#/components/schemas/SubscriptionFrequency'
+          - type: 'null'
+        vendor_id:
+          anyOf:
+          - type: integer
+          - type: 'null'
+          title: Vendor Id
+      type: object
+      title: UpdateSubscriptionRequest
+    UsageReportResponse:
+      properties:
+        active_members:
+          type: integer
+          title: Active Members
+        books_issued:
+          type: integer
+          title: Books Issued
+        popular_categories:
+          items:
+            type: string
+          type: array
+          title: Popular Categories
+      type: object
+      required:
+      - active_members
+      - books_issued
+      - popular_categories
+      title: UsageReportResponse
     UserProfileResponse:
       properties:
         id:
@@ -1854,4 +3370,4 @@ components:
       flows:
         password:
           scopes: {}
-          tokenUrl: /auth/login
+          tokenUrl: /auth/swagger-login
