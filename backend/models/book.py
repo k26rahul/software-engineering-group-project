@@ -25,6 +25,7 @@ class BookBase(SQLModel):
   category: str = Field(description="Category or genre of the book.")
   price: float = Field(description="Price of the book.")
   description: str | None = Field(default=None, description="Summary or description of the book.")
+  is_active: bool = Field(default=True, description="Whether the book is active in the catalog.")
 
 
 class Book(BookBase, IDMixin, CreatedAtMixin, UpdatedAtMixin, table=True):

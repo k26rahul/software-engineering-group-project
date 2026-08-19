@@ -167,7 +167,6 @@ export default function BookCopiesPage() {
                             </SelectTrigger>
                             <SelectContent>
                               <SelectItem value="AVAILABLE">Available</SelectItem>
-                              <SelectItem value="ISSUED">Issued</SelectItem>
                               <SelectItem value="DAMAGED">Damaged</SelectItem>
                               <SelectItem value="LOST">Lost</SelectItem>
                             </SelectContent>

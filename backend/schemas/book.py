@@ -35,6 +35,12 @@ class UpdateCopyStatusRequest(SQLModel):
   status: CopyStatus
 
 
+class CopyResponse(SQLModel):
+  id: int
+  copy_number: int
+  status: CopyStatus
+
+
 class BookSummaryResponse(SQLModel):
   id: int
   title: str
@@ -43,12 +49,14 @@ class BookSummaryResponse(SQLModel):
   category: str
   price: float
   available_copies: int
+  is_active: bool
 
 
 class BookDetailResponse(BookSummaryResponse):
   description: str | None
   average_rating: float
   created_at: datetime
+  copies: list[CopyResponse]
 
 
 class BookRecommendationResponse(SQLModel):

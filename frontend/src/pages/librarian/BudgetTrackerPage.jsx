@@ -98,7 +98,7 @@ export default function BudgetTrackerPage() {
         <div>
           <h1 className="text-3xl font-semibold tracking-tight">Budget Tracker</h1>
           <p className="text-muted-foreground mt-1 text-sm">
-            Monitor library expenditure and income against the annual budget.
+            Monitor library expenditure and income against the monthly budget.
           </p>
         </div>
         <Dialog open={open} onOpenChange={setOpen}>
@@ -189,7 +189,7 @@ export default function BudgetTrackerPage() {
         <Card className="border-l-4 border-l-emerald-500">
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-muted-foreground text-sm font-medium">
-              Annual Budget
+              Monthly Budget
             </CardTitle>
             <div className="rounded-lg bg-emerald-500/10 p-2 text-emerald-600">
               <DollarSign className="h-4 w-4" />

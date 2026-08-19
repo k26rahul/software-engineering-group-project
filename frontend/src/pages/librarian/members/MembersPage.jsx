@@ -79,7 +79,7 @@ export default function MembersPage() {
   const [statusFilter, setStatusFilter] = useState("all");
 
   const load = useCallback(() => {
-    const params = {};
+    const params = { role: "MEMBER" };
     if (search) params.search = search;
     if (statusFilter !== "all") params.approval_status = statusFilter;
     fetchMembers(params);
@@ -308,7 +308,7 @@ export default function MembersPage() {
                                 ) : (
                                   <Check className="h-3 w-3" />
                                 )}
-                                Approve
+                                {memberActionLoading[member.id] === "approve" ? "Approving..." : "Approve"}
                               </Button>
                               <Button
                                 id={`reject-member-${member.id}`}
@@ -323,7 +323,7 @@ export default function MembersPage() {
                                 ) : (
                                   <X className="h-3 w-3" />
                                 )}
-                                Reject
+                                {memberActionLoading[member.id] === "reject" ? "Rejecting..." : "Reject"}
                               </Button>
                             </div>
                           ) : (

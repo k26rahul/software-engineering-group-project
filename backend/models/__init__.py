@@ -1,5 +1,5 @@
 from models.book import Book, BookCopy
-from models.budget import BookPurchaseEntry, Vendor
+from models.budget import BookPurchaseEntry, BudgetEntry, Vendor
 from models.notification import Notification
 from models.payment import Fine, Payment
 from models.purchase_request import PurchaseRequest, PurchaseRequestVote
@@ -27,6 +27,7 @@ __all__ = [
   "Subscription",
   "Vendor",
   "BookPurchaseEntry",
+  "BudgetEntry",
   "Payment",
   "Notification",
 ]

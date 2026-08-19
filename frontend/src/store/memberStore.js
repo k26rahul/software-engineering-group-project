@@ -7,6 +7,8 @@ const useMemberStore = create((set) => ({
   payments: [],
   recommendations: [],
   readingLists: [],
+  readingListDetail: null,
+  reservations: [],
   history: [],
   loading: false,
   error: "",
@@ -21,6 +23,7 @@ const useMemberStore = create((set) => ({
       const query = new URLSearchParams();
       if (params.search) query.append("search", params.search);
       if (params.approval_status) query.append("approval_status", params.approval_status);
+      if (params.role) query.append("role", params.role);
       const response = await api.get(`/members?${query.toString()}`);
       set({ members: response.data, membersLoading: false });
     } catch (err) {
@@ -91,6 +94,26 @@ const useMemberStore = create((set) => ({
         error: "Could not load dashboard data. Please try again later.",
         loading: false,
       });
+    }
+  },
+
+  fetchReservations: async (memberId) => {
+    try {
+      const response = await api.get(`/members/${memberId}/reservations`);
+      set({ reservations: response.data });
+    } catch (err) {
+      console.error("Error loading reservations in store:", err);
+    }
+  },
+
+  fetchReadingListDetail: async (listId) => {
+    try {
+      set({ loading: true, error: "", readingListDetail: null });
+      const response = await api.get(`/reading-lists/${listId}/detail`);
+      set({ readingListDetail: response.data, loading: false });
+    } catch (err) {
+      console.error("Error loading reading list detail in store:", err);
+      set({ error: "Could not load reading list. Please try again.", loading: false });
     }
   },
 

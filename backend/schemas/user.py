@@ -30,9 +30,9 @@ class MemberSummaryResponse(SQLModel):
   membership_type: MembershipType | None
   approval_status: MemberApprovalStatus
   is_active: bool
+  created_at: datetime
 
 
 class MemberDetailResponse(MemberSummaryResponse):
-  created_at: datetime
   membership_start_date: date | None
   max_issue_limit: int

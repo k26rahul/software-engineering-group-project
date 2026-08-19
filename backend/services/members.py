@@ -3,7 +3,7 @@
 from datetime import date
 
 from fastapi import HTTPException, status
-from sqlmodel import Session, select
+from sqlmodel import Session, select, or_
 
 from models.enums import MemberApprovalStatus, UserRole
 from models.transaction import Transaction
@@ -20,6 +20,7 @@ class MembersService:
     session: Session,
     approval_status: MemberApprovalStatus | None = None,
     role: UserRole | None = None,
+    search: str | None = None,
   ) -> list[MemberSummaryResponse]:
     """Retrieve list of members filtered by approval status or user role."""
     statement = select(User)
@@ -27,6 +28,13 @@ class MembersService:
       statement = statement.where(User.approval_status == approval_status)
     if role:
       statement = statement.where(User.role == role)
+    if search:
+      statement = statement.where(
+        or_(
+          User.name.icontains(search),
+          User.email.icontains(search),
+        )
+      )
 
     users = session.exec(statement).all()
     return [
@@ -38,6 +46,7 @@ class MembersService:
         membership_type=u.membership_type,
         approval_status=u.approval_status,
         is_active=u.is_active,
+        created_at=u.created_at,
       )
       for u in users
     ]

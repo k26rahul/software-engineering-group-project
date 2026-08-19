@@ -7,6 +7,7 @@ from schemas.book import (
   AddBookRequest,
   BookDetailResponse,
   BookSummaryResponse,
+  CopyResponse,
   ISBNLookupRequest,
   UpdateBookRequest,
   UpdateCopyStatusRequest,
@@ -110,6 +111,42 @@ def update_book(
   return BooksService.update_book(session, id, request)
 
 
+@books_router.delete(
+  "/books/{id}",
+  status_code=status.HTTP_200_OK,
+  summary="Archive book",
+  description="Librarian-only. Soft deletes a book from the active catalog.",
+  responses={
+    **_LIBRARIAN_ERRORS,
+    **_NOT_FOUND,
+  },
+)
+def delete_book(
+  id: int,
+  session: SessionDep,
+  _: LibrarianDep,
+):
+  return BooksService.delete_book(session, id)
+
+
+@books_router.post(
+  "/books/{id}/restore",
+  status_code=status.HTTP_200_OK,
+  summary="Restore archived book",
+  description="Librarian-only. Unarchives a previously archived book.",
+  responses={
+    **_LIBRARIAN_ERRORS,
+    **_NOT_FOUND,
+  },
+)
+def restore_book(
+  id: int,
+  session: SessionDep,
+  _: LibrarianDep,
+):
+  return BooksService.restore_book(session, id)
+
+
 @books_router.patch(
   "/books/{id}/copies/{copy_id}",
   response_model=BookDetailResponse,
@@ -130,3 +167,22 @@ def update_copy_status(
   _: LibrarianDep,
 ) -> BookDetailResponse:
   return BooksService.update_copy_status(session, id, copy_id, request)
+
+
+@books_router.post(
+  "/books/{id}/copies",
+  response_model=CopyResponse,
+  status_code=status.HTTP_201_CREATED,
+  summary="Add a new copy",
+  description="Librarian-only. Adds a new physical copy for a book.",
+  responses={
+    **_LIBRARIAN_ERRORS,
+    **_NOT_FOUND,
+  },
+)
+def add_copy(
+  id: int,
+  session: SessionDep,
+  _: LibrarianDep,
+):
+  return BooksService.add_copy(session, id)

@@ -23,6 +23,8 @@ def test_get_management_dashboard(client: TestClient, management_user_token: str
   assert response.status_code == 200
   data = response.json()
   assert "total_members" in data
-  assert "total_catalog_items" in data
-  assert "total_circulation_count" in data
-  assert "total_budget_allocated" in data
+  assert "active_members" in data
+  assert "active_issues" in data
+  assert "total_books" in data
+  assert "budget_spent" in data
+  assert "budget_limit" in data

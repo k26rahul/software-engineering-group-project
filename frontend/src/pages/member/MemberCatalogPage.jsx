@@ -43,6 +43,8 @@ import {
 import { Skeleton } from "@/components/ui/skeleton";
 import { toast } from "sonner";
 import useBookStore from "@/store/bookStore";
+import useMemberStore from "@/store/memberStore";
+import useAuthStore from "@/store/authStore";
 import { categories } from "@/mocks/data/booksData";
 
 // Category badge color theme mapping
@@ -60,6 +62,10 @@ const CATEGORY_STYLES = {
 
 export default function MemberCatalogPage() {
   const { books, fetchBooks, reserveBook, isLoading } = useBookStore();
+  const { reservations, fetchReservations } = useMemberStore();
+  const user = useAuthStore((state) => state.user);
+
+  const memberId = user?.id || 1;
 
   const [search, setSearch] = useState("");
   const [category, setCategory] = useState("all");
@@ -68,6 +74,11 @@ export default function MemberCatalogPage() {
   const [viewMode, setViewMode] = useState("grid"); // "grid" | "list"
   const [selectedBook, setSelectedBook] = useState(null);
   const [reservingBookId, setReservingBookId] = useState(null);
+
+  // Fetch books when search or category changes
+  useEffect(() => {
+    fetchReservations(memberId);
+  }, [memberId, fetchReservations]);
 
   // Fetch books when search or category changes
   useEffect(() => {
@@ -108,6 +119,13 @@ export default function MemberCatalogPage() {
     setReservingBookId(book.id);
     try {
       await reserveBook(book.id);
+      // Optimistically mark the book as reserved without a refetch
+      useMemberStore.setState((state) => ({
+        reservations: [
+          ...state.reservations,
+          { id: Date.now(), book_id: book.id, status: "PENDING" },
+        ],
+      }));
       toast.success(`Reservation placed for "${book.title}". You will be notified when available.`);
     } catch (err) {
       toast.error(err.message || "Failed to place reservation");
@@ -115,6 +133,12 @@ export default function MemberCatalogPage() {
       setReservingBookId(null);
     }
   };
+
+  // Set of book IDs for which the member already has an active reservation
+  const reservedBookIds = useMemo(
+    () => new Set(reservations.map((r) => r.book_id)),
+    [reservations]
+  );
 
   const totalBooksCount = books.length;
   const availableBooksCount = books.filter((b) => b.available_copies > 0).length;
@@ -409,15 +433,21 @@ export default function MemberCatalogPage() {
                   </Button>
 
                   {!isAvailable && (
-                    <Button
-                      size="sm"
-                      variant="secondary"
-                      className="bg-amber-500/10 text-xs font-semibold text-amber-700 hover:bg-amber-500/20 dark:text-amber-300"
-                      disabled={reservingBookId === book.id}
-                      onClick={() => handleReserve(book)}
-                    >
-                      <Clock className="mr-1.5 h-3.5 w-3.5" /> Reserve
-                    </Button>
+                    reservedBookIds.has(book.id) ? (
+                      <Badge className="bg-amber-500/10 text-amber-700 dark:text-amber-300 border-amber-200 dark:border-amber-800 gap-1 px-2.5">
+                        <Bookmark className="h-3 w-3" /> Reserved
+                      </Badge>
+                    ) : (
+                      <Button
+                        size="sm"
+                        variant="secondary"
+                        className="bg-amber-500/10 text-xs font-semibold text-amber-700 hover:bg-amber-500/20 dark:text-amber-300"
+                        disabled={reservingBookId === book.id}
+                        onClick={() => handleReserve(book)}
+                      >
+                        <Clock className="mr-1.5 h-3.5 w-3.5" /> Reserve
+                      </Button>
+                    )
                   )}
                 </div>
               </Card>
@@ -480,15 +510,21 @@ export default function MemberCatalogPage() {
                           Details
                         </Button>
                         {!isAvailable && (
-                          <Button
-                            size="sm"
-                            variant="secondary"
-                            className="bg-amber-500/10 text-xs font-semibold text-amber-700 hover:bg-amber-500/20 dark:text-amber-300"
-                            disabled={reservingBookId === book.id}
-                            onClick={() => handleReserve(book)}
-                          >
-                            Reserve
-                          </Button>
+                          reservedBookIds.has(book.id) ? (
+                            <Badge className="bg-amber-500/10 text-amber-700 dark:text-amber-300 border-amber-200 dark:border-amber-800 gap-1 px-2.5">
+                              <Bookmark className="h-3 w-3" /> Reserved
+                            </Badge>
+                          ) : (
+                            <Button
+                              size="sm"
+                              variant="secondary"
+                              className="bg-amber-500/10 text-xs font-semibold text-amber-700 hover:bg-amber-500/20 dark:text-amber-300"
+                              disabled={reservingBookId === book.id}
+                              onClick={() => handleReserve(book)}
+                            >
+                              Reserve
+                            </Button>
+                          )
                         )}
                       </div>
                     </TableCell>
@@ -572,16 +608,22 @@ export default function MemberCatalogPage() {
                 To issue available books, present your Member ID at the library counter.
               </span>
               {selectedBook.available_copies === 0 && (
-                <Button
-                  className="bg-amber-500 text-white hover:bg-amber-600"
-                  disabled={reservingBookId === selectedBook.id}
-                  onClick={() => {
-                    handleReserve(selectedBook);
-                    setSelectedBook(null);
-                  }}
-                >
-                  <Bookmark className="mr-1.5 h-4 w-4" /> Place Waitlist Hold
-                </Button>
+                reservedBookIds.has(selectedBook.id) ? (
+                  <Badge className="bg-amber-500/10 text-amber-700 dark:text-amber-300 border-amber-200 dark:border-amber-800 gap-1.5 px-3 py-1.5 text-sm">
+                    <Bookmark className="h-4 w-4" /> Already Reserved
+                  </Badge>
+                ) : (
+                  <Button
+                    className="bg-amber-500 text-white hover:bg-amber-600"
+                    disabled={reservingBookId === selectedBook.id}
+                    onClick={() => {
+                      handleReserve(selectedBook);
+                      setSelectedBook(null);
+                    }}
+                  >
+                    <Bookmark className="mr-1.5 h-4 w-4" /> Place Waitlist Hold
+                  </Button>
+                )
               )}
             </div>
           </DialogContent>

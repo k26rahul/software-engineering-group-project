@@ -398,7 +398,7 @@ export default function ManagementReportsPage() {
               {/* Top Borrowed Books Table */}
               <Card>
                 <CardHeader>
-                  <CardTitle className="text-xl font-bold">Most Borrowed Titles</CardTitle>
+                  <CardTitle className="text-xl font-bold">Most borrowed books</CardTitle>
                   <CardDescription>Popular books with high circulation velocity</CardDescription>
                 </CardHeader>
                 <CardContent className="p-0">

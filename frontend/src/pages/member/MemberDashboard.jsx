@@ -6,6 +6,8 @@ import useAuthStore from "@/store/authStore";
 import useMemberStore from "@/store/memberStore";
 import MemberProfilePage from "./MemberProfilePage";
 import MemberCatalogPage from "./MemberCatalogPage";
+import ReadingListDetailPage from "./ReadingListDetailPage";
+import BorrowingHistoryPage from "./BorrowingHistoryPage";
 import {
   BookOpen,
   Calendar,
@@ -195,7 +197,7 @@ function MemberDashboardHome() {
                 </CardDescription>
               </div>
               <Button asChild variant="ghost" size="sm" className="gap-1">
-                <Link to="/member/profile">
+                <Link to="/member/history">
                   View History <ArrowRight className="h-4 w-4" />
                 </Link>
               </Button>
@@ -295,7 +297,7 @@ function MemberDashboardHome() {
                         {list.book_ids?.length ?? list.books?.length ?? 0} Books
                       </span>
                       <Button asChild variant="link" size="sm" className="h-auto p-0">
-                        <Link to="/member/catalog" className="text-primary text-xs font-semibold">
+                        <Link to={`/member/reading-list/${list.id}`} className="text-primary text-xs font-semibold">
                           Explore
                         </Link>
                       </Button>
@@ -357,6 +359,8 @@ export default function MemberDashboard() {
       <Route path="" element={<MemberDashboardHome />} />
       <Route path="profile" element={<MemberProfilePage />} />
       <Route path="catalog" element={<MemberCatalogPage />} />
+      <Route path="reading-list/:id" element={<ReadingListDetailPage />} />
+      <Route path="history" element={<BorrowingHistoryPage />} />
     </Routes>
   );
 }

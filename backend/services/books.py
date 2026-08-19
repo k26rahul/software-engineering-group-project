@@ -42,6 +42,7 @@ class BooksService:
           category=b.category,
           price=b.price,
           available_copies=b.available_copies(session),
+          is_active=b.is_active,
         )
       )
     return results
@@ -66,6 +67,11 @@ class BooksService:
       available_copies=book.available_copies(session),
       average_rating=book.average_rating(session),
       created_at=book.created_at,
+      is_active=book.is_active,
+      copies=[
+        {"id": c.id, "copy_number": c.copy_number, "status": c.status}
+        for c in book.copies
+      ],
     )
 
   @staticmethod
@@ -121,6 +127,34 @@ class BooksService:
     return BooksService.get_book_by_id(session, book.id)
 
   @staticmethod
+  def delete_book(session: Session, book_id: int):
+    """Archive a book (soft delete)."""
+    book = session.get(Book, book_id)
+    if not book:
+      raise HTTPException(
+        status_code=status.HTTP_404_NOT_FOUND,
+        detail=f"Book with ID {book_id} not found.",
+      )
+    book.is_active = False
+    session.add(book)
+    session.commit()
+    return {"message": f"Book '{book.title}' archived successfully."}
+
+  @staticmethod
+  def restore_book(session: Session, book_id: int):
+    """Unarchive a book."""
+    book = session.get(Book, book_id)
+    if not book:
+      raise HTTPException(
+        status_code=status.HTTP_404_NOT_FOUND,
+        detail=f"Book with ID {book_id} not found.",
+      )
+    book.is_active = True
+    session.add(book)
+    session.commit()
+    return {"message": f"Book '{book.title}' restored successfully."}
+
+  @staticmethod
   def isbn_lookup(session: Session, isbn: str) -> AddBookRequest:
     """Lookup ISBN in external catalog simulation and return auto-fill data."""
     existing = session.exec(select(Book).where(Book.isbn == isbn)).first()
@@ -159,3 +193,30 @@ class BooksService:
     session.add(copy)
     session.commit()
     return BooksService.get_book_by_id(session, book_id)
+
+  @staticmethod
+  def add_copy(session: Session, book_id: int):
+    """Add a new physical copy for a book."""
+    book = session.get(Book, book_id)
+    if not book:
+      raise HTTPException(
+        status_code=status.HTTP_404_NOT_FOUND,
+        detail=f"Book with ID {book_id} not found.",
+      )
+    
+    # Determine the next copy number
+    # The highest existing copy number might not be len(copies) if copies were deleted
+    # But let's just use max(copy.copy_number) + 1, or 1 if no copies exist
+    if book.copies:
+      next_number = max(c.copy_number for c in book.copies) + 1
+    else:
+      next_number = 1
+      
+    new_copy = BookCopy(book_id=book.id, copy_number=next_number)
+    session.add(new_copy)
+    session.commit()
+    
+    # Refresh to return the new copy data. The schema might return the new copy directly or BookDetail.
+    # In this case, we return the newly created copy object as dict to match frontend expectation.
+    session.refresh(new_copy)
+    return {"id": new_copy.id, "copy_number": new_copy.copy_number, "status": new_copy.status}

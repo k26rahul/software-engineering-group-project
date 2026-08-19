@@ -57,4 +57,22 @@ MEMBERS = [
     "is_active": False,
     "max_issue_limit": 0,
   },
+  {
+    "name": "Amit Patel",
+    "email": "amit.patel@example.com",
+    "phone": "9988771122",
+    "membership_type": "OFF_CAMPUS",
+    "approval_status": "PENDING",
+    "is_active": False,
+    "max_issue_limit": 2,
+  },
+  {
+    "name": "Sanya Gupta",
+    "email": "sanya.gupta@example.com",
+    "phone": "9123004567",
+    "membership_type": "ON_CAMPUS",
+    "approval_status": "PENDING",
+    "is_active": False,
+    "max_issue_limit": 3,
+  },
 ]

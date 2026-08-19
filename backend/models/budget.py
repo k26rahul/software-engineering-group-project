@@ -1,4 +1,4 @@
-from datetime import date
+import datetime
 from typing import TYPE_CHECKING
 
 from sqlmodel import Field, Relationship
@@ -36,10 +36,20 @@ class BookPurchaseEntry(IDMixin, table=True):
     default=None, foreign_key="vendor.id", description="ID of the vendor."
   )
   category: str | None = Field(default=None, description="Category of the purchased books.")
-  purchase_date: date = Field(description="Date the purchase was made.")
+  purchase_date: datetime.date = Field(description="Date the purchase was made.")
 
   vendor: "Vendor" = Relationship(back_populates="book_purchases")
 
   def total_cost(self) -> float:
     """Total cost of the purchase entry."""
     return self.copies * self.price_per_copy
+
+
+class BudgetEntry(IDMixin, table=True):
+  """A generic ledger entry for all income and expenses."""
+
+  description: str = Field(description="Description of the entry.")
+  category: str = Field(description="Category (e.g. 'Book Purchase', 'Maintenance').")
+  amount: float = Field(description="Amount of the entry.")
+  type: str = Field(description="'EXPENSE' or 'INCOME'.")
+  date: datetime.date = Field(default_factory=datetime.date.today, description="Date of the transaction.")

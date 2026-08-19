@@ -75,7 +75,7 @@ function ManagementHome() {
   if (!data) return null;
 
   const budgetPercent = data
-    ? Math.min(100, Math.round((data.budget_spent / data.budget_limit) * 100))
+    ? Math.min(100, Math.round(((data.budget_spent || 0) / (data.budget_limit || 1)) * 100))
     : 0;
 
   return (
@@ -167,7 +167,7 @@ function ManagementHome() {
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold text-emerald-600">
-              ₹{data.budget_spent.toLocaleString()}
+              ₹{(data.budget_spent || 0).toLocaleString()}
             </div>
             <div className="bg-muted mt-2 h-1.5 w-full rounded-full">
               <div
@@ -176,7 +176,7 @@ function ManagementHome() {
               ></div>
             </div>
             <p className="text-muted-foreground mt-1 text-[10px]">
-              {budgetPercent}% of ₹{data.budget_limit.toLocaleString()} monthly limit
+              {budgetPercent}% of ₹{(data.budget_limit || 0).toLocaleString()} monthly limit
             </p>
           </CardContent>
         </Card>
@@ -201,7 +201,7 @@ function ManagementHome() {
             <div className="h-80 w-full">
               <ResponsiveContainer width="100%" height="100%">
                 <AreaChart
-                  data={data.monthly_stats}
+                  data={data.monthly_stats || []}
                   margin={{ top: 10, right: 30, left: 0, bottom: 0 }}
                 >
                   <defs>
@@ -272,7 +272,7 @@ function ManagementHome() {
             <CardDescription>Book copies split by subject genre</CardDescription>
           </CardHeader>
           <CardContent className="flex flex-1 flex-col justify-center pt-6">
-            {data.category_stats.length === 0 || data.category_stats.every((c) => c.value === 0) ? (
+            {(!data.category_stats || data.category_stats.length === 0 || data.category_stats.every((c) => c.value === 0)) ? (
               <div className="text-muted-foreground flex h-64 flex-col items-center justify-center p-8 text-center">
                 <Library className="text-muted-foreground/30 mb-2 h-10 w-10" />
                 <p className="text-sm font-semibold">No catalog entries</p>
@@ -286,7 +286,7 @@ function ManagementHome() {
                   <ResponsiveContainer width="100%" height="100%">
                     <PieChart>
                       <Pie
-                        data={data.category_stats}
+                        data={data.category_stats || []}
                         cx="50%"
                         cy="50%"
                         innerRadius={60}
@@ -294,7 +294,7 @@ function ManagementHome() {
                         paddingAngle={5}
                         dataKey="value"
                       >
-                        {data.category_stats.map((entry, index) => (
+                        {(data.category_stats || []).map((entry, index) => (
                           <Cell key={`cell-${entry.name}`} fill={COLORS[index % COLORS.length]} />
                         ))}
                       </Pie>
@@ -312,7 +312,7 @@ function ManagementHome() {
 
                 {/* Custom Legend */}
                 <div className="grid w-full grid-cols-2 gap-2 text-xs">
-                  {data.category_stats.map((entry, index) => (
+                  {(data.category_stats || []).map((entry, index) => (
                     <div key={entry.name} className="flex items-center gap-2">
                       <span
                         className="h-3 w-3 shrink-0 rounded-full"

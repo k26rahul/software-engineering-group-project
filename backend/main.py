@@ -8,9 +8,12 @@ from core.config import settings
 from core.database import create_db_and_tables, engine
 from core.seeding import (
   seed_books,
+  seed_budget_entries,
   seed_default_users,
   seed_members,
+  seed_notifications,
   seed_purchase_requests,
+  seed_reading_lists,
   seed_reservations,
   seed_reviews,
   seed_subscriptions,
@@ -31,6 +34,7 @@ from routers.reservations import reservations_router
 from routers.reviews import reviews_router
 from routers.subscriptions import subscriptions_router
 from routers.transactions import transactions_router
+from routers.notifications import notifications_router
 
 
 @asynccontextmanager
@@ -45,6 +49,9 @@ async def lifespan(app: FastAPI):
     seed_reviews(session)
     seed_purchase_requests(session)
     seed_subscriptions(session)
+    seed_notifications(session)
+    seed_budget_entries(session)
+    seed_reading_lists(session)
   yield
 
 
@@ -57,7 +64,11 @@ def create_app() -> FastAPI:
   )
   app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:5173", "http://localhost:5174"],
+    allow_origins=[
+      "http://localhost:5173",
+      "http://localhost:5174",
+      "https://your-app-name.netlify.app",
+    ],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -77,6 +88,7 @@ def create_app() -> FastAPI:
   app.include_router(reviews_router)
   app.include_router(reading_lists_router)
   app.include_router(subscriptions_router)
+  app.include_router(notifications_router)
   return app
 
 

@@ -6,6 +6,8 @@ from models.book import Book
 from models.reading_list import ReadingList, ReadingListBook
 from schemas.reading_list import (
   CreateReadingListRequest,
+  ReadingListBookItem,
+  ReadingListDetailResponse,
   ReadingListResponse,
   UpdateReadingListRequest,
 )
@@ -36,6 +38,34 @@ def get_reading_list(session: Session, list_id: int) -> ReadingListResponse:
   if not reading_list:
     raise HTTPException(status_code=404, detail="Reading list not found")
   return _to_response(reading_list)
+
+
+def get_reading_list_detail(session: Session, list_id: int) -> ReadingListDetailResponse:
+  """Returns a reading list with full book details for the member reading list page."""
+  statement = (
+    select(ReadingList).where(ReadingList.id == list_id).options(selectinload(ReadingList.books))
+  )
+  reading_list = session.exec(statement).first()
+  if not reading_list:
+    raise HTTPException(status_code=404, detail="Reading list not found")
+
+  books = [
+    ReadingListBookItem(
+      id=book.id,
+      title=book.title,
+      author=book.author,
+      category=book.category,
+      available_copies=book.available_copies(session),
+    )
+    for book in (reading_list.books or [])
+  ]
+  return ReadingListDetailResponse(
+    id=reading_list.id,
+    title=reading_list.title,
+    description=reading_list.description,
+    created_at=reading_list.created_at,
+    books=books,
+  )
 
 
 def create_reading_list(session: Session, request: CreateReadingListRequest) -> ReadingListResponse:

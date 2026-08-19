@@ -45,7 +45,7 @@ import useBookStore from "@/store/bookStore";
 import { categories } from "@/mocks/data/booksData";
 
 export default function CatalogPage() {
-  const { books, fetchBooks, deleteBook, isLoading } = useBookStore();
+  const { books, fetchBooks, deleteBook, restoreBook, isLoading } = useBookStore();
   const [search, setSearch] = useState("");
   const [category, setCategory] = useState("all");
   const [bookToDelete, setBookToDelete] = useState(null);
@@ -168,8 +168,15 @@ export default function CatalogPage() {
                   </TableRow>
                 ) : (
                   books.map((book) => (
-                    <TableRow key={book.id}>
-                      <TableCell className="font-medium">{book.title}</TableCell>
+                    <TableRow key={book.id} className={!book.is_active ? "opacity-60" : ""}>
+                      <TableCell className={`font-medium ${!book.is_active ? "text-destructive" : ""}`}>
+                        {book.title}
+                        {!book.is_active && (
+                          <Badge variant="secondary" className="ml-2 text-[10px]">
+                            Archived
+                          </Badge>
+                        )}
+                      </TableCell>
                       <TableCell>{book.author}</TableCell>
                       <TableCell className="hidden md:table-cell">
                         <Badge variant="outline">{book.category}</Badge>
@@ -208,40 +215,58 @@ export default function CatalogPage() {
                               </Link>
                             </DropdownMenuItem>
                             <DropdownMenuSeparator />
-                            <AlertDialog>
-                              <AlertDialogTrigger asChild>
-                                <DropdownMenuItem
-                                  onSelect={(e) => {
-                                    e.preventDefault();
-                                    setBookToDelete(book);
-                                  }}
-                                  className="text-destructive focus:text-destructive focus:bg-destructive/10"
-                                >
-                                  <Trash2 className="mr-2 h-4 w-4" />
-                                  Archive
-                                </DropdownMenuItem>
-                              </AlertDialogTrigger>
-                              <AlertDialogContent>
-                                <AlertDialogHeader>
-                                  <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
-                                  <AlertDialogDescription>
-                                    This will archive "{bookToDelete?.title}" from the catalog. You
-                                    can restore it later if needed.
-                                  </AlertDialogDescription>
-                                </AlertDialogHeader>
-                                <AlertDialogFooter>
-                                  <AlertDialogCancel onClick={() => setBookToDelete(null)}>
-                                    Cancel
-                                  </AlertDialogCancel>
-                                  <AlertDialogAction
-                                    onClick={handleDelete}
-                                    className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+                            {book.is_active ? (
+                              <AlertDialog>
+                                <AlertDialogTrigger asChild>
+                                  <DropdownMenuItem
+                                    onSelect={(e) => {
+                                      e.preventDefault();
+                                      setBookToDelete(book);
+                                    }}
+                                    className="text-destructive focus:text-destructive focus:bg-destructive/10"
                                   >
-                                    Archive Book
-                                  </AlertDialogAction>
-                                </AlertDialogFooter>
-                              </AlertDialogContent>
-                            </AlertDialog>
+                                    <Trash2 className="mr-2 h-4 w-4" />
+                                    Archive
+                                  </DropdownMenuItem>
+                                </AlertDialogTrigger>
+                                <AlertDialogContent>
+                                  <AlertDialogHeader>
+                                    <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
+                                    <AlertDialogDescription>
+                                      This will archive "{bookToDelete?.title}" from the catalog. You
+                                      can restore it later if needed.
+                                    </AlertDialogDescription>
+                                  </AlertDialogHeader>
+                                  <AlertDialogFooter>
+                                    <AlertDialogCancel onClick={() => setBookToDelete(null)}>
+                                      Cancel
+                                    </AlertDialogCancel>
+                                    <AlertDialogAction
+                                      onClick={handleDelete}
+                                      className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+                                    >
+                                      Archive Book
+                                    </AlertDialogAction>
+                                  </AlertDialogFooter>
+                                </AlertDialogContent>
+                              </AlertDialog>
+                            ) : (
+                              <DropdownMenuItem
+                                onSelect={async (e) => {
+                                  e.preventDefault();
+                                  try {
+                                    await restoreBook(book.id);
+                                    toast.success("Book restored successfully");
+                                  } catch (err) {
+                                    toast.error(err.message || "Failed to restore book");
+                                  }
+                                }}
+                                className="text-emerald-600 focus:text-emerald-700 focus:bg-emerald-50"
+                              >
+                                <Plus className="mr-2 h-4 w-4" />
+                                Unarchive
+                              </DropdownMenuItem>
+                            )}
                           </DropdownMenuContent>
                         </DropdownMenu>
                       </TableCell>

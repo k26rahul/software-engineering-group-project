@@ -1,6 +1,6 @@
 """Service layer for Circulation & Transactions domain."""
 
-from datetime import date
+from datetime import date, timedelta
 
 from fastapi import HTTPException, status
 from sqlmodel import Session, select
@@ -10,7 +10,13 @@ from models.enums import CopyStatus, MemberApprovalStatus, ReturnCondition
 from models.payment import Fine
 from models.transaction import Transaction
 from models.user import User
-from schemas.transaction import IssueBookRequest, ReturnBookRequest, TransactionResponse
+from schemas.transaction import (
+  ActiveTransactionResponse,
+  IssueBookRequest,
+  MemberCurrentIssueResponse,
+  ReturnBookRequest,
+  TransactionResponse,
+)
 
 
 class TransactionsService:
@@ -28,7 +34,20 @@ class TransactionsService:
         detail="Member must be active and approved to issue books.",
       )
 
-    copy = session.get(BookCopy, request.book_copy_id)
+    if request.copy_id:
+      copy = session.get(BookCopy, request.copy_id)
+      if copy and copy.book_id != request.book_id:
+        raise HTTPException(
+          status_code=status.HTTP_400_BAD_REQUEST,
+          detail="Copy does not belong to the specified book.",
+        )
+    else:
+      copy = session.exec(
+        select(BookCopy).where(
+          BookCopy.book_id == request.book_id, BookCopy.status == CopyStatus.AVAILABLE
+        )
+      ).first()
+
     if not copy or copy.status != CopyStatus.AVAILABLE:
       raise HTTPException(
         status_code=status.HTTP_400_BAD_REQUEST,
@@ -50,11 +69,13 @@ class TransactionsService:
     copy.status = CopyStatus.ISSUED
     session.add(copy)
 
+    due_date = request.due_date or (date.today() + timedelta(days=14))
+
     transaction = Transaction(
       member_id=request.member_id,
-      book_copy_id=request.book_copy_id,
+      book_copy_id=copy.id,
       issue_date=date.today(),
-      due_date=request.due_date,
+      due_date=due_date,
     )
     session.add(transaction)
     session.commit()
@@ -157,6 +178,42 @@ class TransactionsService:
     )
 
   @staticmethod
+  def get_active_transactions(session: Session, search: str | None = None) -> list[ActiveTransactionResponse]:
+    """Retrieve all currently active (not returned) borrowing transactions."""
+    from models.user import User
+    from models.book import BookCopy, Book
+
+    statement = select(Transaction, User, Book).join(User).join(BookCopy, Transaction.book_copy_id == BookCopy.id).join(Book, BookCopy.book_id == Book.id).where(Transaction.return_date.is_(None))
+    
+    if search:
+      search_term = f"%{search}%"
+      statement = statement.where(
+        (User.name.ilike(search_term)) | 
+        (User.email.ilike(search_term)) | 
+        (Book.title.ilike(search_term))
+      )
+
+    results = session.exec(statement).all()
+    today = date.today()
+    
+    response = []
+    for tx, user, book in results:
+      days_overdue = (today - tx.due_date).days if today > tx.due_date else 0
+      response.append(
+        ActiveTransactionResponse(
+          transaction_id=tx.id,
+          member_name=user.name,
+          member_email=user.email,
+          book_title=book.title,
+          issue_date=tx.issue_date,
+          due_date=tx.due_date,
+          is_overdue=tx.is_overdue(),
+          days_overdue=max(0, days_overdue),
+        )
+      )
+    return response
+
+  @staticmethod
   def get_overdue_transactions(session: Session) -> list[TransactionResponse]:
     """Retrieve all currently overdue borrowing transactions."""
     today = date.today()
@@ -179,24 +236,25 @@ class TransactionsService:
     ]
 
   @staticmethod
-  def get_member_current_issues(session: Session, member_id: int) -> list[TransactionResponse]:
-    """Retrieve active issued books for a specific member."""
-    transactions = session.exec(
-      select(Transaction).where(
-        Transaction.member_id == member_id, Transaction.return_date.is_(None)
-      )
-    ).all()
+  def get_member_current_issues(session: Session, member_id: int) -> list[MemberCurrentIssueResponse]:
+    """Retrieve active issued books for a specific member, including book title."""
+    from models.book import Book, BookCopy
+
+    statement = (
+      select(Transaction, Book)
+      .join(BookCopy, Transaction.book_copy_id == BookCopy.id)
+      .join(Book, BookCopy.book_id == Book.id)
+      .where(Transaction.member_id == member_id, Transaction.return_date.is_(None))
+    )
+    results = session.exec(statement).all()
 
     return [
-      TransactionResponse(
-        id=t.id,
-        member_id=t.member_id,
-        book_copy_id=t.book_copy_id,
+      MemberCurrentIssueResponse(
+        transaction_id=t.id,
+        book_title=book.title,
         issue_date=t.issue_date,
         due_date=t.due_date,
-        return_date=t.return_date,
-        return_condition=t.return_condition,
         is_overdue=t.is_overdue(),
       )
-      for t in transactions
+      for t, book in results
     ]

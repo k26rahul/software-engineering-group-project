@@ -22,3 +22,19 @@ class ReadingListResponse(SQLModel):
   description: str | None
   book_ids: list[int]
   created_at: datetime
+
+
+class ReadingListBookItem(SQLModel):
+  id: int
+  title: str
+  author: str
+  category: str
+  available_copies: int
+
+
+class ReadingListDetailResponse(SQLModel):
+  id: int
+  title: str
+  description: str | None
+  created_at: datetime
+  books: list[ReadingListBookItem]

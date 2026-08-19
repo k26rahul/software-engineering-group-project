@@ -18,6 +18,7 @@ import {
   AlertTriangle,
   Loader2,
 } from "lucide-react";
+import { toast } from "sonner";
 import CatalogPage from "./catalog/CatalogPage";
 import AddBookPage from "./catalog/AddBookPage";
 import EditBookPage from "./catalog/EditBookPage";
@@ -54,10 +55,15 @@ function LibrarianHome() {
     dismissAlert(id);
   };
 
-  const handleMemberAction = async (id, action) => {
+  const handleMemberAction = async (user, action) => {
     try {
       setActionError(null);
-      await storeMemberAction(id, action);
+      await storeMemberAction(user.id, action);
+      if (action === "approve") {
+        toast.success(`${user.name} has been approved.`);
+      } else if (action === "reject") {
+        toast.warning(`${user.name}'s registration has been rejected.`);
+      }
     } catch (err) {
       console.error(`Failed to ${action} member:`, err);
       setActionError(`Error processing request: ${err.message}`);
@@ -91,8 +97,18 @@ function LibrarianHome() {
 
   if (!stats) return null;
 
-  const budgetPercent = stats
-    ? Math.min(100, Math.round((stats.budget_spent / stats.budget_limit) * 100))
+  const safeStats = {
+    pending_approvals_count: stats.pending_approvals_count ?? (typeof stats.pending_approvals === 'number' ? stats.pending_approvals : 0),
+    overdue_books_count: stats.overdue_books_count ?? stats.overdue_issues ?? 0,
+    active_reservations_count: stats.active_reservations_count ?? stats.active_issues ?? 0,
+    budget_spent: stats.budget_spent ?? 0,
+    budget_limit: stats.budget_limit ?? 0,
+    pending_approvals_list: Array.isArray(stats.pending_approvals) ? stats.pending_approvals : (stats.pending_approvals_list || []),
+    recent_overdue_books: Array.isArray(stats.recent_overdue_books) ? stats.recent_overdue_books : [],
+  };
+
+  const budgetPercent = safeStats.budget_limit > 0
+    ? Math.min(100, Math.round((safeStats.budget_spent / safeStats.budget_limit) * 100))
     : 0;
 
   // Progress bar colors based on utilization
@@ -125,7 +141,7 @@ function LibrarianHome() {
             </div>
           </CardHeader>
           <CardContent>
-            <div className="text-3xl font-bold">{stats.pending_approvals_count}</div>
+            <div className="text-3xl font-bold">{safeStats.pending_approvals_count}</div>
             <p className="text-muted-foreground mt-1 text-xs">Requires review & action</p>
           </CardContent>
         </Card>
@@ -141,7 +157,7 @@ function LibrarianHome() {
             </div>
           </CardHeader>
           <CardContent>
-            <div className="text-destructive text-3xl font-bold">{stats.overdue_books_count}</div>
+            <div className="text-destructive text-3xl font-bold">{safeStats.overdue_books_count}</div>
             <p className="text-muted-foreground mt-1 text-xs">Outstanding return periods</p>
           </CardContent>
         </Card>
@@ -157,7 +173,7 @@ function LibrarianHome() {
             </div>
           </CardHeader>
           <CardContent>
-            <div className="text-3xl font-bold">{stats.active_reservations_count}</div>
+            <div className="text-3xl font-bold">{safeStats.active_reservations_count}</div>
             <p className="text-muted-foreground mt-1 text-xs">Members in book queues</p>
           </CardContent>
         </Card>
@@ -169,14 +185,14 @@ function LibrarianHome() {
               Monthly Budget
             </CardTitle>
             <div className="text-primary text-xs font-semibold">
-              ₹{stats.budget_spent.toLocaleString()} / ₹{stats.budget_limit.toLocaleString()}
+              ₹{safeStats.budget_spent.toLocaleString()} / ₹{safeStats.budget_limit.toLocaleString()}
             </div>
           </CardHeader>
           <CardContent className="space-y-3">
             <div className="flex items-center justify-between text-xs">
               <span className="text-foreground font-bold">{budgetPercent}% Spent</span>
               <span className="text-muted-foreground">
-                ₹{(stats.budget_limit - stats.budget_spent).toLocaleString()} left
+                ₹{(safeStats.budget_limit - safeStats.budget_spent).toLocaleString()} left
               </span>
             </div>
             <div className="bg-muted h-2 w-full rounded-full">
@@ -344,7 +360,7 @@ function LibrarianHome() {
             )}
           </CardHeader>
           <CardContent className="flex-1 p-0">
-            {stats.pending_approvals.length === 0 ? (
+            {safeStats.pending_approvals_list.length === 0 ? (
               <div className="text-muted-foreground flex h-[250px] flex-col items-center justify-center p-8 text-center">
                 <UserCheck className="text-muted-foreground/50 mb-2 h-10 w-10" />
                 <p className="text-foreground font-medium">No pending registrations</p>
@@ -362,7 +378,7 @@ function LibrarianHome() {
                     </tr>
                   </thead>
                   <tbody className="divide-y">
-                    {stats.pending_approvals.map((user) => (
+                    {safeStats.pending_approvals_list.map((user) => (
                       <tr key={user.id} className="hover:bg-muted/20 transition-colors">
                         <td className="text-foreground p-4 font-medium">{user.name}</td>
                         <td className="text-muted-foreground p-4 text-xs sm:text-sm">
@@ -374,7 +390,7 @@ function LibrarianHome() {
                             <Button
                               size="xs"
                               variant="default"
-                              onClick={() => handleMemberAction(user.id, "approve")}
+                              onClick={() => handleMemberAction(user, "approve")}
                               disabled={
                                 actionLoading[user.id] !== undefined &&
                                 actionLoading[user.id] !== null
@@ -386,12 +402,12 @@ function LibrarianHome() {
                               ) : (
                                 <Check className="h-3 w-3" />
                               )}
-                              Approve
+                              {actionLoading[user.id] === "approve" ? "Approving..." : "Approve"}
                             </Button>
                             <Button
                               size="xs"
                               variant="destructive"
-                              onClick={() => handleMemberAction(user.id, "reject")}
+                              onClick={() => handleMemberAction(user, "reject")}
                               disabled={
                                 actionLoading[user.id] !== undefined &&
                                 actionLoading[user.id] !== null
@@ -403,7 +419,7 @@ function LibrarianHome() {
                               ) : (
                                 <X className="h-3 w-3" />
                               )}
-                              Reject
+                              {actionLoading[user.id] === "reject" ? "Rejecting..." : "Reject"}
                             </Button>
                           </div>
                         </td>
@@ -433,7 +449,7 @@ function LibrarianHome() {
             </div>
           </CardHeader>
           <CardContent className="flex-1 p-0">
-            {stats.recent_overdue_books.length === 0 ? (
+            {safeStats.recent_overdue_books.length === 0 ? (
               <div className="text-muted-foreground flex h-[250px] flex-col items-center justify-center p-8 text-center">
                 <Clock className="text-muted-foreground/50 mb-2 h-10 w-10" />
                 <p className="text-foreground font-medium">No overdue items</p>
@@ -451,7 +467,7 @@ function LibrarianHome() {
                     </tr>
                   </thead>
                   <tbody className="divide-y">
-                    {stats.recent_overdue_books.map((item) => (
+                    {safeStats.recent_overdue_books.map((item) => (
                       <tr key={item.transaction_id} className="hover:bg-muted/20 transition-colors">
                         <td className="text-foreground p-4 font-medium">{item.title}</td>
                         <td className="text-muted-foreground p-4">{item.borrower_name}</td>

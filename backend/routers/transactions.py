@@ -3,7 +3,13 @@
 from fastapi import APIRouter, status
 
 from core.dependencies import CurrentUserDep, LibrarianDep, SessionDep
-from schemas.transaction import IssueBookRequest, ReturnBookRequest, TransactionResponse
+from schemas.transaction import (
+  ActiveTransactionResponse,
+  IssueBookRequest,
+  MemberCurrentIssueResponse,
+  ReturnBookRequest,
+  TransactionResponse,
+)
 from services.transactions import TransactionsService
 
 transactions_router = APIRouter(tags=["Transactions"])
@@ -57,6 +63,21 @@ def return_book(
 
 
 @transactions_router.get(
+  "/transactions/active",
+  response_model=list[ActiveTransactionResponse],
+  summary="Get active transactions",
+  description="Librarian-only. Retrieves a list of all currently active (not returned) transactions.",
+  responses={**_LIBRARIAN_ERRORS},
+)
+def get_active_transactions(
+  session: SessionDep,
+  _: LibrarianDep,
+  search: str | None = None,
+) -> list[ActiveTransactionResponse]:
+  return TransactionsService.get_active_transactions(session, search)
+
+
+@transactions_router.get(
   "/transactions/overdue",
   response_model=list[TransactionResponse],
   summary="Get overdue transactions",
@@ -90,7 +111,7 @@ def get_transaction(
 
 @transactions_router.get(
   "/members/{id}/current-issues",
-  response_model=list[TransactionResponse],
+  response_model=list[MemberCurrentIssueResponse],
   summary="Get member current issues",
   description="Retrieves a list of all books currently issued to a specific member.",
   responses={**_AUTH_ERRORS},
@@ -99,5 +120,5 @@ def get_member_current_issues(
   id: int,
   session: SessionDep,
   _: CurrentUserDep,
-) -> list[TransactionResponse]:
+) -> list[MemberCurrentIssueResponse]:
   return TransactionsService.get_member_current_issues(session, id)

@@ -61,11 +61,11 @@ const useDashboardStore = create((set) => ({
         librarianStats: state.librarianStats
           ? {
               ...state.librarianStats,
-              pending_approvals_count: Math.max(
+              pending_approvals: Math.max(
                 0,
-                state.librarianStats.pending_approvals_count - 1
+                (state.librarianStats.pending_approvals || state.librarianStats.pending_approvals_count || 1) - 1
               ),
-              pending_approvals: state.librarianStats.pending_approvals.filter((u) => u.id !== id),
+              pending_approvals_list: (state.librarianStats.pending_approvals_list || []).filter((u) => u.id !== id),
             }
           : null,
         actionLoading: { ...state.actionLoading, [id]: null },

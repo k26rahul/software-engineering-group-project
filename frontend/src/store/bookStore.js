@@ -12,7 +12,7 @@ const useBookStore = create((set) => ({
     try {
       const { search, category } = params;
       const queryParams = new URLSearchParams();
-      if (search) queryParams.append("search", search);
+      if (search) queryParams.append("query", search);
       if (category) queryParams.append("category", category);
 
       const response = await api.get(`/books?${queryParams.toString()}`);
@@ -73,8 +73,29 @@ const useBookStore = create((set) => ({
     try {
       await api.delete(`/books/${id}`);
       set((state) => ({
-        books: state.books.filter((b) => b.id !== id),
-        selectedBook: state.selectedBook?.id === id ? null : state.selectedBook,
+        books: state.books.map((b) => (b.id === id ? { ...b, is_active: false } : b)),
+        selectedBook:
+          state.selectedBook?.id === id
+            ? { ...state.selectedBook, is_active: false }
+            : state.selectedBook,
+        isLoading: false,
+      }));
+    } catch (error) {
+      set({ error: error.message, isLoading: false });
+      throw error;
+    }
+  },
+
+  restoreBook: async (id) => {
+    set({ isLoading: true, error: null });
+    try {
+      await api.post(`/books/${id}/restore`);
+      set((state) => ({
+        books: state.books.map((b) => (b.id === id ? { ...b, is_active: true } : b)),
+        selectedBook:
+          state.selectedBook?.id === id
+            ? { ...state.selectedBook, is_active: true }
+            : state.selectedBook,
         isLoading: false,
       }));
     } catch (error) {

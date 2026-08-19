@@ -57,7 +57,7 @@ export default function IssueBookPage() {
 
   // Load members (only APPROVED+active)
   const loadMembers = useCallback(() => {
-    fetchMembers({ search: memberSearch, approval_status: "APPROVED" });
+    fetchMembers({ search: memberSearch, approval_status: "APPROVED", role: "MEMBER" });
   }, [memberSearch, fetchMembers]);
 
   useEffect(() => {

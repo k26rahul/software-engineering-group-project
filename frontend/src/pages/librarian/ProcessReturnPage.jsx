@@ -23,13 +23,22 @@ export default function ProcessReturnPage() {
   const [search, setSearch] = useState("");
 
   const load = useCallback(() => {
-    fetchActiveTransactions({ search });
-  }, [search, fetchActiveTransactions]);
+    fetchActiveTransactions();
+  }, [fetchActiveTransactions]);
 
   useEffect(() => {
-    const t = setTimeout(load, 300);
-    return () => clearTimeout(t);
+    load();
   }, [load]);
+
+  const filteredTransactions = activeTransactions.filter((tx) => {
+    if (!search) return true;
+    const term = search.toLowerCase();
+    return (
+      tx.member_name.toLowerCase().includes(term) ||
+      tx.book_title.toLowerCase().includes(term) ||
+      tx.transaction_id.toString().includes(term)
+    );
+  });
 
   const handleReturn = async (transaction) => {
     try {
@@ -160,7 +169,7 @@ export default function ProcessReturnPage() {
                       </TableCell>
                     </TableRow>
                   ))
-                ) : activeTransactions.length === 0 ? (
+                ) : filteredTransactions.length === 0 ? (
                   <TableRow>
                     <TableCell colSpan={6} className="text-muted-foreground h-28 text-center">
                       <CheckCircle className="mx-auto mb-2 h-6 w-6 text-emerald-500" />
@@ -168,7 +177,7 @@ export default function ProcessReturnPage() {
                     </TableCell>
                   </TableRow>
                 ) : (
-                  activeTransactions.map((tx) => (
+                  filteredTransactions.map((tx) => (
                     <TableRow
                       key={tx.transaction_id}
                       className={tx.is_overdue ? "bg-destructive/5" : ""}

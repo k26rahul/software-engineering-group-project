@@ -33,8 +33,11 @@ def list_members(
     default=None, description="Filter by member approval status"
   ),
   role: UserRole | None = Query(default=None, description="Filter by user role"),
+  search: str | None = Query(default=None, description="Search by name or email"),
 ) -> list[MemberSummaryResponse]:
-  return MembersService.list_members(session, approval_status=approval_status, role=role)
+  return MembersService.list_members(
+    session, approval_status=approval_status, role=role, search=search
+  )
 
 
 @members_router.get(

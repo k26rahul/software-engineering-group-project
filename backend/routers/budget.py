@@ -1,7 +1,7 @@
 from fastapi import APIRouter
 
 from core.dependencies import SessionDep, StaffDep
-from schemas.budget import BudgetSummaryResponse, ExpenseItemResponse, RecordPurchaseRequest
+from schemas.budget import BudgetEntryResponse, BudgetSummaryResponse, RecordBudgetEntryRequest
 from services.budget import BudgetService
 
 budget_router = APIRouter(tags=["Budget"])
@@ -21,13 +21,13 @@ def get_budget_summary(
 
 @budget_router.post(
   "/budget/expenses",
-  response_model=ExpenseItemResponse,
-  summary="Record an expense",
-  description="Manually log a new expense (Librarian-only).",
+  response_model=BudgetEntryResponse,
+  summary="Record an entry",
+  description="Manually log a new budget entry (Librarian-only).",
 )
 def record_expense(
-  request: RecordPurchaseRequest,
+  request: RecordBudgetEntryRequest,
   session: SessionDep,
   _: StaffDep,
-) -> ExpenseItemResponse:
+) -> BudgetEntryResponse:
   return BudgetService.record_expense(session, request)

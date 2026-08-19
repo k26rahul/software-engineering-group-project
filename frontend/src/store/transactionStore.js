@@ -41,7 +41,10 @@ const useTransactionStore = create((set) => ({
   returnBook: async (transactionId) => {
     set((state) => ({ actionLoading: { ...state.actionLoading, [transactionId]: true } }));
     try {
-      const response = await api.patch(`/transactions/${transactionId}/return`);
+      const response = await api.post(`/transactions/return`, {
+        transaction_id: transactionId,
+        condition: "GOOD",
+      });
       set((state) => ({
         activeTransactions: state.activeTransactions.filter(
           (t) => t.transaction_id !== transactionId

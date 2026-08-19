@@ -4,13 +4,17 @@ from sqlmodel import Session, select
 
 from core.auth import hash_password
 from core.seed_data.books import BOOKS
+from core.seed_data.budget import BUDGET_ENTRIES
 from core.seed_data.members import MEMBERS
 from core.seed_data.purchase_requests import PURCHASE_REQUESTS
+from core.seed_data.reading_lists import READING_LISTS
 from core.seed_data.reservations import RESERVATIONS
 from core.seed_data.reviews import REVIEWS
 from core.seed_data.subscriptions import SUBSCRIPTIONS
 from core.seed_data.transactions import TRANSACTIONS
 from models.book import Book, BookCopy
+from models.reading_list import ReadingList, ReadingListBook
+from models.budget import BudgetEntry
 from models.enums import (
   CopyStatus,
   MemberApprovalStatus,
@@ -29,6 +33,8 @@ from models.review import Review
 from models.subscription import Newspaper, Subscription
 from models.transaction import Transaction
 from models.user import User
+from models.notification import Notification
+from models.enums import NotificationType
 
 
 def seed_default_users(session: Session) -> None:
@@ -254,5 +260,77 @@ def seed_subscriptions(session: Session) -> None:
         subscription_id=subscription.id,
       )
       session.add(newspaper)
+
+  session.commit()
+
+
+def seed_notifications(session: Session) -> None:
+  """Seeds notifications for the librarian user."""
+  if session.exec(select(Notification)).first() is not None:
+    return
+
+  librarian = session.exec(select(User).where(User.role == UserRole.LIBRARIAN)).first()
+  if librarian is None:
+    return
+
+  notifications = [
+    Notification(
+      recipient_id=librarian.id,
+      type=NotificationType.REGISTRATION_APPROVED,
+      message="New member registration request from Amit Patel requires your approval.",
+      is_read=False,
+    ),
+    Notification(
+      recipient_id=librarian.id,
+      type=NotificationType.OVERDUE_REMINDER,
+      message="The book 'The Catcher in the Rye' issued to Vaishnavi is overdue by 26 days.",
+      is_read=False,
+    ),
+    Notification(
+      recipient_id=librarian.id,
+      type=NotificationType.BILLING_RENEWAL,
+      message="Monthly billing report is ready for review.",
+      is_read=False,
+    ),
+  ]
+  for n in notifications:
+    session.add(n)
+  session.commit()
+
+
+def seed_budget_entries(session: Session) -> None:
+  """Seeds default budget entries."""
+  if session.exec(select(BudgetEntry)).first() is not None:
+    return
+
+  for data in BUDGET_ENTRIES:
+    entry = BudgetEntry(
+      description=data["description"],
+      category=data["category"],
+      amount=data["amount"],
+      type=data["type"],
+      date=data["date"],
+    )
+    session.add(entry)
+
+  session.commit()
+
+
+def seed_reading_lists(session: Session) -> None:
+  """Seeds librarian-curated reading lists with book associations."""
+  if session.exec(select(ReadingList)).first() is not None:
+    return
+
+  for data in READING_LISTS:
+    reading_list = ReadingList(title=data["title"], description=data["description"])
+    session.add(reading_list)
+    session.flush()  # assigns reading_list.id before linking books
+
+    for isbn in data["book_isbns"]:
+      book = session.exec(select(Book).where(Book.isbn == isbn)).first()
+      if book is None:
+        continue
+      rl_book = ReadingListBook(reading_list_id=reading_list.id, book_id=book.id)
+      session.add(rl_book)
 
   session.commit()

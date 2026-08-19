@@ -14,10 +14,10 @@ from schemas.book import (
   UpdateCopyStatusRequest,
 )
 from schemas.budget import (
+  BudgetEntryResponse,
   BudgetSummaryResponse,
-  ExpenseItemResponse,
   ExpenseReportResponse,
-  RecordPurchaseRequest,
+  RecordBudgetEntryRequest,
   UsageReportResponse,
 )
 from schemas.notification import NotificationResponse
@@ -93,9 +93,9 @@ __all__ = [
   "ReadingListResponse",
   "CreatePurchaseRequestRequest",
   "PurchaseRequestResponse",
-  "RecordPurchaseRequest",
+  "RecordBudgetEntryRequest",
   "BudgetSummaryResponse",
-  "ExpenseItemResponse",
+  "BudgetEntryResponse",
   "UsageReportResponse",
   "ExpenseReportResponse",
   "CreateSubscriptionRequest",

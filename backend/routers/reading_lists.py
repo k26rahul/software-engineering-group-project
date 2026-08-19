@@ -6,6 +6,7 @@ from core.database import get_session
 from core.dependencies import LibrarianDep
 from schemas.reading_list import (
   CreateReadingListRequest,
+  ReadingListDetailResponse,
   ReadingListResponse,
   UpdateReadingListRequest,
 )
@@ -23,6 +24,12 @@ def get_reading_lists(session: Session = Depends(get_session)):
 def get_reading_list(id: int, session: Session = Depends(get_session)):
   """Retrieves the details and associated books for a specific reading list."""
   return reading_list_service.get_reading_list(session, id)
+
+
+@reading_lists_router.get("/reading-lists/{id}/detail", response_model=ReadingListDetailResponse)
+def get_reading_list_detail(id: int, session: Session = Depends(get_session)):
+  """Retrieves a reading list with full embedded book details for the member UI."""
+  return reading_list_service.get_reading_list_detail(session, id)
 
 
 @reading_lists_router.post("/reading-lists", response_model=ReadingListResponse)
