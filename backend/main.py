@@ -67,7 +67,7 @@ def create_app() -> FastAPI:
     allow_origins=[
       "http://localhost:5173",
       "http://localhost:5174",
-      "https://your-app-name.netlify.app",
+      "https://polite-fudge-f82b6c.netlify.app",
     ],
     allow_credentials=True,
     allow_methods=["*"],
