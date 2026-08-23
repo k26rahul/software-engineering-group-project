@@ -1,5 +1,11 @@
 # Seed data for Book and BookCopy records.
 # Each entry in BOOKS has a "copies" list describing the initial physical copies.
+#
+# Copy status legend:
+#   AVAILABLE  – on the shelf, can be issued
+#   ISSUED     – currently borrowed by a member (a transaction row exists)
+#   DAMAGED    – requires repair
+#   LOST       – lost / written off
 
 BOOKS = [
   {
@@ -10,6 +16,7 @@ BOOKS = [
     "price": 499.0,
     "description": "A handbook of agile software craftsmanship that teaches you "
     "how to write clean, maintainable code.",
+    # copy1 & copy2 used for completed transactions; copy3 is active-overdue
     "copies": ["AVAILABLE", "AVAILABLE", "ISSUED"],
   },
   {
@@ -37,7 +44,8 @@ BOOKS = [
     "category": "Fiction",
     "price": 199.0,
     "description": "A dystopian social science fiction novel and cautionary tale.",
-    "copies": ["ISSUED", "ISSUED"],
+    # copy1 = overdue (kiran), copy2 = normal (sneha), copy3 = overdue (member@)
+    "copies": ["ISSUED", "ISSUED", "ISSUED"],
   },
   {
     "title": "Sapiens: A Brief History of Humankind",
@@ -46,7 +54,8 @@ BOOKS = [
     "category": "History",
     "price": 550.0,
     "description": "An exploration of the history of the human species.",
-    "copies": ["AVAILABLE", "AVAILABLE", "DAMAGED"],
+    # copy4 = normal active (member@)
+    "copies": ["AVAILABLE", "AVAILABLE", "DAMAGED", "ISSUED"],
   },
   {
     "title": "Steve Jobs",
@@ -55,7 +64,8 @@ BOOKS = [
     "category": "Biography",
     "price": 600.0,
     "description": "The exclusive biography of Steve Jobs.",
-    "copies": ["AVAILABLE", "ISSUED"],
+    # copy2 = overdue (priya), copy3 = normal (kiran)
+    "copies": ["AVAILABLE", "ISSUED", "ISSUED"],
   },
   {
     "title": "Design Patterns",
@@ -82,7 +92,8 @@ BOOKS = [
     "category": "Science",
     "price": 450.0,
     "description": "A landmark book on evolution by Richard Dawkins.",
-    "copies": ["AVAILABLE", "AVAILABLE"],
+    # copy2 = overdue (arjun), copy3 = normal (arjun)
+    "copies": ["AVAILABLE", "ISSUED", "ISSUED"],
   },
   {
     "title": "The Diary of a Young Girl",

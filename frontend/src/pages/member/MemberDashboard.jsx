@@ -8,6 +8,7 @@ import MemberProfilePage from "./MemberProfilePage";
 import MemberCatalogPage from "./MemberCatalogPage";
 import ReadingListDetailPage from "./ReadingListDetailPage";
 import BorrowingHistoryPage from "./BorrowingHistoryPage";
+import MemberPaymentPage from "./MemberPaymentPage";
 import {
   BookOpen,
   Calendar,
@@ -19,6 +20,7 @@ import {
   Book,
   XCircle,
 } from "lucide-react";
+import { formatDate } from "@/lib/utils";
 
 function MemberDashboardHome() {
   const user = useAuthStore((state) => state.user);
@@ -234,7 +236,7 @@ function MemberDashboardHome() {
                         <div>
                           <h4 className="text-foreground font-semibold">{issue.book_title}</h4>
                           <p className="text-muted-foreground mt-1 flex items-center gap-1 text-xs">
-                            <Calendar className="h-3 w-3" /> Issued: {issue.issue_date}
+                            <Calendar className="h-3 w-3" /> Issued: {formatDate(issue.issue_date)}
                           </p>
                         </div>
                       </div>
@@ -245,7 +247,7 @@ function MemberDashboardHome() {
                           <p
                             className={`flex items-center gap-1 text-sm font-medium ${issue.is_overdue ? "text-destructive font-bold" : "text-foreground"}`}
                           >
-                            {issue.due_date}
+                            {formatDate(issue.due_date)}
                             {issue.is_overdue && (
                               <AlertTriangle className="h-3 w-3 animate-bounce" />
                             )}
@@ -361,6 +363,7 @@ export default function MemberDashboard() {
       <Route path="catalog" element={<MemberCatalogPage />} />
       <Route path="reading-list/:id" element={<ReadingListDetailPage />} />
       <Route path="history" element={<BorrowingHistoryPage />} />
+      <Route path="fines/:fineId/pay" element={<MemberPaymentPage />} />
     </Routes>
   );
 }

@@ -1,4 +1,5 @@
 import { useEffect, useState, useCallback } from "react";
+import { useNavigate } from "react-router-dom";
 import { Search, RotateCcw, Loader2, AlertTriangle, CheckCircle, RotateCw } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -15,10 +16,11 @@ import { Badge } from "@/components/ui/badge";
 import { Skeleton } from "@/components/ui/skeleton";
 import { toast } from "sonner";
 import useTransactionStore from "@/store/transactionStore";
+import { formatDate } from "@/lib/utils";
 
 export default function ProcessReturnPage() {
-  const { activeTransactions, isLoading, actionLoading, fetchActiveTransactions, returnBook } =
-    useTransactionStore();
+  const navigate = useNavigate();
+  const { activeTransactions, isLoading, fetchActiveTransactions } = useTransactionStore();
 
   const [search, setSearch] = useState("");
 
@@ -40,18 +42,8 @@ export default function ProcessReturnPage() {
     );
   });
 
-  const handleReturn = async (transaction) => {
-    try {
-      const result = await returnBook(transaction.transaction_id);
-      const fine = result?.fine_amount;
-      if (fine > 0) {
-        toast.warning(`"${transaction.book_title}" returned. Fine of ₹${fine.toFixed(2)} applied.`);
-      } else {
-        toast.success(`"${transaction.book_title}" returned successfully.`);
-      }
-    } catch (err) {
-      toast.error(err.message || "Failed to process return.");
-    }
+  const handleReturnClick = (transaction) => {
+    navigate(`/librarian/return/process/${transaction.transaction_id}`, { state: { transaction } });
   };
 
   const overdueCount = activeTransactions.filter((t) => t.is_overdue).length;
@@ -192,10 +184,10 @@ export default function ProcessReturnPage() {
                         {tx.book_title}
                       </TableCell>
                       <TableCell className="text-muted-foreground hidden text-sm md:table-cell">
-                        {new Date(tx.issue_date).toLocaleDateString()}
+                        {formatDate(tx.issue_date)}
                       </TableCell>
                       <TableCell className="text-sm">
-                        {new Date(tx.due_date).toLocaleDateString()}
+                        {formatDate(tx.due_date)}
                       </TableCell>
                       <TableCell>
                         {tx.is_overdue ? (
@@ -220,14 +212,9 @@ export default function ProcessReturnPage() {
                           size="sm"
                           variant="outline"
                           className="h-7 gap-1.5 px-3 text-xs"
-                          disabled={actionLoading[tx.transaction_id]}
-                          onClick={() => handleReturn(tx)}
+                          onClick={() => handleReturnClick(tx)}
                         >
-                          {actionLoading[tx.transaction_id] ? (
-                            <Loader2 className="h-3 w-3 animate-spin" />
-                          ) : (
-                            <RotateCcw className="h-3 w-3" />
-                          )}
+                          <RotateCcw className="h-3 w-3" />
                           Return
                         </Button>
                       </TableCell>

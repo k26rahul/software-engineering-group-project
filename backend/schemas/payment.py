@@ -26,3 +26,5 @@ class FineResponse(SQLModel):
   amount: float
   reason: ReturnCondition
   is_paid: bool
+  book_title: str | None = None
+  status: str | None = None

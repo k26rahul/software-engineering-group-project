@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback, useMemo } from "react";
-import { Search, BookOpen, User, Check, Loader2, AlertTriangle, ChevronRight } from "lucide-react";
+import { Search, BookOpen, User, Check, Loader2, ChevronRight, CalendarDays } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -9,6 +9,7 @@ import { toast } from "sonner";
 import useBookStore from "@/store/bookStore";
 import useMemberStore from "@/store/memberStore";
 import useTransactionStore from "@/store/transactionStore";
+import { formatDate } from "@/lib/utils";
 
 // Step indicator
 function Step({ number, label, active, done }) {
@@ -48,12 +49,24 @@ export default function IssueBookPage() {
   const [bookSearch, setBookSearch] = useState("");
   const [selectedMember, setSelectedMember] = useState(null);
   const [selectedBook, setSelectedBook] = useState(null);
+  const [loanDays, setLoanDays] = useState(14);
 
-  const issueDateStr = useMemo(() => new Date().toLocaleDateString(), []);
-  const dueDateStr = useMemo(
-    () => new Date(Date.now() + 14 * 24 * 60 * 60 * 1000).toLocaleDateString(),
-    []
+  const LOAN_PRESETS = [
+    { days: 5, label: "5 days", hint: "Magazines" },
+    { days: 10, label: "10 days", hint: "High demand" },
+    { days: 14, label: "14 days", hint: "Standard" },
+    { days: 20, label: "20 days", hint: "Regular" },
+    { days: 30, label: "30 days", hint: "Extended" },
+  ];
+
+  const issueDateStr = useMemo(() => formatDate(new Date()), []);
+  const dueDate = useMemo(
+    () => new Date(Date.now() + loanDays * 24 * 60 * 60 * 1000),
+    [loanDays]
   );
+  const dueDateStr = useMemo(() => formatDate(dueDate), [dueDate]);
+  // ISO date string for the API (YYYY-MM-DD)
+  const dueDateISO = useMemo(() => dueDate.toISOString().split("T")[0], [dueDate]);
 
   // Load members (only APPROVED+active)
   const loadMembers = useCallback(() => {
@@ -92,16 +105,17 @@ export default function IssueBookPage() {
   const handleIssue = async () => {
     if (!selectedMember || !selectedBook) return;
     try {
-      // The store will use any available copy_id; we pass -1 to let the mock pick one.
-      // In a real API the server picks the copy. Here we simulate by passing copy_id=null.
-      await issueBook(selectedMember.id, selectedBook.id, null);
-      toast.success(`"${selectedBook.title}" issued to ${selectedMember.name} for 14 days.`);
+      await issueBook(selectedMember.id, selectedBook.id, null, dueDateISO);
+      toast.success(
+        `"${selectedBook.title}" issued to ${selectedMember.name} for ${loanDays} days.`
+      );
       // Reset
       setStep(1);
       setSelectedMember(null);
       setSelectedBook(null);
       setMemberSearch("");
       setBookSearch("");
+      setLoanDays(14);
     } catch (err) {
       toast.error(err.message || "Failed to issue book.");
     }
@@ -299,7 +313,33 @@ export default function IssueBookPage() {
                       Due Date
                     </p>
                     <p className="font-semibold">{dueDateStr}</p>
-                    <p className="text-muted-foreground text-xs">14-day loan period</p>
+                    <p className="text-muted-foreground text-xs">{loanDays}-day loan period</p>
+                  </div>
+                </div>
+
+                {/* Loan duration selector */}
+                <div className="flex flex-col gap-2">
+                  <p className="flex items-center gap-1.5 text-sm font-medium">
+                    <CalendarDays className="text-primary h-4 w-4" />
+                    Loan Period
+                  </p>
+                  <div className="flex flex-wrap gap-2">
+                    {LOAN_PRESETS.map(({ days, label, hint }) => (
+                      <button
+                        key={days}
+                        id={`loan-preset-${days}`}
+                        type="button"
+                        onClick={() => setLoanDays(days)}
+                        className={`flex flex-col items-center rounded-lg border px-4 py-2 text-xs transition-all duration-150 ${
+                          loanDays === days
+                            ? "border-primary bg-primary/10 text-primary font-semibold shadow-sm"
+                            : "border-border text-muted-foreground hover:border-primary/50 hover:text-foreground"
+                        }`}
+                      >
+                        <span className="text-sm font-bold">{label}</span>
+                        <span className="mt-0.5 opacity-70">{hint}</span>
+                      </button>
+                    ))}
                   </div>
                 </div>
                 <div className="flex gap-2">
@@ -335,7 +375,11 @@ export default function IssueBookPage() {
                 Member
               </p>
               {selectedMember ? (
-                <p className="text-sm font-semibold">{selectedMember.name}</p>
+                <>
+                  <p className="text-sm font-semibold">{selectedMember.name}</p>
+                  <p className="text-muted-foreground text-xs">ID: {selectedMember.id}</p>
+                  <p className="text-muted-foreground text-xs">{selectedMember.email}</p>
+                </>
               ) : (
                 <p className="text-muted-foreground text-sm italic">Not selected</p>
               )}
@@ -350,12 +394,7 @@ export default function IssueBookPage() {
                 <p className="text-muted-foreground text-sm italic">Not selected</p>
               )}
             </div>
-            {selectedMember && (
-              <div className="flex items-start gap-2 rounded-lg bg-amber-500/10 p-3 text-xs text-amber-700">
-                <AlertTriangle className="mt-0.5 h-3.5 w-3.5 shrink-0" />
-                Verify member ID before issuing.
-              </div>
-            )}
+
           </CardContent>
         </Card>
       </div>

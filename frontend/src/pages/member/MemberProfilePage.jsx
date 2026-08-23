@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
 import { Card, CardHeader, CardTitle, CardDescription, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -14,7 +15,10 @@ import {
   CheckCircle2,
   History,
   AlertCircle,
+  AlertTriangle,
+  CreditCard,
 } from "lucide-react";
+import { formatDate } from "@/lib/utils";
 
 function ProfileForm({ profile, memberId, updateProfile, error }) {
   const [saving, setSaving] = useState(false);
@@ -159,7 +163,7 @@ function ProfileForm({ profile, memberId, updateProfile, error }) {
 
 export default function MemberProfilePage() {
   const user = useAuthStore((state) => state.user);
-  const { profile, history, loading, error, fetchProfileAndHistory, updateProfile } =
+  const { profile, history, pendingFines, loading, error, fetchProfileAndHistory, updateProfile } =
     useMemberStore();
 
   const memberId = user?.id || 1;
@@ -203,6 +207,58 @@ export default function MemberProfilePage() {
             />
           )}
 
+          {/* Pending Fines Section */}
+          {pendingFines && pendingFines.length > 0 && (
+            <Card className="border-amber-500/50">
+              <CardHeader className="bg-amber-500/10 border-b border-amber-500/20 pb-4">
+                <CardTitle className="text-amber-700 flex items-center gap-2 text-xl font-bold">
+                  <AlertTriangle className="h-5 w-5" />
+                  Action Required: Pending Fines
+                </CardTitle>
+                <CardDescription className="text-amber-700/80">
+                  You have outstanding fines that need to be settled. Returns and new checkouts may be blocked.
+                </CardDescription>
+              </CardHeader>
+              <CardContent className="pt-6">
+                <div className="flex flex-col gap-4">
+                  {pendingFines.map((fine) => (
+                    <div key={fine.id} className="flex flex-col sm:flex-row sm:items-center justify-between p-4 rounded-xl border bg-white shadow-sm gap-4">
+                      <div className="flex items-start gap-3">
+                        <div className="mt-1 shrink-0 rounded-lg p-2 bg-destructive/10 text-destructive">
+                          <AlertCircle className="h-5 w-5" />
+                        </div>
+                        <div>
+                          <h4 className="text-foreground font-semibold">{fine.book_title || `Transaction #${fine.transaction_id}`}</h4>
+                          <div className="flex items-center gap-2 mt-1">
+                            <span className={`text-xs px-2 py-0.5 rounded-md font-medium ${fine.status === 'OVERDUE' ? 'bg-destructive/10 text-destructive' : 'bg-primary/10 text-primary'}`}>
+                              {fine.status === "OVERDUE" ? "Overdue Return" : "Active"}
+                            </span>
+                            <span className="text-xs text-muted-foreground">•</span>
+                            <span className="text-xs text-muted-foreground font-medium">Condition: {fine.reason}</span>
+                          </div>
+                        </div>
+                      </div>
+                      <div className="flex items-center justify-between sm:justify-end gap-4 shrink-0">
+                        <div className="text-left sm:text-right">
+                          <p className="text-muted-foreground text-xs">Amount Due</p>
+                          <p className="text-lg font-bold text-destructive">
+                            ₹{fine.amount.toFixed(2)}
+                          </p>
+                        </div>
+                        <Button asChild className="shrink-0 gap-2">
+                          <Link to={`/member/fines/${fine.id}/pay`}>
+                            <CreditCard className="h-4 w-4" />
+                            Pay Now
+                          </Link>
+                        </Button>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </CardContent>
+            </Card>
+          )}
+
           {/* Borrowing History Table */}
           <Card className="border-border">
             <CardHeader>
@@ -240,10 +296,10 @@ export default function MemberProfilePage() {
                           <td className="text-foreground px-4 py-3 font-medium">
                             {item.book_title}
                           </td>
-                          <td className="text-muted-foreground px-4 py-3">{item.issue_date}</td>
-                          <td className="text-muted-foreground px-4 py-3">{item.due_date}</td>
+                          <td className="text-muted-foreground px-4 py-3">{formatDate(item.issue_date)}</td>
+                          <td className="text-muted-foreground px-4 py-3">{formatDate(item.due_date)}</td>
                           <td className="text-muted-foreground px-4 py-3">
-                            {item.return_date || "-"}
+                            {item.return_date ? formatDate(item.return_date) : "-"}
                           </td>
                           <td className="px-4 py-3 text-right">
                             <span
@@ -298,7 +354,7 @@ export default function MemberProfilePage() {
                 <span className="text-muted-foreground text-sm">Join Date</span>
                 <span className="flex items-center gap-1 text-sm font-semibold">
                   <Calendar className="text-muted-foreground h-4 w-4" />
-                  {profile?.created_at ? new Date(profile.created_at).toLocaleDateString() : "-"}
+                  {profile?.created_at ? formatDate(profile.created_at) : "-"}
                 </span>
               </div>
               <div className="border-border flex items-center justify-between border-b py-2">
@@ -308,7 +364,7 @@ export default function MemberProfilePage() {
               <div className="flex items-center justify-between py-2">
                 <span className="text-muted-foreground text-sm">Cycle Renewal</span>
                 <span className="font-mono text-sm font-semibold">
-                  {profile?.membership_start_date || "N/A"}
+                  {profile?.membership_start_date ? formatDate(profile.membership_start_date) : "N/A"}
                 </span>
               </div>
             </CardContent>

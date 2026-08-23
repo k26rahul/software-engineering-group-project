@@ -15,6 +15,7 @@ import PendingApprovalPage from "@/pages/auth/PendingApprovalPage";
 import LibrarianDashboard from "@/pages/librarian/LibrarianDashboard";
 import MemberDashboard from "@/pages/member/MemberDashboard";
 import ManagementDashboard from "@/pages/management/ManagementDashboard";
+import PdfReportPage from "@/pages/management/PdfReportPage";
 
 export default function App() {
   const initializeAuth = useAuthStore((state) => state.initializeAuth);
@@ -80,6 +81,10 @@ export default function App() {
         />
 
         {/* Management Routes */}
+        <Route
+          path="/management/print-report/:type"
+          element={<PdfReportPage />}
+        />
         <Route
           path="/management/*"
           element={

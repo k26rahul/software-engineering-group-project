@@ -51,6 +51,7 @@ import {
   LineChart,
   Line,
 } from "recharts";
+import { exportToCSV } from "@/lib/utils";
 import useReportsStore from "@/store/reportsStore";
 
 const PIE_COLORS = ["#3b82f6", "#10b981", "#8b5cf6", "#f59e0b", "#f43f5e"];
@@ -80,6 +81,40 @@ export default function ManagementReportsPage() {
 
   // Handle report downloads with toast feedback
   const handleDownload = async (type) => {
+    if (type === "pdf" || type === "monthly_audit" || type === "category_analytics") {
+      window.open(`/management/print-report/${type}`, "_blank");
+      return;
+    }
+
+    if (type === "expense_statement" || type === "csv") {
+      const headers = ["Date", "Description", "Category", "Amount", "Status"];
+      const rows = (expenseReport?.expense_items || []).map(item => [
+        item.date,
+        item.description,
+        item.category,
+        `₹${item.amount.toFixed(2)}`,
+        item.status
+      ]);
+      exportToCSV("expense_statement.csv", headers, rows);
+      toast.success("Exported EXPENSE STATEMENT CSV successfully");
+      return;
+    }
+
+    if (type === "top_borrowed_books_csv") {
+      const headers = ["Rank", "Book Title", "Author", "Category", "Total Checkouts", "Available Copies"];
+      const rows = (usageReport?.top_borrowed_books || []).map((book, idx) => [
+        `#${idx + 1}`,
+        book.title,
+        book.author,
+        book.category,
+        book.checkouts,
+        book.available
+      ]);
+      exportToCSV("top_borrowed_books.csv", headers, rows);
+      toast.success("Exported TOP BORROWED BOOKS CSV successfully");
+      return;
+    }
+
     try {
       const res = await downloadReport(type);
       toast.success(res.message || `Exported ${type.toUpperCase()} report successfully`);
@@ -397,9 +432,19 @@ export default function ManagementReportsPage() {
 
               {/* Top Borrowed Books Table */}
               <Card>
-                <CardHeader>
-                  <CardTitle className="text-xl font-bold">Most borrowed books</CardTitle>
-                  <CardDescription>Popular books with high circulation velocity</CardDescription>
+                <CardHeader className="flex flex-row items-center justify-between">
+                  <div>
+                    <CardTitle className="text-xl font-bold">Most borrowed books</CardTitle>
+                    <CardDescription>Popular books with high circulation velocity</CardDescription>
+                  </div>
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    className="h-8 gap-1 text-xs"
+                    onClick={() => handleDownload("top_borrowed_books_csv")}
+                  >
+                    <FileSpreadsheet className="h-3.5 w-3.5 text-emerald-600" /> CSV
+                  </Button>
                 </CardHeader>
                 <CardContent className="p-0">
                   <Table>
@@ -453,7 +498,7 @@ export default function ManagementReportsPage() {
                     <div className="text-2xl font-bold">
                       ₹{expenseSummary?.total_budget.toLocaleString()}
                     </div>
-                    <p className="text-muted-foreground mt-1 text-xs">Annual approved cap</p>
+                    <p className="text-muted-foreground mt-1 text-xs">Monthly approved cap</p>
                   </CardContent>
                 </Card>
 
@@ -552,11 +597,21 @@ export default function ManagementReportsPage() {
 
               {/* Expense Items Log Table */}
               <Card>
-                <CardHeader>
-                  <CardTitle className="text-xl font-bold">Recent Expense Itemization</CardTitle>
-                  <CardDescription>
-                    Audited book purchases, subscriptions, and maintenance
-                  </CardDescription>
+                <CardHeader className="flex flex-row items-center justify-between">
+                  <div>
+                    <CardTitle className="text-xl font-bold">Recent Expense Itemization</CardTitle>
+                    <CardDescription>
+                      Audited book purchases, subscriptions, and maintenance
+                    </CardDescription>
+                  </div>
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    className="h-8 gap-1 text-xs"
+                    onClick={() => handleDownload("expense_statement")}
+                  >
+                    <FileSpreadsheet className="h-3.5 w-3.5 text-emerald-600" /> CSV
+                  </Button>
                 </CardHeader>
                 <CardContent className="p-0">
                   <Table>

@@ -8,9 +8,15 @@ from schemas.transaction import (
   IssueBookRequest,
   MemberCurrentIssueResponse,
   ReturnBookRequest,
+  ConditionRequest,
+  InitiateReturnResponse,
   TransactionResponse,
 )
+from schemas.payment import FineResponse
 from services.transactions import TransactionsService
+from sqlmodel import select
+from models.payment import Fine
+from fastapi import HTTPException
 
 transactions_router = APIRouter(tags=["Transactions"])
 
@@ -60,6 +66,72 @@ def return_book(
   _: LibrarianDep,
 ) -> TransactionResponse:
   return TransactionsService.return_book(session, request)
+
+
+@transactions_router.post(
+  "/transactions/{id}/initiate-return",
+  response_model=InitiateReturnResponse,
+  summary="Initiate a book return",
+  description="Librarian-only. Calculates fines and creates a pending fine if applicable.",
+  responses={
+    **_LIBRARIAN_ERRORS,
+    400: {"description": "Transaction has already been returned."},
+    **_NOT_FOUND,
+  },
+)
+def initiate_return(
+  id: int,
+  request: ConditionRequest,
+  session: SessionDep,
+  _: LibrarianDep,
+) -> InitiateReturnResponse:
+  return TransactionsService.initiate_return(session, id, request)
+
+
+@transactions_router.post(
+  "/transactions/{id}/complete-return",
+  response_model=TransactionResponse,
+  summary="Complete a book return",
+  description="Librarian-only. Completes the return if no pending unpaid fines exist.",
+  responses={
+    **_LIBRARIAN_ERRORS,
+    400: {"description": "Transaction has already been returned or has unpaid fines."},
+    **_NOT_FOUND,
+  },
+)
+def complete_return(
+  id: int,
+  session: SessionDep,
+  _: LibrarianDep,
+) -> TransactionResponse:
+  return TransactionsService.complete_return(session, id)
+
+
+@transactions_router.get(
+  "/transactions/{id}/fine",
+  response_model=FineResponse,
+  summary="Get pending fine for a transaction",
+  description="Librarian-only. Gets the pending unpaid fine for a transaction, if any.",
+  responses={
+    **_LIBRARIAN_ERRORS,
+    **_NOT_FOUND,
+  },
+)
+def get_transaction_fine(
+  id: int,
+  session: SessionDep,
+  _: LibrarianDep,
+) -> FineResponse:
+  fine = session.exec(select(Fine).where(Fine.transaction_id == id, Fine.is_paid == False)).first()
+  if not fine:
+    raise HTTPException(status_code=404, detail="No pending fine found for this transaction.")
+  return FineResponse(
+    id=fine.id,
+    transaction_id=fine.transaction_id,
+    amount=fine.amount,
+    reason=fine.reason, # Type is ReturnCondition but schema can handle it or cast it
+    is_paid=fine.is_paid,
+  )
 
 
 @transactions_router.get(

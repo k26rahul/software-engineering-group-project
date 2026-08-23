@@ -15,6 +15,8 @@ from schemas.transaction import (
   IssueBookRequest,
   MemberCurrentIssueResponse,
   ReturnBookRequest,
+  ConditionRequest,
+  InitiateReturnResponse,
   TransactionResponse,
 )
 
@@ -138,7 +140,7 @@ class TransactionsService:
         transaction_id=transaction.id,
         member_id=transaction.member_id,
         amount=fine_amount,
-        reason=f"Return condition: {request.condition.value}, overdue days: {overdue_days}",
+        reason=request.condition,
       )
       session.add(fine)
 
@@ -156,6 +158,124 @@ class TransactionsService:
       return_condition=transaction.return_condition,
       is_overdue=False,
     )
+
+  @staticmethod
+  def initiate_return(session: Session, transaction_id: int, request: ConditionRequest) -> InitiateReturnResponse:
+    """Initiates a return by calculating fines. Creates a pending fine if applicable."""
+    transaction = session.get(Transaction, transaction_id)
+    if not transaction:
+      raise HTTPException(
+        status_code=status.HTTP_404_NOT_FOUND,
+        detail=f"Transaction with ID {transaction_id} not found.",
+      )
+
+    if transaction.return_date is not None:
+      raise HTTPException(
+        status_code=status.HTTP_400_BAD_REQUEST,
+        detail="Transaction has already been returned.",
+      )
+
+    # Check if a fine already exists for this transaction
+    existing_fine = session.exec(select(Fine).where(Fine.transaction_id == transaction_id)).first()
+
+    today = date.today()
+    fine_amount = 0.0
+    if today > transaction.due_date:
+      days_overdue = (today - transaction.due_date).days
+      fine_amount += days_overdue * 2.0  # $2/day fine rate
+
+    if request.condition == ReturnCondition.DAMAGED:
+      fine_amount += 15.0  # $15 damage fee
+    elif request.condition == ReturnCondition.LOST:
+      fine_amount += 50.0  # $50 lost book replacement fee
+
+    transaction.return_condition = request.condition
+    session.add(transaction)
+    
+    fine_id = None
+    if fine_amount > 0:
+      if existing_fine:
+        existing_fine.amount = fine_amount
+        existing_fine.reason = request.condition
+        session.add(existing_fine)
+        fine_id = existing_fine.id
+      else:
+        fine = Fine(
+          transaction_id=transaction.id,
+          member_id=transaction.member_id,
+          amount=fine_amount,
+          reason=request.condition,
+        )
+        session.add(fine)
+        session.commit()
+        session.refresh(fine)
+        fine_id = fine.id
+    else:
+      # If no fine, we might as well process the return, but let the complete step do it for consistency
+      pass
+
+    session.commit()
+
+    return InitiateReturnResponse(
+      fine_amount=fine_amount,
+      fine_id=fine_id,
+      transaction_id=transaction.id
+    )
+
+  @staticmethod
+  def complete_return(session: Session, transaction_id: int) -> TransactionResponse:
+    """Completes the return if no pending fines exist."""
+    transaction = session.get(Transaction, transaction_id)
+    if not transaction:
+      raise HTTPException(
+        status_code=status.HTTP_404_NOT_FOUND,
+        detail=f"Transaction with ID {transaction_id} not found.",
+      )
+
+    if transaction.return_date is not None:
+      raise HTTPException(
+        status_code=status.HTTP_400_BAD_REQUEST,
+        detail="Transaction has already been returned.",
+      )
+
+    # Check for unpaid fine
+    fine = session.exec(select(Fine).where(Fine.transaction_id == transaction_id, Fine.is_paid == False)).first()
+    if fine:
+      raise HTTPException(
+        status_code=status.HTTP_400_BAD_REQUEST,
+        detail="Cannot complete return: there is an unpaid fine.",
+      )
+
+    today = date.today()
+    transaction.return_date = today
+
+    copy = session.get(BookCopy, transaction.book_copy_id)
+    if copy:
+      if transaction.return_condition == ReturnCondition.GOOD:
+        copy.status = CopyStatus.AVAILABLE
+      elif transaction.return_condition == ReturnCondition.DAMAGED:
+        copy.status = CopyStatus.DAMAGED
+      elif transaction.return_condition == ReturnCondition.LOST:
+        copy.status = CopyStatus.LOST
+      elif transaction.return_condition is None:
+        copy.status = CopyStatus.AVAILABLE
+      session.add(copy)
+
+    session.add(transaction)
+    session.commit()
+    session.refresh(transaction)
+
+    return TransactionResponse(
+      id=transaction.id,
+      member_id=transaction.member_id,
+      book_copy_id=transaction.book_copy_id,
+      issue_date=transaction.issue_date,
+      due_date=transaction.due_date,
+      return_date=transaction.return_date,
+      return_condition=transaction.return_condition,
+      is_overdue=False,
+    )
+
 
   @staticmethod
   def get_transaction(session: Session, transaction_id: int) -> TransactionResponse:

@@ -132,12 +132,17 @@ class MembersService:
         detail=f"Member with ID {member_id} not found.",
       )
 
-    transactions = session.exec(select(Transaction).where(Transaction.member_id == member_id)).all()
+    transactions = session.exec(
+      select(Transaction).where(
+        Transaction.member_id == member_id,
+        Transaction.return_date.is_not(None),
+      )
+    ).all()
 
     history = []
     for t in transactions:
       title = t.book_copy.book.title if t.book_copy and t.book_copy.book else "Unknown Book"
-      is_overdue = t.return_date is None and date.today() > t.due_date
+      is_overdue = t.return_date > t.due_date
       history.append(
         TransactionHistoryItemResponse(
           transaction_id=t.id,

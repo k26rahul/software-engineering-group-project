@@ -17,6 +17,16 @@ class ReturnBookRequest(SQLModel):
   condition: ReturnCondition
 
 
+class ConditionRequest(SQLModel):
+  condition: ReturnCondition
+
+
+class InitiateReturnResponse(SQLModel):
+  fine_amount: float
+  fine_id: int | None
+  transaction_id: int
+
+
 class TransactionResponse(SQLModel):
   id: int
   member_id: int

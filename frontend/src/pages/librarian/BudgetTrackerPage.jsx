@@ -25,6 +25,7 @@ import { Badge } from "@/components/ui/badge";
 import { Skeleton } from "@/components/ui/skeleton";
 import FormSelect from "@/components/FormSelect";
 import { toast } from "sonner";
+import { formatDate } from "@/lib/utils";
 import useTransactionStore from "@/store/transactionStore";
 
 const CATEGORIES = [
@@ -315,7 +316,7 @@ export default function BudgetTrackerPage() {
                   sorted.map((entry) => (
                     <TableRow key={entry.id}>
                       <TableCell className="text-muted-foreground text-sm">
-                        {new Date(entry.date).toLocaleDateString()}
+                        {formatDate(entry.date)}
                       </TableCell>
                       <TableCell className="text-sm">{entry.category}</TableCell>
                       <TableCell className="text-muted-foreground hidden text-sm sm:table-cell">

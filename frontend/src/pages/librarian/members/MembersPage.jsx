@@ -1,4 +1,5 @@
 import { useEffect, useState, useCallback } from "react";
+import { useNavigate } from "react-router-dom";
 import { Search, Users, Check, X, Loader2, RotateCcw, AlertTriangle } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -22,6 +23,7 @@ import { Badge } from "@/components/ui/badge";
 import { Skeleton } from "@/components/ui/skeleton";
 import { toast } from "sonner";
 import useMemberStore from "@/store/memberStore";
+import { formatDate } from "@/lib/utils";
 
 const STATUS_OPTIONS = [
   { value: "all", label: "All Statuses" },
@@ -74,6 +76,8 @@ export default function MembersPage() {
     approveMember,
     rejectMember,
   } = useMemberStore();
+
+  const navigate = useNavigate();
 
   const [search, setSearch] = useState("");
   const [statusFilter, setStatusFilter] = useState("all");
@@ -274,7 +278,11 @@ export default function MembersPage() {
                     const isPending = member.approval_status === "PENDING";
 
                     return (
-                      <TableRow key={member.id}>
+                      <TableRow
+                        key={member.id}
+                        className="hover:bg-muted/50 cursor-pointer"
+                        onClick={() => navigate(`/librarian/members/${member.id}`)}
+                      >
                         <TableCell className="font-medium">{member.name}</TableCell>
                         <TableCell className="text-muted-foreground hidden sm:table-cell">
                           {member.email}
@@ -291,11 +299,14 @@ export default function MembersPage() {
                           />
                         </TableCell>
                         <TableCell className="text-muted-foreground hidden text-sm lg:table-cell">
-                          {new Date(member.created_at).toLocaleDateString()}
+                          {formatDate(member.created_at)}
                         </TableCell>
                         <TableCell className="text-right">
                           {isPending ? (
-                            <div className="inline-flex gap-1.5">
+                            <div
+                              className="inline-flex gap-1.5"
+                              onClick={(e) => e.stopPropagation()}
+                            >
                               <Button
                                 id={`approve-member-${member.id}`}
                                 size="sm"

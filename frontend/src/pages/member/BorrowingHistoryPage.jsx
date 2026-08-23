@@ -14,6 +14,8 @@ import {
   Clock,
   BookMarked,
 } from "lucide-react";
+import { formatDate } from "@/lib/utils";
+
 
 export default function BorrowingHistoryPage() {
   const user = useAuthStore((state) => state.user);
@@ -175,14 +177,14 @@ export default function BorrowingHistoryPage() {
                         <td className="text-foreground px-4 py-3.5 font-semibold">
                           {item.book_title}
                         </td>
-                        <td className="text-muted-foreground px-4 py-3.5">{item.issue_date}</td>
+                        <td className="text-muted-foreground px-4 py-3.5">{formatDate(item.issue_date)}</td>
                         <td
                           className={`px-4 py-3.5 font-medium ${isOverdue ? "text-destructive" : "text-muted-foreground"}`}
                         >
-                          {item.due_date}
+                          {formatDate(item.due_date)}
                         </td>
                         <td className="text-muted-foreground px-4 py-3.5">
-                          {item.return_date || (
+                          {item.return_date ? formatDate(item.return_date) : (
                             <span className="text-primary text-xs font-medium italic">
                               In Progress
                             </span>

@@ -5,6 +5,7 @@ from sqlmodel import Session, select
 
 from models.enums import PaymentType
 from models.payment import Fine, Payment
+from models.transaction import Transaction
 from models.user import User
 from schemas.payment import FineResponse, PaymentResponse, ProcessPaymentRequest
 
@@ -22,19 +23,29 @@ class PaymentsService:
         detail=f"Member with ID {member_id} not found.",
       )
 
-    statement = select(Fine).where(Fine.member_id == member_id, Fine.is_paid == False)  # noqa: E712
-    fines = session.exec(statement).all()
+    statement = select(Fine, Transaction).join(Transaction, Fine.transaction_id == Transaction.id).where(Fine.member_id == member_id, Fine.is_paid == False)  # noqa: E712
+    results = session.exec(statement).all()
 
-    return [
-      FineResponse(
-        id=f.id,
-        transaction_id=f.transaction_id,
-        amount=f.amount,
-        reason=f.reason,
-        is_paid=f.is_paid,
+    response = []
+    for f, t in results:
+      title = "Unknown Book"
+      if t.book_copy and t.book_copy.book:
+        title = t.book_copy.book.title
+      
+      status = "OVERDUE" if t.is_overdue() else "ACTIVE"
+      
+      response.append(
+        FineResponse(
+          id=f.id,
+          transaction_id=f.transaction_id,
+          amount=f.amount,
+          reason=f.reason,
+          is_paid=f.is_paid,
+          book_title=title,
+          status=status,
+        )
       )
-      for f in fines
-    ]
+    return response
 
   @staticmethod
   def get_payment_history(session: Session, member_id: int) -> list[PaymentResponse]:

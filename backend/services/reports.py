@@ -7,7 +7,7 @@ import calendar
 from sqlmodel import Session, func, select, text
 
 from models.book import Book, BookCopy
-from models.budget import BookPurchaseEntry
+from models.budget import BookPurchaseEntry, BudgetEntry
 from models.enums import MemberApprovalStatus, UserRole, PaymentType
 from models.transaction import Transaction
 from models.user import User
@@ -184,27 +184,70 @@ class ReportsService:
             purchase_date=date(today.year, today.month, 1),
         ))
 
-    # Calculate summary (YTD)
-    total_budget = 120000.0
-    ytd_start = date(today.year, 1, 1)
+    # Add manual BudgetEntry expenses for current month
+    manual_expenses_stmt = select(BudgetEntry).where(
+      BudgetEntry.type == "EXPENSE",
+      func.extract("month", BudgetEntry.date) == month,
+      func.extract("year", BudgetEntry.date) == year,
+    )
+    manual_expenses = session.exec(manual_expenses_stmt).all()
     
-    # Calculate YTD book purchases
-    ytd_book_purchases = session.exec(select(BookPurchaseEntry).where(BookPurchaseEntry.purchase_date >= ytd_start)).all()
-    book_spend_ytd = sum(p.total_cost() for p in ytd_book_purchases)
-    
-    # Calculate YTD subscription spend (assuming they were active all year for simplicity)
-    sub_spend_ytd = monthly_sub_spend * today.month
+    for me in manual_expenses:
+      items.append(ExpenseItemResponse(
+        title=me.description,
+        category=me.category,
+        copies=1,
+        price_per_copy=me.amount,
+        total_cost=me.amount,
+        purchase_date=me.date,
+        status="PAID"
+      ))
 
-    total_spent = book_spend_ytd + sub_spend_ytd
-
-    ytd_start_str = ytd_start.strftime("%Y-%m-%d")
+    # Calculate summary (Current Month)
+    total_budget = 10000.0
+    month_start = date(today.year, today.month, 1)
+    month_end = date(today.year, today.month, calendar.monthrange(today.year, today.month)[1])
     
-    # Calculate YTD fine income
+    # Calculate current month book purchases
+    month_book_purchases = session.exec(select(BookPurchaseEntry).where(
+        BookPurchaseEntry.purchase_date >= month_start,
+        BookPurchaseEntry.purchase_date <= month_end
+    )).all()
+    book_spend_month = sum(p.total_cost() for p in month_book_purchases)
+    
+    # Subscription spend is monthly
+    sub_spend_month = monthly_sub_spend
+
+    # Calculate manual budget expenses
+    month_manual_expenses_stmt = select(func.sum(BudgetEntry.amount)).where(
+        BudgetEntry.type == "EXPENSE",
+        BudgetEntry.date >= month_start,
+        BudgetEntry.date <= month_end
+    )
+    manual_spend_month = session.exec(month_manual_expenses_stmt).one_or_none() or 0.0
+
+    total_spent = book_spend_month + sub_spend_month + manual_spend_month
+
+    month_start_str = month_start.strftime("%Y-%m-%d")
+    month_end_str = month_end.strftime("%Y-%m-%d")
+    
+    # Calculate automated fine income for current month
     fine_income_stmt = select(func.sum(Payment.amount)).where(
         Payment.type == PaymentType.FINE_PAYMENT,
-        func.date(Payment.created_at) >= ytd_start_str
+        func.date(Payment.created_at) >= month_start_str,
+        func.date(Payment.created_at) <= month_end_str
     )
-    fine_income = session.exec(fine_income_stmt).one_or_none() or 0.0
+    automated_fine_income = session.exec(fine_income_stmt).one_or_none() or 0.0
+
+    # Calculate manual budget income
+    month_manual_income_stmt = select(func.sum(BudgetEntry.amount)).where(
+        BudgetEntry.type == "INCOME",
+        BudgetEntry.date >= month_start,
+        BudgetEntry.date <= month_end
+    )
+    manual_income_month = session.exec(month_manual_income_stmt).one_or_none() or 0.0
+
+    fine_income = automated_fine_income + manual_income_month
 
     net_spend = total_spent - fine_income
     budget_utilization_percent = round((total_spent / total_budget) * 100, 1) if total_budget > 0 else 0.0
@@ -236,7 +279,15 @@ class ReportsService:
                 BookPurchaseEntry.purchase_date <= end_date
             )
         ).all()
-        month_spent = sum(p.total_cost() for p in purchases_this_month) + monthly_sub_spend
+        
+        manual_exp_this_month_stmt = select(func.sum(BudgetEntry.amount)).where(
+            BudgetEntry.type == "EXPENSE",
+            BudgetEntry.date >= start_date,
+            BudgetEntry.date <= end_date
+        )
+        manual_exp_this_month = session.exec(manual_exp_this_month_stmt).one_or_none() or 0.0
+        
+        month_spent = sum(p.total_cost() for p in purchases_this_month) + monthly_sub_spend + manual_exp_this_month
         
         start_date_str = start_date.strftime("%Y-%m-%d")
         end_date_str = end_date.strftime("%Y-%m-%d")
@@ -247,7 +298,16 @@ class ReportsService:
             func.date(Payment.created_at) >= start_date_str,
             func.date(Payment.created_at) <= end_date_str
         )
-        month_income = session.exec(month_income_stmt).one_or_none() or 0.0
+        automated_month_income = session.exec(month_income_stmt).one_or_none() or 0.0
+        
+        manual_inc_this_month_stmt = select(func.sum(BudgetEntry.amount)).where(
+            BudgetEntry.type == "INCOME",
+            BudgetEntry.date >= start_date,
+            BudgetEntry.date <= end_date
+        )
+        manual_inc_this_month = session.exec(manual_inc_this_month_stmt).one_or_none() or 0.0
+        
+        month_income = automated_month_income + manual_inc_this_month
         
         monthly_expenses.append(MonthlyExpenseItem(
             month=start_date.strftime("%b %Y"),

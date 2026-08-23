@@ -3,6 +3,7 @@ import api from "@/lib/api";
 
 const useTransactionStore = create((set) => ({
   activeTransactions: [],
+  allTransactions: [],
   isLoading: false,
   error: null,
   actionLoading: {},
@@ -23,10 +24,22 @@ const useTransactionStore = create((set) => ({
     }
   },
 
-  issueBook: async (member_id, book_id, copy_id) => {
+  fetchAllTransactions: async () => {
     set({ isLoading: true, error: null });
     try {
-      const response = await api.post("/transactions/issue", { member_id, book_id, copy_id });
+      const response = await api.get("/transactions/active");
+      set({ allTransactions: response.data, isLoading: false });
+    } catch (err) {
+      set({ error: err.message, isLoading: false });
+    }
+  },
+
+  issueBook: async (member_id, book_id, copy_id, due_date) => {
+    set({ isLoading: true, error: null });
+    try {
+      const body = { member_id, book_id, copy_id };
+      if (due_date) body.due_date = due_date;
+      const response = await api.post("/transactions/issue", body);
       set((state) => ({
         activeTransactions: [...state.activeTransactions, response.data],
         isLoading: false,
@@ -45,6 +58,50 @@ const useTransactionStore = create((set) => ({
         transaction_id: transactionId,
         condition: "GOOD",
       });
+      set((state) => ({
+        activeTransactions: state.activeTransactions.filter(
+          (t) => t.transaction_id !== transactionId
+        ),
+        actionLoading: { ...state.actionLoading, [transactionId]: false },
+      }));
+      return response.data;
+    } catch (err) {
+      set((state) => ({ actionLoading: { ...state.actionLoading, [transactionId]: false } }));
+      throw err;
+    }
+  },
+
+  initiateReturn: async (transactionId, condition) => {
+    set((state) => ({ actionLoading: { ...state.actionLoading, [transactionId]: true } }));
+    try {
+      const response = await api.post(`/transactions/${transactionId}/initiate-return`, {
+        condition,
+      });
+      set((state) => ({ actionLoading: { ...state.actionLoading, [transactionId]: false } }));
+      return response.data;
+    } catch (err) {
+      set((state) => ({ actionLoading: { ...state.actionLoading, [transactionId]: false } }));
+      throw err;
+    }
+  },
+
+  getReturnFine: async (transactionId) => {
+    try {
+      const response = await api.get(`/transactions/${transactionId}/fine`);
+      return response.data;
+    } catch (err) {
+      // If 404, it means no pending fine, which is handled appropriately.
+      if (err.response && err.response.status === 404) {
+        return null;
+      }
+      throw err;
+    }
+  },
+
+  completeReturn: async (transactionId) => {
+    set((state) => ({ actionLoading: { ...state.actionLoading, [transactionId]: true } }));
+    try {
+      const response = await api.post(`/transactions/${transactionId}/complete-return`);
       set((state) => ({
         activeTransactions: state.activeTransactions.filter(
           (t) => t.transaction_id !== transactionId

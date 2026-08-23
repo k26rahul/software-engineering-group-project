@@ -18,15 +18,19 @@ import {
   AlertTriangle,
   Loader2,
 } from "lucide-react";
+import { formatDate } from "@/lib/utils";
 import { toast } from "sonner";
 import CatalogPage from "./catalog/CatalogPage";
 import AddBookPage from "./catalog/AddBookPage";
 import EditBookPage from "./catalog/EditBookPage";
 import BookCopiesPage from "./catalog/BookCopiesPage";
 import MembersPage from "./members/MembersPage";
+import MemberDetailPage from "./members/MemberDetailPage";
 import IssueBookPage from "./IssueBookPage";
 import ProcessReturnPage from "./ProcessReturnPage";
+import ReturnDetailsPage from "./ReturnDetailsPage";
 import BudgetTrackerPage from "./BudgetTrackerPage";
+import OverduePage from "./OverduePage";
 
 function LibrarianHome() {
   const {
@@ -245,7 +249,7 @@ function LibrarianHome() {
                             hour: "2-digit",
                             minute: "2-digit",
                           })}{" "}
-                          - {new Date(alert.created_at).toLocaleDateString()}
+                          - {formatDate(alert.created_at)}
                         </p>
                       </div>
                       <Button
@@ -384,7 +388,7 @@ function LibrarianHome() {
                         <td className="text-muted-foreground p-4 text-xs sm:text-sm">
                           {user.email}
                         </td>
-                        <td className="text-muted-foreground p-4 text-xs">{user.created_at}</td>
+                        <td className="text-muted-foreground p-4 text-xs">{formatDate(user.created_at)}</td>
                         <td className="p-4 text-right">
                           <div className="inline-flex gap-1.5">
                             <Button
@@ -441,7 +445,7 @@ function LibrarianHome() {
                 <CardDescription>Outstanding circulation items</CardDescription>
               </div>
               <Link
-                to="/librarian/overdue"
+                to="/librarian/overdue?filter=overdue"
                 className="text-primary flex items-center gap-1 text-xs font-semibold hover:underline"
               >
                 View Overdue List <ArrowRight className="h-3 w-3" />
@@ -471,7 +475,7 @@ function LibrarianHome() {
                       <tr key={item.transaction_id} className="hover:bg-muted/20 transition-colors">
                         <td className="text-foreground p-4 font-medium">{item.title}</td>
                         <td className="text-muted-foreground p-4">{item.borrower_name}</td>
-                        <td className="text-muted-foreground p-4 text-xs">{item.due_date}</td>
+                        <td className="text-muted-foreground p-4 text-xs">{formatDate(item.due_date)}</td>
                         <td className="p-4 text-right">
                           <span className="bg-destructive/10 text-destructive rounded-full px-2 py-0.5 text-xs font-bold">
                             {item.days_overdue} days
@@ -546,9 +550,12 @@ export default function LibrarianDashboard() {
       <Route path="catalog/:id/edit" element={<EditBookPage />} />
       <Route path="catalog/:id/copies" element={<BookCopiesPage />} />
       <Route path="members" element={<MembersPage />} />
+      <Route path="members/:id" element={<MemberDetailPage />} />
       <Route path="issue" element={<IssueBookPage />} />
       <Route path="return" element={<ProcessReturnPage />} />
+      <Route path="return/process/:id" element={<ReturnDetailsPage />} />
       <Route path="budget" element={<BudgetTrackerPage />} />
+      <Route path="overdue" element={<OverduePage />} />
     </Routes>
   );
 }
